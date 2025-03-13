@@ -1,25 +1,4 @@
-from collections import defaultdict
-import string
-from fastapi import FastAPI
-import hdbscan
-import umap.umap_ as umap
-from pydantic import BaseModel
-from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import silhouette_score
-from sentence_transformers import SentenceTransformer
-from sklearn.cluster import DBSCAN, KMeans
-import numpy as np
-import pandas as pd
-from dotenv import load_dotenv
-import os
-import openai
-from fastapi_limiter import FastAPILimiter
-from fastapi_limiter.depends import RateLimiter
-import nltk
-from nltk.corpus import stopwords
-from nltk.stem import WordNetLemmatizer
-from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
+from imports import *
 
 MAX_CHAR_LIMIT = 1000
 
@@ -76,7 +55,7 @@ def kmeans_clustering(embeddings):
     scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
     # Reduce dimensions using UMAP (5D for better clustering)
-    umap_reducer = umap.UMAP(n_components=5, metric="cosine", random_state=42)
+    umap_reducer = umap.UMAP(n_components=5, metric="cosine")
     reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
     # Compute silhouette scores for different k values
@@ -131,6 +110,10 @@ def graph_clusters(embeddings, labels):
     # Show the plot
     plt.show()
     
+@app.get("/")
+def main():
+    return {"message": "Microservice for clustering and labeling text."}
+
 @app.get("/label")
 async def cluster_notes(request_body: RequestBody):
     notes = request_body.notes
