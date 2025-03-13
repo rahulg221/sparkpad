@@ -1,8 +1,8 @@
 from collections import defaultdict
+import string
 from fastapi import FastAPI
 from pydantic import BaseModel
 from sklearn.metrics import silhouette_score
-import uvicorn
 from sentence_transformers import SentenceTransformer
 from sklearn.cluster import KMeans
 import numpy as np
@@ -10,10 +10,19 @@ import pandas as pd
 from dotenv import load_dotenv
 import os
 import openai
+from fastapi_limiter import FastAPILimiter
+from fastapi_limiter.depends import RateLimiter
+import nltk
+from nltk.corpus import stopwords
+from nltk.stem import WordNetLemmatizer
+
+MAX_CHAR_LIMIT = 500
 
 load_dotenv()
 
-MAX_CHAR_LIMIT = 500
+# Download resources
+nltk.download("stopwords")
+nltk.download("wordnet")
 
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
@@ -26,9 +35,22 @@ model = SentenceTransformer('all-MiniLM-L6-v2')
 class RequestBody(BaseModel):
     notes: list[str]
 
+def preprocess_note(note):
+    note = note.lower()  # Convert to lowercase
+    note = note.translate(str.maketrans("", "", string.punctuation))  # Remove punctuation
+    note = " ".join(note.split())  # Remove extra spaces
+    
+    stop_words = set(stopwords.words("english"))
+    words = [word for word in note.split() if word not in stop_words]  # Remove stopwords
+    
+    lemmatizer = WordNetLemmatizer()
+    note = " ".join([lemmatizer.lemmatize(word) for word in words])  # Lemmatization
+
+    return note
+
 def generate_category(notes):
     input_string = "".join(notes)
-    prompt = f"Create a 1-2 word category name for the following text: {input_string}"
+    prompt = f"Create a 1-3 word category name for the following text: {input_string}"
 
     # Generate response
     res = client.chat.completions.create(
@@ -47,6 +69,10 @@ async def cluster_notes(request_body: RequestBody):
     if not notes:
         return {"error": "No notes provided"}
     
+    # Preprocess the notes
+    original_notes = notes
+    notes = [preprocess_note(note) for note in notes]
+
     # Encode the notes
     embeddings = model.encode(notes)
 
@@ -81,7 +107,7 @@ async def cluster_notes(request_body: RequestBody):
     generated_categories = {int(k): v for k, v in generated_categories.items()}
 
     # Compile results in a dataframe
-    df = pd.DataFrame({"Note": notes, "Cluster": labels})
+    df = pd.DataFrame({"Note": original_notes, "Cluster": labels})
 
     # Map the cluster numbers to their respective generated categories
     df["Category"] = df["Cluster"].map(generated_categories)
