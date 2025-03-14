@@ -7,7 +7,7 @@ load_dotenv()
 calender_id = os.getenv("CALENDAR_ID")
 
 # Load the service account file
-SERVICE_ACCOUNT_FILE = "calendar_data.json" 
+SERVICE_ACCOUNT_FILE = "assets/calendar_data.json" 
 SCOPES = ["https://www.googleapis.com/auth/calendar"]
 
 def create_google_event(text):

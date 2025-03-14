@@ -1,5 +1,5 @@
-from services.clustering_service import group_and_label_notes
-from services.calendar_service import create_google_event
+from backend.services.clustering_service import group_and_label_notes
+from backend.services.calendar_service import create_google_event
 
 from imports import *
 

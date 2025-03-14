@@ -3,7 +3,7 @@ from imports import *
 
 load_dotenv()
 
-MAX_CHAR_LIMIT = 1000
+MAX_CHAR_LIMIT = 2500
 
 # Initialize the OpenAI API client
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -99,7 +99,7 @@ def kmeans_clustering(embeddings):
 
     # Calculate final silhouette score for chosen k
     final_silhouette = silhouette_score(reduced_embeddings, labels)
-    print(f"\n✅ Selected k={optimal_k} with Silhouette Score: {final_silhouette:.4f}")
+    print(f"\nSelected k={optimal_k} with Silhouette Score: {final_silhouette:.4f}")
 
     return labels
 
@@ -117,7 +117,7 @@ def generate_category(notes):
     """
 
     input_string = "".join(notes)
-    prompt = f"Create a 1-3 word category name for the following text: {input_string}"
+    prompt = f"Match the tone of the text and create a 1-3 word category name for the following text: {input_string}"
 
     # Generate response
     res = client.chat.completions.create(
