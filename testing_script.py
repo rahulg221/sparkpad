@@ -1,7 +1,7 @@
 from services.calendar_service import create_google_event, extract_datetime, get_calendar_service
 
 test_strings = [
-        "Submit wabtec housing app by March 18th at 5pm",
+        "Bring tax files home on Saturday noon",
     ]
     
 for test in test_strings:

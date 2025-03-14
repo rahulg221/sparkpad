@@ -1,37 +1,59 @@
+from services.utils import preprocess_text
 from imports import *
+
+load_dotenv()
+
+MAX_CHAR_LIMIT = 1000
+
+# Initialize the OpenAI API client
+client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+# Load the sentence transformer model
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # Download resources
 nltk.download("stopwords")
 nltk.download("wordnet")
 
-def preprocess_note(note):
-    """
-    Preprocesses a given note by performing the following steps:
-        1. Converts the note to lower case.
-        2. Removes punctuation and extra spaces.
-        3. Removes stopwords.
-        4. Converts words to their base form using lemmatization.
-    Args:
-        note (str): The note to be preprocessed.
-    Returns:
-        str: The preprocessed note.
-    """
-
-    # Convert to lower case
-    note = note.lower()  
-
-    # Remove punctuation, extra spaces, and stopwords
-    note = note.translate(str.maketrans("", "", string.punctuation))  
-    note = " ".join(note.split())  # Remove extra spaces
+def group_and_label_notes(notes):
+    if not notes:
+        return {"error": "No notes provided"}
     
-    stop_words = set(stopwords.words("english"))
-    words = [word for word in note.split() if word not in stop_words]
-    
-    # Convert words to their base form
-    lemmatizer = WordNetLemmatizer()
-    note = " ".join([lemmatizer.lemmatize(word) for word in words])  
+    # Preprocess the notes
+    original_notes = notes
+    notes = [preprocess_text(note) for note in notes]
 
-    return note
+    # Encode the notes
+    embeddings = model.encode(notes)
+
+    labels = kmeans_clustering(embeddings)
+
+    # Create a dictionary to store a list of all notes in each cluster
+    clustered_notes = defaultdict(list)
+    for note, label in zip(notes, labels):
+        clustered_notes[label].append(note)
+    
+    # Concatenate all notes in each cluster into a single string and store, MAX_CHAR_LIMIT limits input tokens
+    concatenated_clusters = {cluster: " ".join(notes)[:MAX_CHAR_LIMIT] for cluster, notes in clustered_notes.items()}
+
+    # Generate a category name for each cluster
+    generated_categories = {cluster: "Unlabeled" if cluster == -1 else generate_category(text) for cluster, text in concatenated_clusters.items()}
+
+    # Convert the keys to integers
+    generated_categories = {int(k): v for k, v in generated_categories.items()}
+
+    # Compile results in a dataframe
+    df = pd.DataFrame({"Note": original_notes, "Cluster": labels})
+
+    # Map the cluster numbers to their respective generated categories
+    df["Category"] = df["Cluster"].map(generated_categories)
+
+    df_sorted = df.sort_values(by="Cluster")
+
+    # Convert DataFrame to JSON format
+    json_result = df_sorted.to_dict(orient="records")
+
+    return {"clusters": json_result}
 
 def kmeans_clustering(embeddings):
     """
@@ -44,14 +66,6 @@ def kmeans_clustering(embeddings):
         embeddings (array-like): The input data to be clustered.
     Returns:
         labels (array-like): The cluster labels for each data point.
-        
-    Steps:
-        1. Scale the embeddings using StandardScaler.
-        2. Reduce dimensions using UMAP to 5 components.
-        3. Compute silhouette scores for different values of k (from 2 to 9).
-        4. Select the optimal k based on the highest silhouette score.
-        5. Handle cases where silhouette scores are low (indicating poor clustering).
-        6. Run K-Means with the optimal k and return the cluster labels.
     """
     
     # Scale embeddings (improves clustering performance)
@@ -88,6 +102,32 @@ def kmeans_clustering(embeddings):
     print(f"\n✅ Selected k={optimal_k} with Silhouette Score: {final_silhouette:.4f}")
 
     return labels
+
+def generate_category(notes):
+    """
+    Generates a category name based on the provided notes.
+    This function takes a list of notes, concatenates them into a single string,
+    and uses a language model to generate a 1-3 word category name for the text.
+
+    Args:
+        notes (list of str): A list of strings representing the notes.
+        
+    Returns:
+        str: A generated category name based on the input notes.
+    """
+
+    input_string = "".join(notes)
+    prompt = f"Create a 1-3 word category name for the following text: {input_string}"
+
+    # Generate response
+    res = client.chat.completions.create(
+        model="gpt-4o-mini",  
+        messages=[{"role": "user", "content": prompt}],  
+        max_tokens=10,
+        temperature=0.4,
+    )
+
+    return res.choices[0].message.content.strip()
 
 def graph_clusters(embeddings, labels):
     """
