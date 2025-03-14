@@ -1,3 +1,4 @@
 # Ignore environment files
 .env
 c_venv/
+calendar_data.json

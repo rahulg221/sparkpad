@@ -5,6 +5,18 @@ nltk.download("stopwords")
 nltk.download("wordnet")
 
 def preprocess_note(note):
+    """
+    Preprocesses a given note by performing the following steps:
+        1. Converts the note to lower case.
+        2. Removes punctuation and extra spaces.
+        3. Removes stopwords.
+        4. Converts words to their base form using lemmatization.
+    Args:
+        note (str): The note to be preprocessed.
+    Returns:
+        str: The preprocessed note.
+    """
+
     # Convert to lower case
     note = note.lower()  
 
@@ -22,6 +34,26 @@ def preprocess_note(note):
     return note
 
 def kmeans_clustering(embeddings):
+    """
+    Perform K-Means clustering on the given embeddings.
+    This function scales the embeddings, reduces their dimensions using UMAP, 
+    and then applies K-Means clustering to find the optimal number of clusters 
+    based on silhouette scores.
+
+    Parameters:
+        embeddings (array-like): The input data to be clustered.
+    Returns:
+        labels (array-like): The cluster labels for each data point.
+        
+    Steps:
+        1. Scale the embeddings using StandardScaler.
+        2. Reduce dimensions using UMAP to 5 components.
+        3. Compute silhouette scores for different values of k (from 2 to 9).
+        4. Select the optimal k based on the highest silhouette score.
+        5. Handle cases where silhouette scores are low (indicating poor clustering).
+        6. Run K-Means with the optimal k and return the cluster labels.
+    """
+    
     # Scale embeddings (improves clustering performance)
     scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
@@ -58,6 +90,16 @@ def kmeans_clustering(embeddings):
     return labels
 
 def graph_clusters(embeddings, labels):
+    """
+    Visualizes clusters using UMAP for dimensionality reduction and a scatter plot.
+
+    Parameters:
+        embeddings (array-like): High-dimensional data points to be clustered.
+        labels (array-like): Cluster labels for each data point.
+    Returns:
+        None
+    """
+
     # Reduce dimensions using UMAP
     reducer = umap.UMAP(n_components=2, metric="cosine")
     reduced_embeddings = reducer.fit_transform(embeddings)
