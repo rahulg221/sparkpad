@@ -1,6 +1,18 @@
 import { useState } from 'react';
-import { useAuth } from '../context/authContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate, Link } from 'react-router-dom';
+import {
+    AuthPageContainer,
+    FormContainer,
+    Title,
+    Form,
+    FormGroup,
+    Input,
+    SubmitButton,
+    ErrorMessage,
+    StyledLink,
+    LinkText
+} from '../styles/components/auth/Auth.styles';
 
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
@@ -29,44 +41,46 @@ export const SignUpForm = () => {
     };
 
     return (
-        <div className="auth-form-container">
-            <h1>Sign Up</h1>
-            <form onSubmit={handleSubmit}>
-                {error && <div className="error">{error}</div>}
-                <div className="form-group">
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        value={confirmPassword}
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                        placeholder="Confirm Password"
-                        required
-                    />
-                </div>
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Signing up...' : 'Sign Up'}
-                </button>
-            </form>
-            <p className="auth-link">
-                Already have an account? <Link to="/login">Login</Link>
-            </p>
-        </div>
+        <AuthPageContainer>
+            <FormContainer>
+                <Title>Sign Up</Title>
+                <Form onSubmit={handleSubmit}>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                    <FormGroup>
+                        <Input
+                            type="email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            placeholder="Email"
+                            required
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            type="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            required
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            type="password"
+                            value={confirmPassword}
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                            placeholder="Confirm Password"
+                            required
+                        />
+                    </FormGroup>
+                    <SubmitButton type="submit" disabled={isLoading}>
+                        {isLoading ? 'Signing up...' : 'Sign Up'}
+                    </SubmitButton>
+                </Form>
+                <LinkText>
+                    Already have an account? <StyledLink to="/login">Login</StyledLink>
+                </LinkText>
+            </FormContainer>
+        </AuthPageContainer>
     );
 };

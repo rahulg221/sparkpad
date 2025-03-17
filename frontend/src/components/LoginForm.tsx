@@ -1,6 +1,18 @@
 import { useState } from 'react';
-import { useAuth } from '../context/authContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
+import {
+    AuthPageContainer,
+    FormContainer,
+    Title,
+    Form,
+    FormGroup,
+    Input,
+    SubmitButton,
+    ErrorMessage,
+    StyledLink,
+    LinkText
+} from '../styles/components/auth/Auth.styles';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -14,7 +26,6 @@ export const LoginForm = () => {
         setError('');
         try {
             await signIn(email, password);
-            console.log('Login successful');
             navigate('/dashboard');
         } catch (err) {
             console.error('Login failed:', err);
@@ -23,35 +34,37 @@ export const LoginForm = () => {
     };
 
     return (
-        <div className="auth-form-container">
-            <h1>Login</h1>
-            <form onSubmit={handleSubmit}>
-                {error && <div className="error-message" style={{ color: 'red', marginBottom: '1rem' }}>{error}</div>}
-                <div className="form-group">
-                    <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="Email"
-                        required
-                    />
-                </div>
-                <div className="form-group">
-                    <input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
-                        required
-                    />
-                </div>
-                <button type="submit" disabled={isLoading}>
-                    {isLoading ? 'Logging in...' : 'Login'}
-                </button>
-            </form>
-            <p className="auth-link">
-                Don't have an account? <Link to="/signup">Sign up</Link>
-            </p>
-        </div>
+        <AuthPageContainer>
+            <FormContainer>
+                <Title>Login</Title>
+                <Form onSubmit={handleSubmit}>
+                    {error && <ErrorMessage>{error}</ErrorMessage>}
+                    <FormGroup>
+                        <Input
+                            type="email"
+                            value={email}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+                            placeholder="Email"
+                            required
+                        />
+                    </FormGroup>
+                    <FormGroup>
+                        <Input
+                            type="password"
+                            value={password}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+                            placeholder="Password"
+                            required
+                        />
+                    </FormGroup>
+                    <SubmitButton type="submit" disabled={isLoading}>
+                        {isLoading ? 'Logging in...' : 'Login'}
+                    </SubmitButton>
+                </Form>
+                <LinkText>
+                    Don't have an account? <StyledLink to="/signup">Sign up</StyledLink>
+                </LinkText>
+            </FormContainer>
+        </AuthPageContainer>
     );
 };

@@ -1,37 +1,17 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthProvider } from './context/authContext';
-import { LoginForm } from './components/LoginForm';
-import { SignUpForm } from './components/SignUpForm';
-import { Dashboard } from './components/Dashboard';
-import { ProtectedRoute } from './components/ProtectedRoute';
+import { ThemeProvider } from 'styled-components';
+import { theme } from './styles/theme';
+import { GlobalStyles } from './styles/GlobalStyles';
+import { AppRoutes } from './routes/AppRoutes';
+import { AuthProvider } from './context/AuthContext';
 
 function App() {
     return (
-        <BrowserRouter>
+        <ThemeProvider theme={theme}>
             <AuthProvider>
-                <Routes>
-                    {/* Default redirect to login */}
-                    <Route path="/" element={<Navigate to="/login" replace />} />
-                    
-                    {/* Auth routes */}
-                    <Route path="/login" element={<LoginForm />} />
-                    <Route path="/signup" element={<SignUpForm />} />
-                    
-                    {/* Protected routes */}
-                    <Route 
-                        path="/dashboard" 
-                        element={
-                            <ProtectedRoute>
-                                <Dashboard />
-                            </ProtectedRoute>
-                        } 
-                    />
-                    
-                    {/* Catch all route */}
-                    <Route path="*" element={<Navigate to="/login" replace />} />
-                </Routes>
+                <GlobalStyles />
+                <AppRoutes />
             </AuthProvider>
-        </BrowserRouter>
+        </ThemeProvider>
     );
 }
 
