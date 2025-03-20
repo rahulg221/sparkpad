@@ -1,11 +1,19 @@
+import { TextBar } from '../components/TextBar';
 import { Dashboard } from '../components/Dashboard';
 
 export const DashboardPage = () => {
-    return (
-        <div className="dashboard-page">
-            <div className="dashboard-container">
-                <Dashboard />
-            </div>
-        </div>
-    );
+  const handleSubmit = (text: string) => {
+    // Handle the text submission
+    console.log('Submitted:', text);
+  };
+
+  return (
+    <div>
+      <Dashboard />
+      <TextBar 
+        onSubmit={handleSubmit}
+        placeholder="Type your message..."
+      />
+    </div>
+  );
 };
