@@ -15,7 +15,7 @@ export const ModalOverlay = styled.div`
 
 export const ModalContent = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  padding: ${({ theme }) => theme.spacing.xl};
+  padding: ${({ theme }) => theme.spacing.lg};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   width: 90%;
   max-width: 500px;

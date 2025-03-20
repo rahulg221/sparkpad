@@ -1,29 +1,30 @@
 export const theme = {
   colors: {
-    // Main colors
-    primary: '#4A90E2',    // Soft blue
-    primaryHover: '#357ABD',
-    accent: '#82B1FF',     // Light blue accent
-    accentHover: '#5E9BFF',
-    error: '#FF6B6B',      // Soft red
-    disabled: '#E0E0E0',   // Light gray
-
+    // Base colors
+    bgDark: '#0a0a0a',      // Almost black background
+    bgElevated: '#141414',  // Slightly lighter black for elevated elements
+    bgLight: '#1a1a1a',     // Dark gray for input backgrounds
+    
     // Text colors
-    textPrimary: '#2C3E50',    // Dark blue-gray
-    textLight: '#546E7A',      // Medium blue-gray
+    textPrimary: '#ffffff',  // Pure white text
+    textLight: '#b3b3b3',   // Lighter gray text
     
-    // Background colors
-    bgDark: '#FFF9F0',        // Warm cream
-    bgLight: '#FFFFFF',        // Pure white
-    bgElevated: '#FFFFFF',     // White for elevated elements
+    // Accent colors
+    primary: '#ff69b4',     // Soft pink
+    primaryHover: '#ff8dc7', // Lighter pink for hover states
+    primaryLight: 'rgba(255, 105, 180, 0.1)', // Very transparent pink for subtle highlights
+    accent: '#ff1493',      // Deeper pink for special highlights
+    accentHover: '#ff69b4', // Soft pink for accent hovers
     
-    // Border and line colors
-    border: '#E6EEF7',        // Light blue-gray
-    
+    // Utility colors
+    border: '#2a2a2a',      // Dark gray borders
+    error: '#ff4d4d',       // Red for errors
+    success: '#00ff9f',     // Neon green for success states
+
     // Additional accent colors
-    success: '#66BB6A',       // Soft green
     warning: '#FFCA28',       // Soft yellow
     info: '#64B5F6',          // Light blue
+    disabled: '#E0E0E0',   // Light gray
   },
   spacing: {
     sm: '8px',

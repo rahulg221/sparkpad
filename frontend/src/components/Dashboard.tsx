@@ -8,7 +8,9 @@ import {
   FAB,
   NoteInput,
   SubmitButton
-} from '../styles/DashboardStyles';
+} from '../styles/components/DashboardStyles';
+import { SecondaryButton } from '../styles/shared/Button.styles';
+import { TextBar } from './TextBar';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -35,24 +37,24 @@ export const Dashboard = () => {
         <DashboardWrapper>
             <Header>
                 <h1>Dashboard</h1>
-                <button onClick={handleLogout}>Logout</button>
+                <SecondaryButton width="10%" onClick={handleLogout}>Logout</SecondaryButton>
             </Header>
 
             <FAB onClick={() => setIsModalOpen(true)}>✐</FAB>
 
             <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2>Create New Note</h2>
+                <h2>Jot down your thoughts</h2>
                 <NoteInput
                     value={noteContent}
                     onChange={(e) => setNoteContent(e.target.value)}
-                    placeholder="Write your note here..."
+                    placeholder="What's on your mind?"
                     autoFocus
                 />
                 <SubmitButton
                     onClick={handleCreateNote}
                     disabled={!noteContent.trim()}
                 >
-                    Create Note
+                    Send
                 </SubmitButton>
             </Modal>
         </DashboardWrapper>

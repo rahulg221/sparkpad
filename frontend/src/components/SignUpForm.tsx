@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import {
     AuthPageContainer,
     FormContainer,
@@ -8,11 +8,11 @@ import {
     Form,
     FormGroup,
     Input,
-    SubmitButton,
     ErrorMessage,
     StyledLink,
     LinkText
 } from '../styles/components/auth/Auth.styles';
+import { PrimaryButton } from '../styles/shared/Button.styles';
 
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
@@ -73,9 +73,9 @@ export const SignUpForm = () => {
                             required
                         />
                     </FormGroup>
-                    <SubmitButton type="submit" disabled={isLoading}>
+                    <PrimaryButton type="submit" disabled={isLoading}>
                         {isLoading ? 'Signing up...' : 'Sign Up'}
-                    </SubmitButton>
+                    </PrimaryButton>
                 </Form>
                 <LinkText>
                     Already have an account? <StyledLink to="/login">Login</StyledLink>

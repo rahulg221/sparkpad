@@ -13,6 +13,7 @@ import {
     StyledLink,
     LinkText
 } from '../styles/components/auth/Auth.styles';
+import { PrimaryButton } from '../styles/shared/Button.styles';
 
 export const LoginForm = () => {
     const [email, setEmail] = useState('');
@@ -57,9 +58,9 @@ export const LoginForm = () => {
                             required
                         />
                     </FormGroup>
-                    <SubmitButton type="submit" disabled={isLoading}>
+                    <PrimaryButton type="submit" disabled={isLoading}>
                         {isLoading ? 'Logging in...' : 'Login'}
-                    </SubmitButton>
+                    </PrimaryButton>
                 </Form>
                 <LinkText>
                     Don't have an account? <StyledLink to="/signup">Sign up</StyledLink>

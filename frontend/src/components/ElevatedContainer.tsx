@@ -5,8 +5,8 @@ import {
   Title,
   Content,
   TextArea
-} from '../styles/ElevatedContainerStyles';
-import { SubmitButton } from '../styles/DashboardStyles';
+} from '../styles/components/modal/ElevatedContainerStyles';
+import { SubmitButton } from '../styles/components/DashboardStyles';
 
 interface ElevatedContainerProps {
     onSubmit: (content: string) => void;
