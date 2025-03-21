@@ -33,7 +33,7 @@ export const SignUpForm = () => {
 
         try {
             await signUp(email, password);
-            navigate('/dashboard', { replace: true });
+            setError('Check your email to confirm your account.');
         } catch (err) {
             setError('Failed to create account');
             console.error('Signup failed:', err);

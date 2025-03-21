@@ -3,8 +3,11 @@ import {
   TextBarContainer, 
   TextBarForm, 
   TextInput, 
-  SubmitButton 
-} from '../styles/components/textbar/TextBar.styles';
+} from '../styles/components/dashboard/TextBar.styles';
+import { addNote } from '../api/noteMethods';
+import { useAuth } from '../context/AuthContext';
+import { Note } from '../models/noteModel';
+import { supabase } from '../api/supabaseClient';
 
 interface TextBarProps {
   onSubmit: (text: string) => void;
@@ -13,20 +16,57 @@ interface TextBarProps {
 }
 
 export const TextBar = ({ 
-  onSubmit, 
   placeholder = 'Type a message...', 
   isLoading = false 
 }: TextBarProps) => {
   const [text, setText] = useState('');
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (text.trim()) {
-      onSubmit(text.trim());
-      setText('');
-    }
-  };
 
+    try {
+      // Fetch the full user data
+      const { data: userData, error: userError } = await supabase
+        .from("users")
+        .select("id")
+        .eq("id", user?.id)
+        .single();
+
+      if (userError || !userData) {
+        console.error("Failed to get user ID:", userError);
+        return;
+      }
+  
+      if (!text.trim()) {
+        console.warn("Cannot submit empty note.");
+        return;
+      }
+  
+      // Create note object
+      const note: Note = {
+        content: text.trim(),
+        user_id: userData.id,  // Use the correct user ID
+        category: "",
+        cluster: -1,
+      };
+  
+      // Insert note into database
+      const { error: insertError } = await addNote(note);
+  
+      if (insertError) {
+        console.error("Failed to insert note:", insertError);
+        return;
+      }
+  
+      console.log("Note added:", note);
+      setText(""); // Clear text input after successful insert
+  
+    } catch (error) {
+      console.error("Unexpected error in handleSubmit:", error);
+    }
+  };  
+  
   return (
     <TextBarContainer>
       <TextBarForm onSubmit={handleSubmit}>
@@ -36,20 +76,8 @@ export const TextBar = ({
           placeholder={placeholder}
           disabled={isLoading}
         />
-        <SubmitButton type="submit" disabled={isLoading || !text.trim()}>
-          <svg 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
-            strokeWidth="2" 
-            strokeLinecap="round" 
-            strokeLinejoin="round"
-          >
-            <line x1="22" y1="2" x2="11" y2="13" />
-            <polygon points="22 2 15 22 11 13 2 9 22 2" />
-          </svg>
-        </SubmitButton>
       </TextBarForm>
     </TextBarContainer>
   );
 }; 
+

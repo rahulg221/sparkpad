@@ -1,22 +1,20 @@
+import { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import { useState } from 'react';
-import { Modal } from '../components/Modal';
 import {
+    ButtonContainer,
   DashboardWrapper,
   Header,
-  FAB,
-  NoteInput,
-  SubmitButton
-} from '../styles/components/DashboardStyles';
+} from '../styles/components/dashboard/DashboardStyles';
 import { SecondaryButton } from '../styles/shared/Button.styles';
-import { TextBar } from './TextBar';
+import { NoteCategories } from './NoteCategories';
+import { NotesList } from './NotesList';
+import { getNotes, groupAndLabelNotes } from '../api/noteMethods';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
     const navigate = useNavigate();
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [noteContent, setNoteContent] = useState('');
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const handleLogout = async () => {
         try {
@@ -27,36 +25,43 @@ export const Dashboard = () => {
         }
     };
 
-    const handleCreateNote = () => {
-        console.log('Creating note:', noteContent);
-        setNoteContent('');
-        setIsModalOpen(false);
+    const handleCategoryClick = (category: string) => {
+        setSelectedCategory(category);
+    };
+
+    const handleBackClick = () => {
+        setSelectedCategory(null);
+    };
+
+    const handleTestClustering = async () => {
+        try {
+          const notes = await getNotes(user?.id || '');
+    
+          await groupAndLabelNotes(notes);
+        } catch (err) {
+          console.error('Error testing clustering:', err);
+        }
     };
 
     return (
         <DashboardWrapper>
             <Header>
                 <h1>Dashboard</h1>
-                <SecondaryButton width="10%" onClick={handleLogout}>Logout</SecondaryButton>
+                <ButtonContainer>
+                    <SecondaryButton width="10%" onClick={handleTestClustering}>Sort Notes</SecondaryButton>
+                    <SecondaryButton width="10%" onClick={handleLogout}>Logout</SecondaryButton>
+                </ButtonContainer>
             </Header>
-
-            <FAB onClick={() => setIsModalOpen(true)}>✐</FAB>
-
-            <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2>Jot down your thoughts</h2>
-                <NoteInput
-                    value={noteContent}
-                    onChange={(e) => setNoteContent(e.target.value)}
-                    placeholder="What's on your mind?"
-                    autoFocus
-                />
-                <SubmitButton
-                    onClick={handleCreateNote}
-                    disabled={!noteContent.trim()}
-                >
-                    Send
-                </SubmitButton>
-            </Modal>
+            <div>
+                {selectedCategory ? (
+                    <NotesList 
+                        category={selectedCategory}
+                        onBackClick={handleBackClick}
+                    />
+                ) : (
+                    <NoteCategories handleCategoryClick={handleCategoryClick} />
+                )}
+            </div>
         </DashboardWrapper>
     );
 };

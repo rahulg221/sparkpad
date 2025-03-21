@@ -6,6 +6,11 @@ export const DashboardWrapper = styled.div`
   position: relative;
 `;
 
+export const ButtonContainer = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
 export const Header = styled.div`
   display: flex;
   justify-content: space-between;
@@ -20,31 +25,6 @@ export const Header = styled.div`
   
   p {
     font-size: ${({ theme }) => theme.fontSize.base};
-  }
-`;
-
-export const FAB = styled.button`
-  position: fixed;
-  bottom: ${({ theme }) => theme.spacing.xl};
-  right: ${({ theme }) => theme.spacing.xl};
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.bgDark};
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: ${({ theme }) => theme.fontSize.md};
-  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.2);
-  transition: transform 0.2s, box-shadow 0.2s;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(74, 144, 226, 0.3);
-    background-color: ${({ theme }) => theme.colors.primaryHover};
   }
 `;
 

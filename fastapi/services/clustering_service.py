@@ -28,6 +28,9 @@ def group_and_label_notes(notes):
 
     labels = kmeans_clustering(embeddings)
 
+    if len(labels) == 0:
+        return {"error": "No clusters found"}
+
     # Create a dictionary to store a list of all notes in each cluster
     clustered_notes = defaultdict(list)
     for note, label in zip(notes, labels):
@@ -48,10 +51,8 @@ def group_and_label_notes(notes):
     # Map the cluster numbers to their respective generated categories
     df["Category"] = df["Cluster"].map(generated_categories)
 
-    df_sorted = df.sort_values(by="Cluster")
-
     # Convert DataFrame to JSON format
-    json_result = df_sorted.to_dict(orient="records")
+    json_result = df.to_dict(orient="records")
 
     return {"clusters": json_result}
 
@@ -71,7 +72,11 @@ def kmeans_clustering(embeddings):
     # Scale embeddings (improves clustering performance)
     scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
-    # Reduce dimensions using UMAP (5D for better clustering)
+    # Skip UMAP if dataset is too small (e.g., less than 5 data points)
+    if len(embeddings) < 5:
+        print("Dataset is too small, skipping UMAP dimensionality reduction.")
+        return []
+    
     umap_reducer = umap.UMAP(n_components=5, metric="cosine")
     reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
@@ -117,14 +122,14 @@ def generate_category(notes):
     """
 
     input_string = "".join(notes)
-    prompt = f"Match the tone of the text and create a 1-3 word category name for the following text: {input_string}"
+    prompt = f"Create a 1-3 word category name for the following text: {input_string}"
 
     # Generate response
     res = client.chat.completions.create(
         model="gpt-4o-mini",  
         messages=[{"role": "user", "content": prompt}],  
         max_tokens=10,
-        temperature=0.4,
+        temperature=0.2,
     )
 
     return res.choices[0].message.content.strip()

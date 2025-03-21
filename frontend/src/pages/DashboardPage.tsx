@@ -12,7 +12,7 @@ export const DashboardPage = () => {
       <Dashboard />
       <TextBar 
         onSubmit={handleSubmit}
-        placeholder="Type your message..."
+        placeholder="Jot down your thoughts, ideas, reminders, and more..."
       />
     </div>
   );

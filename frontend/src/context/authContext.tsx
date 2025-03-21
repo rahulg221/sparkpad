@@ -1,6 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { User } from '@supabase/supabase-js';
 import { signIn as supabaseSignIn, signUp as supabaseSignUp, signOut as supabaseSignOut, getCurrentUser } from '../api/authMethods';
+import { User } from '../models/userModel';
 
 interface AuthContextType {
     user: User | null;
@@ -31,47 +31,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        setIsLoading(true);
-        try {
-            const { user, session } = await supabaseSignIn(email, password);
-            if (!user || !session) {
-                throw new Error('Login failed - no user or session returned');
-            }
-            setUser(user);
-            return { user, session };
-        } catch (error) {
-            console.error('Sign in error:', error);
-            throw error;
-        } finally {
-            setIsLoading(false);
-        }
+        await supabaseSignIn(email, password);
+        const user = await getCurrentUser();
+        setUser(user);
     };
 
     const signUp = async (email: string, password: string) => {
-        setIsLoading(true);
-        try {
-            const { user } = await supabaseSignUp(email, password);
-            setUser(user);
-            return { user };
-        } catch (error) {
-            console.error('Sign up error:', error);
-            throw error;
-        } finally {
-            setIsLoading(false);
-        }
+        await supabaseSignUp(email, password);
+        const user = await getCurrentUser();
+        setUser(user);
     };
 
     const signOut = async () => {
-        setIsLoading(true);
-        try {
-            await supabaseSignOut();
-            setUser(null);
-        } catch (error) {
-            console.error('Sign out error:', error);
-            throw error;
-        } finally {
-            setIsLoading(false);
-        }
+        await supabaseSignOut();
+        setUser(null);
     };
 
     return (
