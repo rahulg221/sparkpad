@@ -1,7 +1,12 @@
 import { supabase } from './supabaseClient';
 import { Note } from '../models/noteModel';
+import { createCalendarEvent } from './calendarMethods';
 
 export const addNote = async (note: Note) => {
+  if (containsDateTime(note.content)) {
+    await createCalendarEvent(note.content);
+  }
+
   try {
     const { data, error } = await supabase
       .from('notes')
@@ -181,4 +186,18 @@ export const getDistinctCategories = async (userId: string): Promise<string[]> =
     console.error('Error fetching distinct categories:', error);
     throw error;
   }
+};
+
+const containsDateTime = (content: string): boolean => {
+  const patterns = [
+    /\b(today|tomorrow|yesterday)\b/i,
+    /\b(monday|tuesday|wednesday|thursday|friday|saturday|sunday)\b/i,
+    /\b(january|february|march|april|may|june|july|august|september|october|november|december)\b/i,
+    /\b(morning|afternoon|evening|night|noon|midnight)\b/i,
+    /\b\d{1,2}(?::\d{2})?\s*(?:am|pm)\b/i,
+    /\b\d{1,2}[-/]\d{1,2}[-/]\d{2,4}\b/,
+    /\b(next|last|this)\s+(week|month|year)\b/i,
+    /\b(now|later|soon|recently|earlier)\b/i
+  ];
+  return patterns.some(pattern => pattern.test(content));
 };

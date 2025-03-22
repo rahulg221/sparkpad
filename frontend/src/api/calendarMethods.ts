@@ -1,10 +1,11 @@
 export const createCalendarEvent = async (text: string): Promise<void> => {
-    const response = await fetch('http://127.0.0.1:8000/calendar', {
+    console.log('Creating calendar event:', text);
+    const response = await fetch('http://127.0.0.1:8000/event', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ text })
+        body: JSON.stringify({ note: text })
     });
 
     if (!response.ok) {
