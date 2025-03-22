@@ -2,13 +2,11 @@ import { supabase } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import { createCalendarEvent } from './calendarMethods';
 
-export const addNote = async (note: Note) => {
-  if (containsDateTime(note.content)) {
-    await createCalendarEvent(note.content);
-  }
+export const addNote = async (note: Note): Promise<string> => {
+  let notificationMessage = '';
 
   try {
-    const { data, error } = await supabase
+    await supabase
       .from('notes')
       .insert([
         {
@@ -20,74 +18,60 @@ export const addNote = async (note: Note) => {
       ])
       .select();
 
-    if (error) {
-      throw error;
-    }
+    notificationMessage = 'Successfully added note!'; 
 
-    console.log('Note added:', data[0]);
-    return data[0];
+    if (containsDateTime(note.content)) {
+      notificationMessage = await createCalendarEvent(note.content);
+    }
   } catch (error) {
-    console.error('Error adding note:', error);
-    throw error;
+    notificationMessage = 'Failed to add note';
   }
+
+  return notificationMessage;
 };
 
-export const deleteNote = async (noteId: string) => {
+export const deleteNote = async (noteId: string): Promise<string> => {
+  let notificationMessage = '';
+
   try {
-    const { error } = await supabase
+    await supabase
       .from('notes')
       .delete()
       .eq('id', noteId);
 
-    if (error) {
-      throw error;
-    }
-
-    console.log('Note deleted:', noteId);
-    return true;
+    notificationMessage = 'Successfully deleted note!';
   } catch (error) {
-    console.error('Error deleting note:', error);
-    throw error;
+    notificationMessage = 'Failed to delete note';
   }
+
+  return notificationMessage;
 };
 
 export const getNotes = async (userId: string): Promise<Note[]> => {
   try {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('notes')
       .select('*')
       .eq('user_id', userId)
       .order('created_at', { ascending: true });
 
-    if (error) {
-      throw error;
-    }
-
-    console.log('Fetched notes:', data);
     return data || [];
   } catch (error) {
-    console.error('Error fetching notes:', error);
     throw error;
   }
 };
 
 export const getNotesByCluster = async (userId: string, cluster: number): Promise<Note[]> => {
   try {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('notes')
       .select('*')
       .eq('user_id', userId)
       .eq('cluster', cluster)
       .order('created_at', { ascending: true });
 
-    if (error) {
-      throw error;
-    }
-
-    console.log('Fetched notes by cluster:', data);
     return data || [];
   } catch (error) {
-    console.error('Error fetching notes by cluster:', error);
     throw error;
   }
 };
@@ -105,10 +89,8 @@ export const getNotesByCategory = async (userId: string, category: string): Prom
       throw error;
     }
 
-    console.log('Fetched notes by category:', data);
     return data || [];
   } catch (error) {
-    console.error('Error fetching notes by category:', error);
     throw error;
   }
 };
@@ -156,34 +138,27 @@ export const groupAndLabelNotes = async (notes: Note[]): Promise<Note[]> => {
       }
     }
 
-    console.log('Notes clustered:', clusteredNotes);
     return clusteredNotes;
 
   } catch (error) {
-    console.error('Error clustering notes:', error);
     throw error;
   }
 };
 
 export const getDistinctCategories = async (userId: string): Promise<string[]> => {
   try {
-    const { data, error } = await supabase
+    const { data } = await supabase
       .from('notes')
       .select('category')
       .eq('user_id', userId)
       .not('category', 'eq', '')
       .not('category', 'is', null);
 
-    if (error) {
-      throw error;
-    }
-
     // Extract unique categories
-    const categories = [...new Set(data.map(note => note.category))];
+    const categories = [...new Set(data?.map(note => note.category))];
     return categories;
 
   } catch (error) {
-    console.error('Error fetching distinct categories:', error);
     throw error;
   }
 };

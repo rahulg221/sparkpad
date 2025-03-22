@@ -8,7 +8,8 @@ import { addNote } from '../../api/noteMethods';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { supabase } from '../../api/supabaseClient';
-import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
+import { PrimaryButton } from '../../styles/shared/Button.styles';
+import { Notification } from '../notif/Notification';
 
 interface TextBarProps {
   onSubmit: (text: string) => void;
@@ -21,6 +22,8 @@ export const TextBar = ({
   isLoading = false 
 }: TextBarProps) => {
   const [text, setText] = useState('');
+  const [showNotification, setShowNotification] = useState(false);
+  const [notificationMessage, setNotificationMessage] = useState('');
   const { user } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -47,18 +50,17 @@ export const TextBar = ({
       // Create note object
       const note: Note = {
         content: text.trim(),
-        user_id: userData.id,  // Use the correct user ID
+        user_id: userData.id,
         category: "",
         cluster: -1,
       };
   
       // Insert note into database
-      const { error: insertError } = await addNote(note);
+      const notificationMessage = await addNote(note);
   
-      if (insertError) {
-        console.error("Failed to insert note:", insertError);
-        return;
-      }
+      // Show notification after successful note creation
+      setNotificationMessage(notificationMessage);
+      setShowNotification(true);
   
       console.log("Note added:", note);
       setText(""); // Clear text input after successful insert
@@ -69,17 +71,26 @@ export const TextBar = ({
   };  
   
   return (
-    <TextBarContainer>
-      <TextBarForm onSubmit={handleSubmit}>
-        <TextInput
-          value={text}
-          onChange={(e) => setText(e.target.value)}
-          placeholder={placeholder}
-          disabled={isLoading}
+    <>
+      <TextBarContainer>
+        <TextBarForm onSubmit={handleSubmit}>
+          <TextInput
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            placeholder={placeholder}
+            disabled={isLoading}
+          />
+          <PrimaryButton type="submit" disabled={isLoading}>Create Note</PrimaryButton>
+        </TextBarForm>
+      </TextBarContainer>
+      {showNotification && (
+        <Notification 
+          message={notificationMessage} 
+          onClose={() => setShowNotification(false)} 
         />
-        <PrimaryButton type="submit" disabled={isLoading}>Create Note</PrimaryButton>
-      </TextBarForm>
-    </TextBarContainer>
+      )}
+    </>
   );
 }; 
+
 
