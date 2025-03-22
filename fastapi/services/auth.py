@@ -17,7 +17,6 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
         return payload 
 
     except jwt.PyJWTError as e:
-        print("❌ JWT decode error:", str(e))
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token"
