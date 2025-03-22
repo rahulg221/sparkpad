@@ -1,3 +1,4 @@
+import math
 from services.utils import preprocess_text
 from imports import *
 
@@ -80,19 +81,24 @@ def kmeans_clustering(embeddings):
     umap_reducer = umap.UMAP(n_components=5, metric="cosine")
     reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
-    # Compute silhouette scores for different k values
+    # Compute silhouette scores and weighted scores
     silhouette_scores = []
-    K_range = range(2, 10)  # Testing k from 2 to 9
+    weighted_scores = []
+    K_range = range(2, 8)
 
     for k in K_range:
         kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto")
         labels = kmeans.fit_predict(reduced_embeddings)
         score = silhouette_score(reduced_embeddings, labels)
-        silhouette_scores.append(score)
-        print(f"Silhouette Score for k={k}: {score:.4f}")
+        weighted = score * math.log(k)
 
-    # Find the best k based on silhouette score
-    optimal_k = K_range[np.argmax(silhouette_scores)]
+        silhouette_scores.append(score)
+        weighted_scores.append(weighted)
+
+        print(f"k={k}, Silhouette={score:.4f}, Weighted={weighted:.4f}")
+
+    # Pick the best k based on the weighted score
+    optimal_k = K_range[np.argmax(weighted_scores)]
 
     # Handle low silhouette scores (poor clustering)
     if max(silhouette_scores) < 0.2:

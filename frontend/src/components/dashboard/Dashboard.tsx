@@ -67,7 +67,7 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <h1>BrainDump</h1>
+                <h1>ScatterBrain</h1>
                 <ButtonContainer>
                     <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
                     <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
