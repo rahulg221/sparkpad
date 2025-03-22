@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const TextBarContainer = styled.div`
   position: fixed;
   bottom: 0;
-  left: 50px;
-  right: 50px;
+  left: 15%;
+  right: 15%;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border: 1px solid ${({ theme }) => theme.colors.border};

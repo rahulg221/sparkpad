@@ -239,3 +239,24 @@ const containsDateTime = (content: string): boolean => {
   ];
   return patterns.some(pattern => pattern.test(content));
 };
+
+// Add this new function to search notes
+export const searchNotes = async (userId: string, searchQuery: string): Promise<Note[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .select('*')
+      .eq('user_id', userId)
+      .ilike('content', `%${searchQuery}%`) // Case-insensitive search
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      throw error;
+    }
+
+    return data || [];
+  } catch (error) {
+    console.error('Error searching notes:', error);
+    throw error;
+  }
+};

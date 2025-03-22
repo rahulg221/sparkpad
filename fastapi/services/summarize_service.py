@@ -23,6 +23,7 @@ def summarize_text(notes):
 
     prompt = f"""
     Produce a daily report of the following notes: {text}
+    Avoid making strong assumptions or connections between the notes.
     The report should be in the following format:
     - Date: {date_str}
     - Random thoughts: [Random thoughts and reflections]

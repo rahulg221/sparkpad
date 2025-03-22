@@ -1,4 +1,17 @@
+import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
+
+export const TrashIcon = styled(MdDeleteOutline)`
+  width: 30px;
+  height: 30px;
+  color: ${({ theme }) => theme.colors.textLight};
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.error};
+  }
+`;
 
 export const NotesContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
@@ -11,7 +24,10 @@ export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-top: ${({ theme }) => theme.spacing.sm};
+  padding-bottom: ${({ theme }) => theme.spacing.sm};
+  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.lg};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   transition: all 0.2s ease;
 
@@ -23,6 +39,11 @@ export const NoteCard = styled.div`
 export const NoteContent = styled.p`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+`;
+
+export const NoteInfo = styled.p`
+  color: ${({ theme }) => theme.colors.textLight};
+  font-size: ${({ theme }) => theme.fontSize.xs};
 `;
 
 export const NoteMeta = styled.div`
@@ -44,5 +65,5 @@ export const BackButton = styled.button`
 `;
 
 export const CategoryTitle = styled.h2`
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;

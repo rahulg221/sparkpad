@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
-import { deleteNote, getNotesByCategory, getNotesByCluster } from '../../api/noteMethods';
-import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, BackButton } from './NotesList.Styles';
+import { deleteNote, getNotesByCategory } from '../../api/noteMethods';
+import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface NotesListProps {
@@ -44,10 +44,6 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
       setError('Error deleting note');
     }
   };
-  
-  if (isLoading) return <div>Loading notes...</div>;
-  if (error) return <div>Error: {error}</div>;
-  if (!notes.length) return <div>Create your first note!</div>;
 
   return (
     <NotesContainer>
@@ -56,9 +52,21 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
       {notes.map((note) => (
         <NoteCard key={note.id}>
           <NoteMeta>
-            <NoteContent>{note.content}</NoteContent>
-            <SecondaryButton onClick={() => handleDeleteNote(note.id!)}>Delete</SecondaryButton>
+            <NoteContent>
+              {note.content}
+            </NoteContent>
+            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
           </NoteMeta>
+          <NoteInfo>
+              {new Date(note.created_at!).toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+              })}
+              <br />
+              {note.category}
+          </NoteInfo>
         </NoteCard>
       ))}
     </NotesContainer>

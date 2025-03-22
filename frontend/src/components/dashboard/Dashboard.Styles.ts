@@ -1,10 +1,16 @@
 import styled from 'styled-components';
 
 export const DashboardWrapper = styled.div`
-  margin: 0 auto;
+  min-height: 100vh;
+  background-color: ${({ theme }) => theme.colors.bgDark};
   padding: ${({ theme }) => theme.spacing.lg};
-  position: relative;
 `;
+
+export const SearchSection = styled.div`
+  flex: 1;
+  max-width: 600px;
+  margin: 0 ${({ theme }) => theme.spacing.md};
+`; 
 
 export const ButtonContainer = styled.div`
   display: flex;
