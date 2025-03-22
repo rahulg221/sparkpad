@@ -3,11 +3,12 @@ import styled from 'styled-components';
 export const TextBarContainer = styled.div`
   position: fixed;
   bottom: 0;
-  left: 0;
-  right: 0;
+  left: 50px;
+  right: 50px;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
 
 export const TextBarForm = styled.form`
@@ -18,8 +19,7 @@ export const TextBarForm = styled.form`
 
 export const TextInput = styled.input`
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.lg} ${({ theme }) => theme.spacing.xl};
-  padding-right: calc(44px + ${({ theme }) => theme.spacing.md});
+  padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};

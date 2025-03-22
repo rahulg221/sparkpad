@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
     AuthPageContainer,
@@ -11,46 +11,39 @@ import {
     ErrorMessage,
     StyledLink,
     LinkText
-} from '../styles/components/auth/Auth.styles';
-import { PrimaryButton } from '../styles/shared/Button.styles';
+} from './Auth.styles';
+import { PrimaryButton } from '../../styles/shared/Button.styles';
 
-export const SignUpForm = () => {
+export const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
-    const { signUp, isLoading } = useAuth();
+    const { signIn, isLoading } = useAuth();
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
-        if (password !== confirmPassword) {
-            setError('Passwords do not match');
-            return;
-        }
-
         try {
-            await signUp(email, password);
-            setError('Check your email to confirm your account.');
+            await signIn(email, password);
+            navigate('/dashboard');
         } catch (err) {
-            setError('Failed to create account');
-            console.error('Signup failed:', err);
+            console.error('Login failed:', err);
+            setError(err instanceof Error ? err.message : 'Failed to login. Please try again.');
         }
     };
 
     return (
         <AuthPageContainer>
             <FormContainer>
-                <Title>Sign Up</Title>
+                <Title>Login</Title>
                 <Form onSubmit={handleSubmit}>
                     {error && <ErrorMessage>{error}</ErrorMessage>}
                     <FormGroup>
                         <Input
                             type="email"
                             value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
                             placeholder="Email"
                             required
                         />
@@ -59,26 +52,17 @@ export const SignUpForm = () => {
                         <Input
                             type="password"
                             value={password}
-                            onChange={(e) => setPassword(e.target.value)}
+                            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
                             placeholder="Password"
                             required
                         />
                     </FormGroup>
-                    <FormGroup>
-                        <Input
-                            type="password"
-                            value={confirmPassword}
-                            onChange={(e) => setConfirmPassword(e.target.value)}
-                            placeholder="Confirm Password"
-                            required
-                        />
-                    </FormGroup>
                     <PrimaryButton type="submit" disabled={isLoading}>
-                        {isLoading ? 'Signing up...' : 'Sign Up'}
+                        {isLoading ? 'Logging in...' : 'Login'}
                     </PrimaryButton>
                 </Form>
                 <LinkText>
-                    Already have an account? <StyledLink to="/login">Login</StyledLink>
+                    Don't have an account? <StyledLink to="/signup">Sign up</StyledLink>
                 </LinkText>
             </FormContainer>
         </AuthPageContainer>

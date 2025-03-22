@@ -10,16 +10,16 @@ export const theme = {
     textLight: '#b3b3b3',   // Lighter gray text
     
     // Accent colors
-    primary: '#ff69b4',     // Soft pink
-    primaryHover: '#ff8dc7', // Lighter pink for hover states
-    primaryLight: 'rgba(255, 105, 180, 0.1)', // Very transparent pink for subtle highlights
-    accent: '#ff1493',      // Deeper pink for special highlights
-    accentHover: '#ff69b4', // Soft pink for accent hovers
+    primary: '#d4855c',     // Muted orange
+    primaryHover: '#e19b73', // Lighter muted orange for hover
+    primaryLight: 'rgba(212, 133, 92, 0.1)', // Very transparent orange for subtle highlights
+    accent: '#bf704a',      // Deeper muted orange for special highlights
+    accentHover: '#d4855c', // Base muted orange for accent hovers
     
     // Utility colors
     border: '#2a2a2a',      // Dark gray borders
     error: '#ff4d4d',       // Red for errors
-    success: '#00ff9f',     // Neon green for success states
+    success: '#00e676',     // Green for success states
 
     // Additional accent colors
     warning: '#FFCA28',       // Soft yellow

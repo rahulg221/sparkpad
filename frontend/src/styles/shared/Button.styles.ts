@@ -22,7 +22,7 @@ export const PrimaryButton = styled.button<{ width?: string }>`
 `;
 
 export const SecondaryButton = styled.button<{ width?: string }>`
-  width: 100px;
+  width: '${props => props.width || 'fit-content'};'
   padding: ${({ theme }) => theme.spacing.md};
   background-color: transparent;
   color: ${({ theme }) => theme.colors.primary};

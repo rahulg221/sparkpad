@@ -1,5 +1,5 @@
-import { TextBar } from '../components/TextBar';
-import { Dashboard } from '../components/Dashboard';
+import { TextBar } from '../components/textbar/TextBar';
+import { Dashboard } from '../components/dashboard/Dashboard';
 
 export const DashboardPage = () => {
   const handleSubmit = (text: string) => {

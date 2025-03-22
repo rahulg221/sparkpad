@@ -27,6 +27,25 @@ export const addNote = async (note: Note) => {
   }
 };
 
+export const deleteNote = async (noteId: string) => {
+  try {
+    const { error } = await supabase
+      .from('notes')
+      .delete()
+      .eq('id', noteId);
+
+    if (error) {
+      throw error;
+    }
+
+    console.log('Note deleted:', noteId);
+    return true;
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    throw error;
+  }
+};
+
 export const getNotes = async (userId: string): Promise<Note[]> => {
   try {
     const { data, error } = await supabase
@@ -64,6 +83,27 @@ export const getNotesByCluster = async (userId: string, cluster: number): Promis
     return data || [];
   } catch (error) {
     console.error('Error fetching notes by cluster:', error);
+    throw error;
+  }
+};
+
+export const getNotesByCategory = async (userId: string, category: string): Promise<Note[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .select('*')
+      .eq('user_id', userId)
+      .eq('category', category)
+      .order('created_at', { ascending: true });
+
+    if (error) {
+      throw error;
+    }
+
+    console.log('Fetched notes by category:', data);
+    return data || [];
+  } catch (error) {
+    console.error('Error fetching notes by category:', error);
     throw error;
   }
 };
@@ -116,6 +156,29 @@ export const groupAndLabelNotes = async (notes: Note[]): Promise<Note[]> => {
 
   } catch (error) {
     console.error('Error clustering notes:', error);
+    throw error;
+  }
+};
+
+export const getDistinctCategories = async (userId: string): Promise<string[]> => {
+  try {
+    const { data, error } = await supabase
+      .from('notes')
+      .select('category')
+      .eq('user_id', userId)
+      .not('category', 'eq', '')
+      .not('category', 'is', null);
+
+    if (error) {
+      throw error;
+    }
+
+    // Extract unique categories
+    const categories = [...new Set(data.map(note => note.category))];
+    return categories;
+
+  } catch (error) {
+    console.error('Error fetching distinct categories:', error);
     throw error;
   }
 };

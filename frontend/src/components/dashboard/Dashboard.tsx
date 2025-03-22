@@ -1,15 +1,15 @@
 import { useState } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
     ButtonContainer,
-  DashboardWrapper,
-  Header,
-} from '../styles/components/dashboard/DashboardStyles';
-import { SecondaryButton } from '../styles/shared/Button.styles';
-import { NoteCategories } from './NoteCategories';
-import { NotesList } from './NotesList';
-import { getNotes, groupAndLabelNotes } from '../api/noteMethods';
+    DashboardWrapper,
+    Header,
+} from './Dashboard.Styles';
+import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { NoteCategories } from '../categories/NoteCategories';
+import { NotesList } from '../list/NotesList';
+import { getNotes, groupAndLabelNotes } from '../../api/noteMethods';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -33,7 +33,7 @@ export const Dashboard = () => {
         setSelectedCategory(null);
     };
 
-    const handleTestClustering = async () => {
+    const handleClustering = async () => {
         try {
           const notes = await getNotes(user?.id || '');
     
@@ -46,10 +46,10 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <h1>Dashboard</h1>
+                <h1>BrainDump</h1>
                 <ButtonContainer>
-                    <SecondaryButton width="10%" onClick={handleTestClustering}>Sort Notes</SecondaryButton>
-                    <SecondaryButton width="10%" onClick={handleLogout}>Logout</SecondaryButton>
+                    <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
+                    <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
                 </ButtonContainer>
             </Header>
             <div>

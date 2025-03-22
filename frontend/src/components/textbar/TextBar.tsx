@@ -3,11 +3,12 @@ import {
   TextBarContainer, 
   TextBarForm, 
   TextInput, 
-} from '../styles/components/dashboard/TextBar.styles';
-import { addNote } from '../api/noteMethods';
-import { useAuth } from '../context/AuthContext';
-import { Note } from '../models/noteModel';
-import { supabase } from '../api/supabaseClient';
+} from './TextBar.styles';
+import { addNote } from '../../api/noteMethods';
+import { useAuth } from '../../context/AuthContext';
+import { Note } from '../../models/noteModel';
+import { supabase } from '../../api/supabaseClient';
+import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface TextBarProps {
   onSubmit: (text: string) => void;
@@ -76,6 +77,7 @@ export const TextBar = ({
           placeholder={placeholder}
           disabled={isLoading}
         />
+        <PrimaryButton type="submit" disabled={isLoading}>Create Note</PrimaryButton>
       </TextBarForm>
     </TextBarContainer>
   );
