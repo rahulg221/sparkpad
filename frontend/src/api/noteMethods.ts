@@ -3,6 +3,9 @@ import { Note } from '../models/noteModel';
 import { createCalendarEvent } from './calendarMethods';
 import { jsPDF } from 'jspdf';
 
+const session = await supabase.auth.getSession();
+const token = session.data.session?.access_token;
+
 export const summarizeDailyNotes = async (userId: string): Promise<string> => {
   const notes = await getTodaysNotes(userId);
 
@@ -10,7 +13,8 @@ export const summarizeDailyNotes = async (userId: string): Promise<string> => {
     const response = await fetch('http://127.0.0.1:8000/summarize', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ notes: notes.map(note => note.content) })
     });
@@ -164,7 +168,8 @@ export const groupAndLabelNotes = async (notes: Note[]): Promise<Note[]> => {
     const response = await fetch('http://127.0.0.1:8000/label', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify({ notes: notes.map(note => note.content) })
     });
@@ -257,6 +262,24 @@ export const searchNotes = async (userId: string, searchQuery: string): Promise<
     return data || [];
   } catch (error) {
     console.error('Error searching notes:', error);
+    throw error;
+  }
+};
+
+export const getNotesCount = async (userId: string): Promise<number> => {
+  try {
+    const { count, error } = await supabase
+      .from('notes')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId);
+
+    if (error) {
+      throw error;
+    }
+
+    return count || 0;
+  } catch (error) {
+    console.error('Error getting notes count:', error);
     throw error;
   }
 };
