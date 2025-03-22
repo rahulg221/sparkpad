@@ -11,7 +11,7 @@ export const signIn = async (email: string, password: string): Promise<void> => 
     const { data: existingUser} = await supabase
         .from('users')
         .select()
-        .eq('id', data.user?.id)
+        .eq('auth_id', data.user?.id)
         .single();
 
     if (!existingUser) {

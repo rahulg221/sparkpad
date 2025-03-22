@@ -1,8 +1,11 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import Lottie from 'lottie-react';
+import animation from '../../assets/animation.json';
+
 import {
-    ButtonContainer,
+    ButtonContainer, 
     DashboardWrapper,
     Header,
 } from './Dashboard.Styles';
@@ -14,6 +17,7 @@ import { getNotes, groupAndLabelNotes } from '../../api/noteMethods';
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
     const navigate = useNavigate();
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
     const handleLogout = async () => {
@@ -36,12 +40,29 @@ export const Dashboard = () => {
     const handleClustering = async () => {
         try {
           const notes = await getNotes(user?.id || '');
-    
+        
+          setIsLoading(true);
           await groupAndLabelNotes(notes);
+          setIsLoading(false);
         } catch (err) {
           console.error('Error testing clustering:', err);
         }
     };
+
+    const CatLoader = () => (
+        <div style={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+          <Lottie
+            animationData={animation}
+            loop
+            autoplay
+            style={{ width: 200, height: 200 }}
+          />
+        </div>
+      );
 
     return (
         <DashboardWrapper>
@@ -53,7 +74,7 @@ export const Dashboard = () => {
                 </ButtonContainer>
             </Header>
             <div>
-                {selectedCategory ? (
+            {isLoading ? <CatLoader /> :selectedCategory ? (
                     <NotesList 
                         category={selectedCategory}
                         onBackClick={handleBackClick}

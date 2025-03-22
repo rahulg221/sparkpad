@@ -10,11 +10,11 @@ export const theme = {
     textLight: '#b3b3b3',   // Lighter gray text
     
     // Accent colors
-    primary: '#d4855c',     // Muted orange
-    primaryHover: '#e19b73', // Lighter muted orange for hover
-    primaryLight: 'rgba(212, 133, 92, 0.1)', // Very transparent orange for subtle highlights
-    accent: '#bf704a',      // Deeper muted orange for special highlights
-    accentHover: '#d4855c', // Base muted orange for accent hovers
+    primary: '#9b6dff',     // Softer high-tech purple
+    primaryHover: '#b38dff', // Lighter soft purple for hover
+    primaryLight: 'rgba(155, 109, 255, 0.1)', // Very transparent purple
+    accent: '#7a5cff',      // Deeper soft purple for special highlights
+    accentHover: '#9b6dff', // Base purple for accent hovers
     
     // Utility colors
     border: '#2a2a2a',      // Dark gray borders
