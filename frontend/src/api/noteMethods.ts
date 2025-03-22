@@ -1,6 +1,69 @@
 import { supabase } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import { createCalendarEvent } from './calendarMethods';
+import { jsPDF } from 'jspdf';
+
+export const summarizeDailyNotes = async (userId: string): Promise<string> => {
+  const notes = await getTodaysNotes(userId);
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/summarize', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ notes: notes.map(note => note.content) })
+    });
+
+    if (!response.ok) {
+      throw new Error('Summarization service request failed');
+    }
+
+    const summary = await response.json();
+
+    const doc = new jsPDF();
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const margin = 20; // mm
+    const usableWidth = pageWidth - margin * 2;
+
+    doc.setFontSize(12);
+    doc.text(summary.trim(), margin, 30, {
+      maxWidth: usableWidth,
+      align: "left",
+    });
+    
+    const today = new Date();
+    doc.save(`${today.toISOString().split('T')[0]}_daily_report.pdf`);
+      
+    return summary;
+  } catch (error) {
+    throw error;
+  }
+}
+
+export const getTodaysNotes = async (userId: string): Promise<Note[]> => {
+  try {
+    // Get current date in EST
+    const today = new Date();
+    const est = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
+    est.setHours(0, 0, 0, 0); // Start of day EST
+    
+    const tomorrow = new Date(est);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Start of next day EST
+
+    const { data } = await supabase
+      .from('notes')
+      .select('*')
+      .eq('user_id', userId)
+      .gte('created_at', est.toISOString())
+      .lt('created_at', tomorrow.toISOString())
+      .order('created_at', { ascending: false });
+
+    return data || [];
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const addNote = async (note: Note): Promise<string> => {
   let notificationMessage = '';

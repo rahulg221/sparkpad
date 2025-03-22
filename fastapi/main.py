@@ -1,5 +1,6 @@
 from services.clustering_service import group_and_label_notes
 from services.calendar_service import create_google_event
+from services.summarize_service import summarize_text
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from imports import *
@@ -24,7 +25,7 @@ class Event(BaseModel):
     
 @app.get("/")
 def main():
-    return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event."}
+    return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
 
 @app.post("/event")
 async def create_new_event(request_body: Event):
@@ -35,3 +36,8 @@ async def create_new_event(request_body: Event):
 async def cluster_notes(request_body: Notes):
     notes = request_body.notes
     return group_and_label_notes(notes)
+
+@app.post("/summarize")
+async def create_daily_report(request_body: Notes):
+    notes = request_body.notes
+    return summarize_text(notes)

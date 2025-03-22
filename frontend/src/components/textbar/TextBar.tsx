@@ -51,7 +51,7 @@ export const TextBar = ({
       const note: Note = {
         content: text.trim(),
         user_id: userData.id,
-        category: "",
+        category: "Unsorted",
         cluster: -1,
       };
   

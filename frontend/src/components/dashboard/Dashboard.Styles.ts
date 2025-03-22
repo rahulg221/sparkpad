@@ -24,7 +24,7 @@ export const Header = styled.div`
   }
   
   p {
-    font-size: ${({ theme }) => theme.fontSize.base};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;
 

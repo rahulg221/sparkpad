@@ -12,7 +12,7 @@ import {
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../list/NotesList';
-import { getNotes, groupAndLabelNotes } from '../../api/noteMethods';
+import { getNotes, groupAndLabelNotes, summarizeDailyNotes } from '../../api/noteMethods';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -39,17 +39,30 @@ export const Dashboard = () => {
 
     const handleClustering = async () => {
         try {
-          const notes = await getNotes(user?.id || '');
-        
-          setIsLoading(true);
-          await groupAndLabelNotes(notes);
-          setIsLoading(false);
+            const notes = await getNotes(user?.id || '');
+            
+            setIsLoading(true);
+            await groupAndLabelNotes(notes);
+            setIsLoading(false);
         } catch (err) {
-          console.error('Error testing clustering:', err);
+            setIsLoading(false);
+            console.error('Error testing clustering:', err);
         }
     };
 
-    const CatLoader = () => (
+    const handleSummarize = async () => {
+        try {
+            setIsLoading(true);
+            const summary = await summarizeDailyNotes(user?.id || '');
+            console.log(summary);
+            setIsLoading(false);
+        } catch (err) {
+            console.error('Error summarizing daily notes:', err);
+            setIsLoading(false);
+        }
+    };
+
+    const Loader = () => (
         <div style={{
           display: 'flex',
           justifyContent: 'center',
@@ -67,14 +80,15 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <h1>ScatterBrain</h1>
+                <h1>DriftPad</h1>
                 <ButtonContainer>
+                    <SecondaryButton onClick={handleSummarize}>Generate Daily Report</SecondaryButton>
                     <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
                     <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
                 </ButtonContainer>
             </Header>
             <div>
-            {isLoading ? <CatLoader /> :selectedCategory ? (
+            {isLoading ? <Loader /> :selectedCategory ? (
                     <NotesList 
                         category={selectedCategory}
                         onBackClick={handleBackClick}

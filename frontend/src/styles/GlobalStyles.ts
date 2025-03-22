@@ -2,13 +2,17 @@ import { createGlobalStyle } from 'styled-components';
 
 export const GlobalStyles = createGlobalStyle`
   html, body, #root {
+    min-height: 100vh;
+    background-color: ${({ theme }) => theme.colors.bgDark};
     margin: 0;
     padding: 0;
-    min-height: 100vh;
-    width: 100%;
-    background-color: ${({ theme }) => theme.colors.bgDark};  // Cream background
+  }
+
+  body {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-family: ${({ theme }) => theme.fonts.primary};
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+      sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -30,6 +34,6 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   p {
-    font-size: ${({ theme }) => theme.fontSize.base};
+    font-size: ${({ theme }) => theme.fontSize.md};
   }
 `;

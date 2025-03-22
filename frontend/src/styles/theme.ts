@@ -52,3 +52,31 @@ export const theme = {
 };
 
 export type Theme = typeof theme; 
+
+/*
+// Base colors
+    bgDark: '#0a0a0a',      // Almost black background
+    bgElevated: '#141414',  // Slightly lighter black for elevated elements
+    bgLight: '#1a1a1a',     // Dark gray for input backgrounds
+    
+    // Text colors
+    textPrimary: '#ffffff',  // Pure white text
+    textLight: '#b3b3b3',   // Lighter gray text
+    
+    // Accent colors
+    primary: '#9b6dff',     // Softer high-tech purple
+    primaryHover: '#b38dff', // Lighter soft purple for hover
+    primaryLight: 'rgba(155, 109, 255, 0.1)', // Very transparent purple
+    accent: '#7a5cff',      // Deeper soft purple for special highlights
+    accentHover: '#9b6dff', // Base purple for accent hovers
+    
+    // Utility colors
+    border: '#2a2a2a',      // Dark gray borders
+    error: '#ff4d4d',       // Red for errors
+    success: '#00e676',     // Green for success states
+
+    // Additional accent colors
+    warning: '#FFCA28',       // Soft yellow
+    info: '#64B5F6',          // Light blue
+    disabled: '#E0E0E0',   // Light gray
+*/
