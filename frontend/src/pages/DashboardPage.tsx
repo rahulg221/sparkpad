@@ -26,7 +26,7 @@ export const DashboardPage = () => {
     <PageLayout>
       <TextBar 
         onSubmit={handleSubmit}
-        placeholder="Jot down your thoughts, ideas, reminders, and more..."
+        placeholder="Jot down your random thoughts and ideas, create lists, and more..."
       />
       <MainContent>
         <Dashboard />

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getDistinctCategories, getNotesByCluster } from '../../api/noteMethods';
+import { getDistinctCategories, getNotesCountByCategory } from '../../api/noteMethods';
 import { useAuth } from '../../context/AuthContext';
 import { CategoriesContainer, CategoryBox, CategoryName } from './NoteCategories.Styles';
 
@@ -25,6 +25,11 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
 
     fetchCategories();
   }, [user?.id]);
+
+  const getCategoryCount = async (category: string) => {
+    if (!user?.id) return 0;
+    return await getNotesCountByCategory(user.id, category);
+  };
 
   return (
     <><CategoriesContainer>

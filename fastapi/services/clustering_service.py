@@ -84,13 +84,13 @@ def kmeans_clustering(embeddings):
     # Compute silhouette scores and weighted scores
     silhouette_scores = []
     weighted_scores = []
-    K_range = range(2, 8)
+    K_range = range(2, 12)
 
     for k in K_range:
         kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto")
         labels = kmeans.fit_predict(reduced_embeddings)
         score = silhouette_score(reduced_embeddings, labels)
-        weighted = score * math.log(k)
+        weighted = score * math.log(k+1) # Penalize more for larger k
 
         silhouette_scores.append(score)
         weighted_scores.append(weighted)

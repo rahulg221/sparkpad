@@ -39,11 +39,12 @@ export const NoteCard = styled.div`
 export const NoteContent = styled.p`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
+  white-space: pre-wrap;
 `;
 
 export const NoteInfo = styled.p`
   color: ${({ theme }) => theme.colors.textLight};
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.sm};
 `;
 
 export const NoteMeta = styled.div`

@@ -1,29 +1,29 @@
 export const theme = {
   colors: {
-    // Base colors (dark backgrounds)
-    bgDark: '#0d0d0f',         // Near-black background (main app shell)
-    bgElevated: '#16181d',     // Dark gray for cards, modals
-    bgLight: '#1f2127',        // Slightly lighter for inputs, code blocks
+    // Base colors (light cream backgrounds)
+    bgDark: '#fdfaf6',         // Soft warm cream (main background)
+    bgElevated: '#f7f3ee',     // Slightly darker cream for cards/modals
+    bgLight: '#f1ece6',        // Light beige-cream for inputs/code blocks
 
-    // Text colors (light + readable)
-    textPrimary: '#e3f2fd',    // Very light blue-white (for high contrast)
-    textLight: '#b0bec5',      // Muted steel blue-gray (for secondary text)
+    // Text colors (calm but readable)
+    textPrimary: '#2c3e50',     // Dark muted blue-gray
+    textLight: '#7f8c8d',       // Subtle warm gray for secondary text
 
-    // Accent colors (calm light blues)
-    primary: '#90caf9',         // Light sky blue (main interactive elements)
-    primaryHover: '#b3e5fc',    // Brighter blue for hover/active states
-    primaryLight: 'rgba(144, 202, 249, 0.15)',  // Transparent background fill
+    // Accent colors (slightly more saturated blues)
+    primary: '#5bb0ff',         // Brighter baby blue for interactive elements
+    primaryHover: '#82c8ff',    // Light sky blue for hover/active
+    primaryLight: 'rgba(91, 176, 255, 0.15)',  // Transparent blue highlight
 
-    accent: '#64b5f6',          // Mid blue for icons, outlines, tags
-    accentHover: '#81d4fa',     // Hovered accent blue
+    accent: '#489fdc',          // Soft aqua-blue for icons/tags/outlines
+    accentHover: '#7bc3f2',     // Pastel but clear hover tone
 
     // Utility colors
-    border: '#2e3440',          // Deep gray border lines
-    error: '#ef9a9a',           // Muted rose red for errors
-    success: '#a5d6a7',         // Pastel green for success states
-    warning: '#ffecb3',         // Pale yellow
-    info: '#81d4fa',            // Reused light blue for info boxes
-    disabled: '#4e5a65'         // Muted gray-blue for disabled elements
+    border: '#e0dcd5',          // Light warm gray border
+    error: '#f7b0a0',           // Soft coral-pink for errors
+    success: '#bde4c6',         // Gentle mint green for success
+    warning: '#ffe5b4',         // Warm apricot-cream warning tone
+    info: '#d0ebff',            // Clear sky-blue for info boxes
+    disabled: '#ccc7be'         // Muted beige-gray for disabled elements
   },
   spacing: {
     sm: '8px',
@@ -79,3 +79,30 @@ export type Theme = typeof theme;
     info: '#64B5F6',          // Light blue
     disabled: '#E0E0E0',   // Light gray
 */
+
+/*
+// Base colors (dark backgrounds)
+    bgDark: '#0d0d0f',         // Near-black background (main app shell)
+    bgElevated: '#16181d',     // Dark gray for cards, modals
+    bgLight: '#1f2127',        // Slightly lighter for inputs, code blocks
+
+    // Text colors (light + readable)
+    textPrimary: '#e3f2fd',    // Very light blue-white (for high contrast)
+    textLight: '#b0bec5',      // Muted steel blue-gray (for secondary text)
+
+    // Accent colors (calm light blues)
+    primary: '#90caf9',         // Light sky blue (main interactive elements)
+    primaryHover: '#b3e5fc',    // Brighter blue for hover/active states
+    primaryLight: 'rgba(144, 202, 249, 0.15)',  // Transparent background fill
+
+    accent: '#64b5f6',          // Mid blue for icons, outlines, tags
+    accentHover: '#81d4fa',     // Hovered accent blue
+
+    // Utility colors
+    border: '#2e3440',          // Deep gray border lines
+    error: '#ef9a9a',           // Muted rose red for errors
+    success: '#a5d6a7',         // Pastel green for success states
+    warning: '#ffecb3',         // Pale yellow
+    info: '#81d4fa',            // Reused light blue for info boxes
+    disabled: '#4e5a65'         // Muted gray-blue for disabled elements
+    */

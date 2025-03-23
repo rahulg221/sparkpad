@@ -6,8 +6,8 @@ import { jsPDF } from 'jspdf';
 const session = await supabase.auth.getSession();
 const token = session.data.session?.access_token;
 
-export const summarizeDailyNotes = async (userId: string): Promise<string> => {
-  const notes = await getTodaysNotes(userId);
+export const summarizeWeeklyNotes = async (userId: string): Promise<string> => {
+  const notes = await getWeeklyNotes(userId);
 
   try {
     const response = await fetch('http://127.0.0.1:8000/summarize', {
@@ -37,7 +37,7 @@ export const summarizeDailyNotes = async (userId: string): Promise<string> => {
     });
     
     const today = new Date();
-    doc.save(`${today.toISOString().split('T')[0]}_daily_report.pdf`);
+    doc.save(`${today.toISOString().split('T')[0]}_weekly_report.pdf`);
       
     return summary;
   } catch (error) {
@@ -45,22 +45,23 @@ export const summarizeDailyNotes = async (userId: string): Promise<string> => {
   }
 }
 
-export const getTodaysNotes = async (userId: string): Promise<Note[]> => {
+export const getWeeklyNotes = async (userId: string): Promise<Note[]> => {
   try {
     // Get current date in EST
     const today = new Date();
     const est = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
     est.setHours(0, 0, 0, 0); // Start of day EST
-    
-    const tomorrow = new Date(est);
-    tomorrow.setDate(tomorrow.getDate() + 1); // Start of next day EST
 
+    // Calculate the date 7 days ago from today in EST
+    const sevenDaysAgo = new Date(est);
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7); // 7 days before today
+    
     const { data } = await supabase
       .from('notes')
       .select('*')
       .eq('user_id', userId)
-      .gte('created_at', est.toISOString())
-      .lt('created_at', tomorrow.toISOString())
+      .gte('created_at', sevenDaysAgo.toISOString())
+      .lt('created_at', est.toISOString())
       .order('created_at', { ascending: false });
 
     return data || [];
@@ -283,3 +284,18 @@ export const getNotesCount = async (userId: string): Promise<number> => {
     throw error;
   }
 };
+
+export const getNotesCountByCategory = async (userId: string, category: string): Promise<number> => {
+  try {
+    const { count } = await supabase
+      .from('notes')
+      .select('*', { count: 'exact', head: true })
+      .eq('user_id', userId)
+      .eq('category', category);
+
+    return count || 0;
+  } catch (error) {
+    throw error;
+  }
+};
+

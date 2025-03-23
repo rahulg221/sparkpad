@@ -13,7 +13,7 @@ import {
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../list/NotesList';
-import { getNotes, groupAndLabelNotes, summarizeDailyNotes, searchNotes, deleteNote } from '../../api/noteMethods';
+import { getNotes, groupAndLabelNotes, summarizeWeeklyNotes, searchNotes, deleteNote } from '../../api/noteMethods';
 import { SearchBar } from '../searchbar/SearchBar';
 import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon } from '../list/NotesList.Styles';
 import { Note } from '../../models/noteModel';
@@ -61,7 +61,7 @@ export const Dashboard = () => {
     const handleSummarize = async () => {
         try {
             setIsLoading(true);
-            const summary = await summarizeDailyNotes(user?.id || '');
+            const summary = await summarizeWeeklyNotes(user?.id || '');
             console.log(summary);
             setIsLoading(false);
         } catch (err) {
@@ -123,7 +123,7 @@ export const Dashboard = () => {
                     <SearchBar onSearch={handleSearch} />
                 </SearchSection>
                 <ButtonContainer>
-                    <SecondaryButton onClick={handleSummarize}>Download Daily Report</SecondaryButton>
+                    <SecondaryButton onClick={handleSummarize}>Download Weekly Report</SecondaryButton>
                     <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
                     <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
                 </ButtonContainer>

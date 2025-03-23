@@ -70,3 +70,31 @@ export const SubmitButton = styled.button`
     cursor: not-allowed;
   }
 `;
+
+export const NotesList = styled.div`
+  margin-top: ${({ theme }) => theme.spacing.lg};
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+export const NoteItem = styled.div`
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
+export const NoteContent = styled.p`
+  margin: 0;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textPrimary};
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+`;
+
+export const NoteDate = styled.span`
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  color: ${({ theme }) => theme.colors.textLight};
+`;
