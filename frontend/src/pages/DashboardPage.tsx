@@ -24,13 +24,13 @@ export const DashboardPage = () => {
 
   return (
     <PageLayout>
-      <MainContent>
-        <Dashboard />
-      </MainContent>
       <TextBar 
         onSubmit={handleSubmit}
         placeholder="Jot down your thoughts, ideas, reminders, and more..."
       />
+      <MainContent>
+        <Dashboard />
+      </MainContent>
     </PageLayout>
   );
 };

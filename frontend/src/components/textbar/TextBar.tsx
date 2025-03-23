@@ -75,6 +75,7 @@ export const TextBar = ({
   return (
     <>
       <TextBarContainer>
+        <h1>AI-Powered Notes</h1>
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
             as="textarea"
