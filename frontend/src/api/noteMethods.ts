@@ -1,10 +1,7 @@
-import { supabase } from './supabaseClient';
+import { supabase, token } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import { createCalendarEvent } from './calendarMethods';
 import { jsPDF } from 'jspdf';
-
-const session = await supabase.auth.getSession();
-const token = session.data.session?.access_token;
 
 export const summarizeWeeklyNotes = async (userId: string): Promise<string> => {
   const notes = await getWeeklyNotes(userId);

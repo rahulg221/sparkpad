@@ -21,8 +21,8 @@ def create_google_event(text):
         dict: A dictionary containing either an error message if the date and time could not be extracted,
               or a success message and a link to the created event.
     """
-
     start_time = extract_datetime(text)
+    print(start_time)
 
     if not start_time:
         return {"error": "Could not extract date and time"}
@@ -50,6 +50,7 @@ def create_google_event(text):
         "start": {"dateTime": start_datetime.isoformat(), "timeZone": "America/New_York"},
         "end": {"dateTime": end_datetime.isoformat(), "timeZone": "America/New_York"},
         "reminders": {
+        
         "useDefault": False,
         "overrides": [
             {"method": "popup", "minutes": 30}
@@ -68,4 +69,5 @@ def get_calendar_service():
     creds = service_account.Credentials.from_service_account_file(
         SERVICE_ACCOUNT_FILE, scopes=SCOPES
     )
+    
     return build("calendar", "v3", credentials=creds)

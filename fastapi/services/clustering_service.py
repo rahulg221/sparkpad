@@ -27,10 +27,8 @@ def group_and_label_notes(notes):
     # Encode the notes
     embeddings = model.encode(notes)
 
+    # Cluster the notes using K-Means           
     labels = kmeans_clustering(embeddings)
-
-    if len(labels) == 0:
-        return {"error": "No clusters found"}
 
     # Create a dictionary to store a list of all notes in each cluster
     clustered_notes = defaultdict(list)
@@ -72,11 +70,6 @@ def kmeans_clustering(embeddings):
     
     # Scale embeddings (improves clustering performance)
     scaled_embeddings = StandardScaler().fit_transform(embeddings)
-
-    # Skip UMAP if dataset is too small (e.g., less than 5 data points)
-    if len(embeddings) < 5:
-        print("Dataset is too small, skipping UMAP dimensionality reduction.")
-        return []
     
     umap_reducer = umap.UMAP(n_components=5, metric="cosine")
     reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
@@ -84,7 +77,7 @@ def kmeans_clustering(embeddings):
     # Compute silhouette scores and weighted scores
     silhouette_scores = []
     weighted_scores = []
-    K_range = range(2, 12)
+    K_range = range(2, 16)
 
     for k in K_range:
         kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto")

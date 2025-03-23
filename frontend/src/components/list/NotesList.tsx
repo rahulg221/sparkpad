@@ -2,8 +2,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { deleteNote, getNotesByCategory } from '../../api/noteMethods';
-import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
+import { Spacer, NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface NotesListProps {
   category: string;
@@ -46,29 +48,31 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
   };
 
   return (
-    <NotesContainer>
+    <>
       <SecondaryButton onClick={onBackClick}>Return to Dashboard</SecondaryButton>
       <CategoryTitle>{category}</CategoryTitle>
+      <NotesContainer>
       {notes.map((note) => (
         <NoteCard key={note.id}>
           <NoteMeta>
             <NoteContent>
-              {note.content}
+             <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
             </NoteContent>
-            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+            <NoteInfo>
+                {note.category}
+                <br />
+                {new Date(note.created_at!).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit'
+                })}
+                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+            </NoteInfo>
           </NoteMeta>
-          <NoteInfo>
-              {new Date(note.created_at!).toLocaleDateString('en-US', {
-                month: 'short',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit'
-              })}
-              <br />
-              {note.category}
-          </NoteInfo>
         </NoteCard>
       ))}
     </NotesContainer>
+    </>
   );
 }; 

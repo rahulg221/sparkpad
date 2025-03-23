@@ -40,6 +40,6 @@ async def cluster_notes(request_body: Notes, user = Depends(get_current_user)):
     return group_and_label_notes(notes)
 
 @app.post("/summarize")
-async def create_daily_report(request_body: Notes, user = Depends(get_current_user)):
+async def create_weekly_report(request_body: Notes, user = Depends(get_current_user)):
     notes = request_body.notes
     return summarize_text(notes)

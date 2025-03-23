@@ -1,9 +1,6 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import Lottie from 'lottie-react';
-import animation from '../../assets/animation.json';
-
 import {
     ButtonContainer, 
     DashboardWrapper,
@@ -15,8 +12,14 @@ import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../list/NotesList';
 import { getNotes, groupAndLabelNotes, summarizeWeeklyNotes, searchNotes, deleteNote } from '../../api/noteMethods';
 import { SearchBar } from '../searchbar/SearchBar';
-import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon } from '../list/NotesList.Styles';
+import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../list/NotesList.Styles';
 import { Note } from '../../models/noteModel';
+import ChromeDinoGame from 'react-chrome-dino';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import { Notification } from '../notif/Notification';
+import { Lottie } from 'react-lottie-player';
+import animation from '../../assets/animation.json';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -25,6 +28,8 @@ export const Dashboard = () => {
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [isSearching, setIsSearching] = useState(false);
+    const [showNotification, setShowNotification] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState('');
     const [notes, setNotes] = useState<Note[]>([]);
     const [error, setError] = useState<string | null>(null);
 
@@ -48,7 +53,11 @@ export const Dashboard = () => {
     const handleClustering = async () => {
         try {
             const notes = await getNotes(user?.id || '');
-            
+            if (notes.length < 16) {
+                setNotificationMessage('You need at least 15 notes to auto-organize');
+                setShowNotification(true);
+                return;
+            }
             setIsLoading(true);
             await groupAndLabelNotes(notes);
             setIsLoading(false);
@@ -107,12 +116,7 @@ export const Dashboard = () => {
           justifyContent: 'center',
           alignItems: 'center',
         }}>
-          <Lottie
-            animationData={animation}
-            loop
-            autoplay
-            style={{ width: 200, height: 200 }}
-          />
+            <h1>Loading...</h1>
         </div>
       );
 
@@ -129,29 +133,31 @@ export const Dashboard = () => {
                 </ButtonContainer>
             </Header>
             {searchResults.length > 0 ? (
+                <>
+                <CategoryTitle>Search Results</CategoryTitle>
                 <NotesContainer>
-                    <h2>Search Results</h2>
-                    {searchResults.map((note) => (
-                        <NoteCard key={note.id}>
-                        <NoteMeta>
-                          <NoteContent>
-                            {note.content}
-                          </NoteContent>
+                {searchResults.map((note) => (
+                  <NoteCard key={note.id}>
+                    <NoteMeta>
+                      <NoteContent>
+                       <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
+                      </NoteContent>
+                      <NoteInfo>
+                          {note.category}
+                          <br />
+                          {new Date(note.created_at!).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
                           <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                        </NoteMeta>
-                        <NoteInfo>
-                            {new Date(note.created_at!).toLocaleDateString('en-US', {
-                              month: 'short',
-                              day: 'numeric',
-                              hour: '2-digit',
-                              minute: '2-digit'
-                            })}
-                            <br />
-                            {note.category}
-                        </NoteInfo>
-                      </NoteCard>
-                    ))}
-                </NotesContainer>
+                      </NoteInfo>
+                    </NoteMeta>
+                  </NoteCard>
+                ))}
+              </NotesContainer>
+              </>
             ) : (
                 <>
                     {isLoading ? <Loader /> : (
@@ -167,6 +173,12 @@ export const Dashboard = () => {
                         </>
                     )}
                 </>
+            )}
+            {showNotification && (
+                <Notification 
+                    message={notificationMessage} 
+                    onClose={() => setShowNotification(false)} 
+                />
             )}
         </DashboardWrapper>
     );

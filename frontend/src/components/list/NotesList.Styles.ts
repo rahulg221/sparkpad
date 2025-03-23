@@ -14,21 +14,24 @@ export const TrashIcon = styled(MdDeleteOutline)`
 `;
 
 export const NotesContainer = styled.div`
-  padding: ${({ theme }) => theme.spacing.lg};
   padding-bottom: calc(${({ theme }) => theme.spacing.lg} + 160px);
   max-width: 1200px;
   margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: ${({ theme }) => theme.spacing.md};
+`;
+
+export const Spacer = styled.div`
+  flex: 1;
 `;
 
 export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  padding-top: ${({ theme }) => theme.spacing.sm};
-  padding-bottom: ${({ theme }) => theme.spacing.sm};
   padding-left: ${({ theme }) => theme.spacing.lg};
   padding-right: ${({ theme }) => theme.spacing.lg};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
   transition: all 0.2s ease;
 
   &:hover {
@@ -43,16 +46,19 @@ export const NoteContent = styled.p`
 `;
 
 export const NoteInfo = styled.p`
+  margin-top: auto;
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  display: flex;
+  justify-content: space-between;
 `;
 
 export const NoteMeta = styled.div`
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.xs};
+  height: 100%;
 `;
 
 export const BackButton = styled.button`

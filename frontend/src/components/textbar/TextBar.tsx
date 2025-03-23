@@ -2,15 +2,13 @@ import { useState } from 'react';
 import { 
   TextBarContainer, 
   TextBarForm, 
-  TextInput, 
-  SubmitButton,
+  TextInput,
 } from './TextBar.styles';
 import { addNote } from '../../api/noteMethods';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { supabase } from '../../api/supabaseClient';
 import { Notification } from '../notif/Notification';
-import { IoArrowUp } from 'react-icons/io5';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 
 interface TextBarProps {
