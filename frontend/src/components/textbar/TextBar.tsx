@@ -3,13 +3,15 @@ import {
   TextBarContainer, 
   TextBarForm, 
   TextInput, 
+  SubmitButton,
 } from './TextBar.styles';
 import { addNote } from '../../api/noteMethods';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { supabase } from '../../api/supabaseClient';
-import { PrimaryButton } from '../../styles/shared/Button.styles';
 import { Notification } from '../notif/Notification';
+import { IoArrowUp } from 'react-icons/io5';
+import { PrimaryButton } from '../../styles/shared/Button.styles';
 
 interface TextBarProps {
   onSubmit: (text: string) => void;
@@ -75,12 +77,14 @@ export const TextBar = ({
       <TextBarContainer>
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
+            as="textarea"
             value={text}
             onChange={(e) => setText(e.target.value)}
             placeholder={placeholder}
             disabled={isLoading}
+            rows={1}
           />
-          <PrimaryButton type="submit" disabled={isLoading}>Create Note</PrimaryButton>
+          <PrimaryButton width="100%" type="submit" disabled={isLoading}>Create Note</PrimaryButton>
         </TextBarForm>
       </TextBarContainer>
       {showNotification && (

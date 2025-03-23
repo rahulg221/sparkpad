@@ -1,31 +1,37 @@
 import styled from 'styled-components';
 
 export const TextBarContainer = styled.div`
-  position: fixed;
-  bottom: 0;
-  left: 15%;
-  right: 15%;
+  width: 20%;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-right: 1px solid ${({ theme }) => theme.colors.border};
+  flex-shrink: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
 `;
 
 export const TextBarForm = styled.form`
   position: relative;
-  max-width: 1200px;
-  margin: 0 auto;
+  height: 50%;
+  display: flex;
+  flex-direction: column;
 `;
 
-export const TextInput = styled.input`
+export const TextInput = styled.textarea`
+  flex: 1;
   width: 100%;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.sm}; // Sharper edges like auth inputs
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.sm};
-  height: 56px; // Increased height
+  resize: none;
+  line-height: 1.5;
+  font-family: inherit;
   
   &:focus {
     outline: none;
@@ -41,11 +47,10 @@ export const TextInput = styled.input`
 export const SubmitButton = styled.button`
   position: absolute;
   right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 54px;
-  height: 54px;
-  border-radius: ${({ theme }) => theme.borderRadius.sm}; // Matching the input's sharp edges
+  bottom: 8px;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.bgLight};
   border: none;
@@ -54,20 +59,14 @@ export const SubmitButton = styled.button`
   justify-content: center;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding: 0;
   
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.primaryHover};
-    transform: translateY(-50%) scale(1.05);
+    transform: scale(1.05);
   }
   
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
-  }
-
-  svg {
-    width: 18px;
-    height: 18px;
   }
 `;

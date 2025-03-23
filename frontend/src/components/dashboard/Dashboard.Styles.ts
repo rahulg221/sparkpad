@@ -1,9 +1,11 @@
 import styled from 'styled-components';
 
 export const DashboardWrapper = styled.div`
+  flex: 1;
   min-height: 100vh;
-  background-color: ${({ theme }) => theme.colors.bgDark};
   padding: ${({ theme }) => theme.spacing.lg};
+  width: 100%;
+  box-sizing: border-box;
 `;
 
 export const SearchSection = styled.div`
@@ -46,23 +48,4 @@ export const NoteInput = styled.textarea`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
 `;
 
-export const SubmitButton = styled.button`
-  padding: ${({ theme }) => theme.spacing.md} ${({ theme }) => theme.spacing.xl};
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.bgDark};
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.primaryHover};
-  }
-
-  &:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-`; 
 

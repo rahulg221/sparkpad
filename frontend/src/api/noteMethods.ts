@@ -150,7 +150,7 @@ export const getNotesByCategory = async (userId: string, category: string): Prom
       .select('*')
       .eq('user_id', userId)
       .eq('category', category)
-      .order('created_at', { ascending: true });
+      .order('created_at', { ascending: false });
 
     if (error) {
       throw error;

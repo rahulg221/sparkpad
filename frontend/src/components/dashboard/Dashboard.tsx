@@ -17,6 +17,7 @@ import { getNotes, groupAndLabelNotes, summarizeDailyNotes, searchNotes, deleteN
 import { SearchBar } from '../searchbar/SearchBar';
 import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon } from '../list/NotesList.Styles';
 import { Note } from '../../models/noteModel';
+import { TextBar } from '../components/textbar/TextBar.styles.ts';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -124,7 +125,7 @@ export const Dashboard = () => {
                     <SearchBar onSearch={handleSearch} />
                 </SearchSection>
                 <ButtonContainer>
-                    <SecondaryButton onClick={handleSummarize}>Generate Daily Report</SecondaryButton>
+                    <SecondaryButton onClick={handleSummarize}>Download Daily Report</SecondaryButton>
                     <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
                     <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
                 </ButtonContainer>
