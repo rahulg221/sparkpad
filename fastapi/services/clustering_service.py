@@ -4,7 +4,7 @@ from imports import *
 
 load_dotenv()
 
-MAX_CHAR_LIMIT = 2500
+MAX_CHAR_LIMIT = 5000
 
 # Initialize the OpenAI API client
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -28,7 +28,7 @@ def group_and_label_notes(notes):
     embeddings = model.encode(notes)
 
     # Cluster the notes using K-Means           
-    labels = kmeans_clustering(embeddings)
+    labels = hdbscan_clustering(embeddings)
 
     # Create a dictionary to store a list of all notes in each cluster
     clustered_notes = defaultdict(list)
@@ -39,7 +39,7 @@ def group_and_label_notes(notes):
     concatenated_clusters = {cluster: " ".join(notes)[:MAX_CHAR_LIMIT] for cluster, notes in clustered_notes.items()}
 
     # Generate a category name for each cluster
-    generated_categories = {cluster: "Unlabeled" if cluster == -1 else generate_category(text) for cluster, text in concatenated_clusters.items()}
+    generated_categories = {cluster: "Unsorted" if cluster == -1 else generate_category(text) for cluster, text in concatenated_clusters.items()}
 
     # Convert the keys to integers
     generated_categories = {int(k): v for k, v in generated_categories.items()}
@@ -71,19 +71,21 @@ def kmeans_clustering(embeddings):
     # Scale embeddings (improves clustering performance)
     scaled_embeddings = StandardScaler().fit_transform(embeddings)
     
+    # Reduce dimensionality using UMAP
     umap_reducer = umap.UMAP(n_components=5, metric="cosine")
     reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
     # Compute silhouette scores and weighted scores
     silhouette_scores = []
     weighted_scores = []
-    K_range = range(2, 16)
+    K_range = range(2, 12)
 
     for k in K_range:
         kmeans = KMeans(n_clusters=k, random_state=42, n_init="auto")
         labels = kmeans.fit_predict(reduced_embeddings)
         score = silhouette_score(reduced_embeddings, labels)
-        weighted = score * math.log(k+1) # Penalize more for larger k
+
+        weighted = score * math.log(k) # Penalize more for smaller k
 
         silhouette_scores.append(score)
         weighted_scores.append(weighted)
@@ -91,7 +93,7 @@ def kmeans_clustering(embeddings):
         print(f"k={k}, Silhouette={score:.4f}, Weighted={weighted:.4f}")
 
     # Pick the best k based on the weighted score
-    optimal_k = K_range[np.argmax(weighted_scores)]
+    optimal_k = K_range[np.argmax(silhouette_scores)]
 
     # Handle low silhouette scores (poor clustering)
     if max(silhouette_scores) < 0.2:
@@ -106,6 +108,73 @@ def kmeans_clustering(embeddings):
     print(f"\nSelected k={optimal_k} with Silhouette Score: {final_silhouette:.4f}")
 
     return labels
+
+def hdbscan_clustering(embeddings):
+    """
+    Perform HDBSCAN clustering on the given embeddings.
+    This function scales the embeddings, reduces their dimensions using UMAP,
+    and then applies HDBSCAN to detect clusters and outliers.
+
+    Parameters:
+        embeddings (array-like): The input data to be clustered.
+
+    Returns:
+        labels (np.ndarray): Cluster labels for each point (-1 = outlier).
+    """
+
+    # Scale the embeddings
+    scaled_embeddings = StandardScaler().fit_transform(embeddings)
+
+    # Reduce dimensionality with UMAP
+    umap_reducer = umap.UMAP(n_components=5, metric="cosine", random_state=42)
+    reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
+
+    # Dynamically select min_cluster_size and min_samples
+    min_cluster_size, min_samples = adaptive_hdbscan_params(embeddings.shape[0])
+
+    # Run HDBSCAN
+    clusterer = hdbscan.HDBSCAN(
+        min_cluster_size=min_cluster_size,
+        min_samples=min_samples or min_cluster_size,
+        metric='euclidean',
+        prediction_data=True
+    )
+    labels = clusterer.fit_predict(reduced_embeddings)
+
+    # Evaluate clustering (excluding outliers)
+    clustered_indices = labels != -1
+    clustered_points = reduced_embeddings[clustered_indices]
+    clustered_labels = labels[clustered_indices]
+
+    # Only calculate silhouette if we have enough data
+    if len(clustered_points) > 1:
+        silhouette = silhouette_score(clustered_points, clustered_labels)
+        print(f"HDBSCAN Silhouette Score (excluding outliers): {silhouette:.4f}")
+    else:
+        print("Warning: Too few clustered points to compute silhouette score.")
+
+    # Identify outliers
+    outlier_indices = np.where(labels == -1)[0]
+
+    print(f"Clusters found: {len(set(labels)) - (1 if -1 in labels else 0)}")
+    print(f"Outliers detected: {len(outlier_indices)}")
+
+    return labels
+
+def adaptive_hdbscan_params(n):
+    """
+    Dynamically select min_cluster_size and min_samples based on number of embeddings.
+    """
+    if n <= 20:
+        return 2, 1  # allow even tiny clusters
+    elif n <= 50:
+        return 3, 2  # still flexible
+    elif n <= 100:
+        return 5, 3  # small-medium clusters
+    elif n <= 300:
+        return 8, 5  # balanced but still somewhat specific
+    else:
+        return 10, 7  # for large datasets, allow specific but stable clusters
 
 def generate_category(notes):
     """
@@ -132,37 +201,3 @@ def generate_category(notes):
     )
 
     return res.choices[0].message.content.strip()
-
-def graph_clusters(embeddings, labels):
-    """
-    Visualizes clusters using UMAP for dimensionality reduction and a scatter plot.
-
-    Parameters:
-        embeddings (array-like): High-dimensional data points to be clustered.
-        labels (array-like): Cluster labels for each data point.
-    Returns:
-        None
-    """
-
-    # Reduce dimensions using UMAP
-    reducer = umap.UMAP(n_components=2, metric="cosine")
-    reduced_embeddings = reducer.fit_transform(embeddings)
-
-    # Create figure
-    plt.figure(figsize=(10, 7))
-
-    # Plot clusters
-    scatter = plt.scatter(
-        reduced_embeddings[:, 0], reduced_embeddings[:, 1], 
-        c=labels, cmap='viridis', alpha=0.7, edgecolors='k'
-    )
-
-    # Add color bar and labels
-    plt.colorbar(scatter, label="Cluster Label")
-    plt.title("K-Means Clustered Visualization")
-    plt.xlabel("UMAP Component 1")
-    plt.ylabel("UMAP Component 2")
-    plt.grid(True)
-
-    # Show the plot
-    plt.show()

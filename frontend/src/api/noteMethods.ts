@@ -58,7 +58,7 @@ export const getWeeklyNotes = async (userId: string): Promise<Note[]> => {
       .select('*')
       .eq('user_id', userId)
       .gte('created_at', sevenDaysAgo.toISOString())
-      .lt('created_at', est.toISOString())
+      .lt('created_at', today.toISOString())
       .order('created_at', { ascending: false });
 
     return data || [];
