@@ -31,15 +31,14 @@ export const SideBarContainer = styled.div`
 `;
 
 export const SummaryContainer = styled.div`
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border};
   font-size: ${({ theme }) => theme.fontSize.sm};
-  font-family: inherit;
   color: ${({ theme }) => theme.colors.textPrimary};
   overflow-y: auto;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -80,7 +79,6 @@ export const TextInput = styled.textarea`
   font-size: ${({ theme }) => theme.fontSize.sm};
   resize: none;
   line-height: 1.5;
-  font-family: inherit;
   
   &:focus {
     outline: none;

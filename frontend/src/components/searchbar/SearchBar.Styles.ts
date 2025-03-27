@@ -14,6 +14,7 @@ export const SearchInput = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: inherit;
 
   &:focus {
     outline: none;

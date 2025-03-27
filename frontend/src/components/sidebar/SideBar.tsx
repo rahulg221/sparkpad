@@ -74,7 +74,7 @@ export const SideBar = () => {
   return (
     <>
       <SideBarContainer>
-        <h3>AI-Powered Notes</h3>
+        <h2>Snapshot</h2>
         { summary ? 
         <SummaryContainer>
           <BulletList>
@@ -91,6 +91,7 @@ export const SideBar = () => {
         : 
         <p>Use Snapshot to view a condensed summary of your notes.</p>
         }
+        <h2>New Note</h2>
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
             as="textarea"
