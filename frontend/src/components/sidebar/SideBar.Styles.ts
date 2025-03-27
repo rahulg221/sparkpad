@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const TextBarContainer = styled.div`
+export const SideBarContainer = styled.div`
   width: 25%;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgElevated};

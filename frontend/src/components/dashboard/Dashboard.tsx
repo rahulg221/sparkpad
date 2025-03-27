@@ -9,10 +9,10 @@ import {
 } from './Dashboard.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
-import { NotesList } from '../list/NotesList';
+import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
 import { SearchBar } from '../searchbar/SearchBar';
-import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../list/NotesList.Styles';
+import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';

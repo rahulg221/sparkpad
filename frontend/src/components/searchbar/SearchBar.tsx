@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { SearchContainer, SearchInput } from './SearchBar.Styles';
+
 interface SearchBarProps {
   onSearch: (query: string) => void;
 }

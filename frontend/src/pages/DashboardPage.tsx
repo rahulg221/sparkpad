@@ -1,4 +1,4 @@
-import { TextBar } from '../components/textbar/TextBar';
+import { SideBar } from '../components/sidebar/SideBar';
 import { Dashboard } from '../components/dashboard/Dashboard';
 import styled from 'styled-components';
 
@@ -17,17 +17,9 @@ const MainContent = styled.div`
 `;
 
 export const DashboardPage = () => {
-  const handleSubmit = (text: string) => {
-    // Handle the text submission
-    console.log('Submitted:', text);
-  };
-
   return (
     <PageLayout>
-      <TextBar 
-        onSubmit={handleSubmit}
-        placeholder="Jot down your random thoughts and ideas, create lists, and more..."
-      />
+      <SideBar/>
       <MainContent>
         <Dashboard />
       </MainContent>

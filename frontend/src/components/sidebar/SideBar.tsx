@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { 
-  TextBarContainer, 
+  SideBarContainer,
   TextBarForm, 
   TextInput,
-} from './TextBar.styles';
+} from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
@@ -11,16 +11,15 @@ import { supabase } from '../../api/supabaseClient';
 import { Notification } from '../notif/Notification';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 
-interface TextBarProps {
-  onSubmit: (text: string) => void;
+interface SideBarProps {
   placeholder?: string;
   isLoading?: boolean;
 }
 
-export const TextBar = ({ 
-  placeholder = 'Type a message...', 
+export const SideBar = ({ 
+  placeholder = 'Brainstorm, create lists, reflect, and turn your chaos into clarity.', 
   isLoading = false 
-}: TextBarProps) => {
+}: SideBarProps) => {
   const [text, setText] = useState('');
   const [showNotification, setShowNotification] = useState(false);
   const [notificationMessage, setNotificationMessage] = useState('');
@@ -72,7 +71,7 @@ export const TextBar = ({
   
   return (
     <>
-      <TextBarContainer>
+      <SideBarContainer>
         <h1>AI Thought Organizer</h1>
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
@@ -85,7 +84,7 @@ export const TextBar = ({
           />
           <PrimaryButton width="100%" type="submit" disabled={isLoading}>Create Note</PrimaryButton>
         </TextBarForm>
-      </TextBarContainer>
+      </SideBarContainer>
       {showNotification && (
         <Notification 
           message={notificationMessage} 
