@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { signIn as supabaseSignIn, signUp as supabaseSignUp, signOut as supabaseSignOut, getCurrentUser } from '../api/authMethods';
+import { AuthService } from '../api/authService';
 import { User } from '../models/userModel';
 
 interface AuthContextType {
@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const user = await getCurrentUser();
+                const user = await AuthService.getCurrentUser();
                 setUser(user);
             } catch (err) {
                 console.error('Error fetching user:', err);
@@ -31,19 +31,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        await supabaseSignIn(email, password);
-        const user = await getCurrentUser();
+        await AuthService.signIn(email, password);
+        const user = await AuthService.getCurrentUser();
         setUser(user);
     };
 
     const signUp = async (email: string, password: string) => {
-        await supabaseSignUp(email, password);
-        const user = await getCurrentUser();
+        await AuthService.signUp(email, password);
+        const user = await AuthService.getCurrentUser();
         setUser(user);
     };
 
     const signOut = async () => {
-        await supabaseSignOut();
+        await AuthService.signOut();
         setUser(null);
     };
 

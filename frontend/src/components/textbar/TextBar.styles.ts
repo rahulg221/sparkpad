@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const TextBarContainer = styled.div`
-  width: 20%;
+  width: 25%;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border-right: 1px solid ${({ theme }) => theme.colors.border};

@@ -1,73 +1,60 @@
-from imports import *
+
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
+from google.oauth2 import service_account
 from services.utils import extract_datetime
+from googleapiclient.discovery import build
+
+import pytz
+import json
+import os
 
 load_dotenv()
 
-# Load the calendar ID from the environment variables
-calender_id = os.getenv("CALENDAR_ID")
-
-# Load the service account file
-SERVICE_ACCOUNT_FILE = "assets/calendar_data.json" 
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
-
-def create_google_event(text):
+class CalendarService:
     """
-    Creates a Google Calendar event based on the provided text.
-    This function extracts the date and time from the given text, creates a Google Calendar event,
-    and returns a dictionary containing a success message and a link to the created event.
-    Args:
-        text (str): The text containing the event details, including date and time.
-    Returns:
-        dict: A dictionary containing either an error message if the date and time could not be extracted,
-              or a success message and a link to the created event.
+    Service for managing Google Calendar events.
     """
-    start_time = extract_datetime(text)
-    print(start_time)
+    def __init__(self):
+        self.service_account_file = "assets/calendar_data.json"
+        self.scopes = ["https://www.googleapis.com/auth/calendar"]
+        self.calendar_id = os.getenv("CALENDAR_ID")
+        self.service = self.get_calendar_service()
 
-    if not start_time:
-        return {"error": "Could not extract date and time"}
+    def get_calendar_service(self):
+        creds = service_account.Credentials.from_service_account_file(
+            self.service_account_file, scopes=self.scopes
+        )
+        return build("calendar", "v3", credentials=creds)
 
-    # Define Eastern timezone 
-    eastern = pytz.timezone('America/New_York')  
+    def create_google_event(self, text):
+        """
+        Creates a Google Calendar event based on the provided text.
+        """
+        start_time = extract_datetime(text)
 
-    # Modify the start time parsing to use Eastern time
-    start_datetime = datetime.fromisoformat(start_time)
+        if not start_time:
+            return {"error": "Could not extract date and time"}
 
-    # If start_time doesn't have timezone info, localize it to Eastern
-    if start_datetime.tzinfo is None:
-        start_datetime = eastern.localize(start_datetime)
-    # If it has timezone info but not Eastern, convert it to Eastern
-    else:
-        start_datetime = start_datetime.astimezone(eastern)
+        eastern = pytz.timezone('America/New_York')
+        start_datetime = datetime.fromisoformat(start_time)
 
-    # Calculate end time 
-    end_datetime = start_datetime + timedelta(hours=1)
+        if start_datetime.tzinfo is None:
+            start_datetime = eastern.localize(start_datetime)
+        else:
+            start_datetime = start_datetime.astimezone(eastern)
 
-    service = get_calendar_service()
+        end_datetime = start_datetime + timedelta(hours=1)
 
-    event = {
-        "summary": text,
-        "start": {"dateTime": start_datetime.isoformat(), "timeZone": "America/New_York"},
-        "end": {"dateTime": end_datetime.isoformat(), "timeZone": "America/New_York"},
-        "reminders": {
-        
-        "useDefault": False,
-        "overrides": [
-            {"method": "popup", "minutes": 30}
-            ]
-        },
-    }
+        event = {
+            "summary": text,
+            "start": {"dateTime": start_datetime.isoformat(), "timeZone": "America/New_York"},
+            "end": {"dateTime": end_datetime.isoformat(), "timeZone": "America/New_York"},
+            "reminders": {
+                "useDefault": False,
+                "overrides": [{"method": "popup", "minutes": 30}],
+            },
+        }
 
-    created_event = service.events().insert(calendarId=calender_id, body=event).execute()
-
-    json_result = json.dumps(created_event)
-
-    return json_result
-
-def get_calendar_service():
-    """Authenticate and return Google Calendar API service."""
-    creds = service_account.Credentials.from_service_account_file(
-        SERVICE_ACCOUNT_FILE, scopes=SCOPES
-    )
-    
-    return build("calendar", "v3", credentials=creds)
+        created_event = self.service.events().insert(calendarId=self.calendar_id, body=event).execute()
+        return json.dumps(created_event)

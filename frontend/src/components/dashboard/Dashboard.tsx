@@ -10,16 +10,13 @@ import {
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../list/NotesList';
-import { getNotes, groupAndLabelNotes, summarizeWeeklyNotes, searchNotes, deleteNote } from '../../api/noteMethods';
+import { NoteService } from '../../api/noteService';
 import { SearchBar } from '../searchbar/SearchBar';
 import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../list/NotesList.Styles';
 import { Note } from '../../models/noteModel';
-import ChromeDinoGame from 'react-chrome-dino';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
-import { Lottie } from 'react-lottie-player';
-import animation from '../../assets/animation.json';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -52,14 +49,14 @@ export const Dashboard = () => {
 
     const handleClustering = async () => {
         try {
-            const notes = await getNotes(user?.id || '');
+            const notes = await NoteService.getNotes(user?.id || '');
             if (notes.length < 16) {
                 setNotificationMessage('You need at least 15 notes to auto-organize');
                 setShowNotification(true);
                 return;
             }
             setIsLoading(true);
-            await groupAndLabelNotes(notes);
+            await NoteService.groupAndLabelNotes(notes);
             setIsLoading(false);
         } catch (err) {
             setIsLoading(false);
@@ -70,7 +67,7 @@ export const Dashboard = () => {
     const handleSummarize = async () => {
         try {
             setIsLoading(true);
-            const summary = await summarizeWeeklyNotes(user?.id || '');
+            const summary = await NoteService.summarizeWeeklyNotes(user?.id || '');
             console.log(summary);
             setIsLoading(false);
         } catch (err) {
@@ -91,7 +88,7 @@ export const Dashboard = () => {
                 return;
             }
 
-            const results = await searchNotes(user.id, query);
+            const results = await NoteService.searchNotes(user.id, query);
             setSearchResults(results);
         } catch (error) {
             console.error('Search failed:', error);
@@ -102,7 +99,7 @@ export const Dashboard = () => {
 
     const handleDeleteNote = async (noteId: string) => {
         try {
-          await deleteNote(noteId);
+          await NoteService.deleteNote(noteId);
           setNotes(notes.filter(note => note.id !== noteId));
         } catch (err) {
           console.error('Error deleting note:', err);

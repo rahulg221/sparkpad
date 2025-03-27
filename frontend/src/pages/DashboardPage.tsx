@@ -11,7 +11,7 @@ const PageLayout = styled.div`
 
 const MainContent = styled.div`
   flex: 1;
-  width: 80%;
+  width: 75%;
   height: 100vh;
   overflow-y: auto;
 `;

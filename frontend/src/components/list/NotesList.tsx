@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
-import { deleteNote, getNotesByCategory } from '../../api/noteMethods';
-import { Spacer, NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
+import { NoteService } from '../../api/noteService';
+import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -24,7 +24,7 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
 
       try {
         setIsLoading(true);
-        const userNotes = await getNotesByCategory(user.id, category);
+        const userNotes = await NoteService.getNotesByCategory(user.id, category);
         setNotes(userNotes);
         setIsLoading(false);
       } catch (err) {
@@ -39,7 +39,7 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      await deleteNote(noteId);
+      await NoteService.deleteNote(noteId);
       setNotes(notes.filter(note => note.id !== noteId));
     } catch (err) {
       console.error('Error deleting note:', err);

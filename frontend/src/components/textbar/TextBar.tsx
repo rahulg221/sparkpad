@@ -4,7 +4,7 @@ import {
   TextBarForm, 
   TextInput,
 } from './TextBar.styles';
-import { addNote } from '../../api/noteMethods';
+import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { supabase } from '../../api/supabaseClient';
@@ -56,7 +56,7 @@ export const TextBar = ({
       };
   
       // Insert note into database
-      const notificationMessage = await addNote(note);
+      const notificationMessage = await NoteService.addNote(note);
   
       // Show notification after successful note creation
       setNotificationMessage(notificationMessage);
@@ -73,7 +73,7 @@ export const TextBar = ({
   return (
     <>
       <TextBarContainer>
-        <h1>AI-Powered Notes</h1>
+        <h1>AI Thought Organizer</h1>
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
             as="textarea"

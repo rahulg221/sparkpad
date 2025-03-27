@@ -1,29 +1,27 @@
 export const theme = {
   colors: {
-    // Base colors (light cream backgrounds)
-    bgDark: '#fdfaf6',         // Soft warm cream (main background)
-    bgElevated: '#f7f3ee',     // Slightly darker cream for cards/modals
-    bgLight: '#f1ece6',        // Light beige-cream for inputs/code blocks
+    bgElevated: '#1a1625',     // Dark purple for cards, modals
+    bgLight: '#241c35',        // Slightly lighter purple for inputs, code blocks
 
-    // Text colors (calm but readable)
-    textPrimary: '#2c3e50',     // Dark muted blue-gray
-    textLight: '#7f8c8d',       // Subtle warm gray for secondary text
+    // Text colors (light + readable)
+    textPrimary: '#f3e5fd',    // Very light purple-white (for high contrast)
+    textLight: '#b5adc6',      // Muted lavender-gray (for secondary text)
 
-    // Accent colors (slightly more saturated blues)
-    primary: '#5bb0ff',         // Brighter baby blue for interactive elements
-    primaryHover: '#82c8ff',    // Light sky blue for hover/active
-    primaryLight: 'rgba(91, 176, 255, 0.15)',  // Transparent blue highlight
+    // Accent colors (calm purples)
+    primary: '#b388ff',         // Light purple (main interactive elements)
+    primaryHover: '#c9a9ff',    // Brighter purple for hover/active states
+    primaryLight: 'rgba(179, 136, 255, 0.15)',  // Transparent background fill
 
-    accent: '#489fdc',          // Soft aqua-blue for icons/tags/outlines
-    accentHover: '#7bc3f2',     // Pastel but clear hover tone
+    accent: '#9575cd',          // Mid purple for icons, outlines, tags
+    accentHover: '#b39ddb',     // Hovered accent purple
 
     // Utility colors
-    border: '#e0dcd5',          // Light warm gray border
-    error: '#f7b0a0',           // Soft coral-pink for errors
-    success: '#bde4c6',         // Gentle mint green for success
-    warning: '#ffe5b4',         // Warm apricot-cream warning tone
-    info: '#d0ebff',            // Clear sky-blue for info boxes
-    disabled: '#ccc7be'         // Muted beige-gray for disabled elements
+    border: '#2d2440',          // Deep purple border lines
+    error: '#ef9a9a',           // Keeping red for errors
+    success: '#a5d6a7',         // Keeping green for success
+    warning: '#ffecb3',         // Keeping yellow for warnings
+    info: '#b39ddb',           // Light purple for info boxes
+    disabled: '#4a4255'         // Muted gray-purple for disabled elements
   },
   spacing: {
     sm: '8px',
@@ -105,4 +103,31 @@ export type Theme = typeof theme;
     warning: '#ffecb3',         // Pale yellow
     info: '#81d4fa',            // Reused light blue for info boxes
     disabled: '#4e5a65'         // Muted gray-blue for disabled elements
+    */
+
+    /* 
+    // Base colors (light cream backgrounds)
+    bgDark: '#fdfaf6',         // Soft warm cream (main background)
+    bgElevated: '#f7f3ee',     // Slightly darker cream for cards/modals
+    bgLight: '#f1ece6',        // Light beige-cream for inputs/code blocks
+
+    // Text colors (calm but readable)
+    textPrimary: '#2c3e50',     // Dark muted blue-gray
+    textLight: '#7f8c8d',       // Subtle warm gray for secondary text
+
+    // Accent colors (slightly more saturated blues)
+    primary: '#5bb0ff',         // Brighter baby blue for interactive elements
+    primaryHover: '#82c8ff',    // Light sky blue for hover/active
+    primaryLight: 'rgba(91, 176, 255, 0.15)',  // Transparent blue highlight
+
+    accent: '#489fdc',          // Soft aqua-blue for icons/tags/outlines
+    accentHover: '#7bc3f2',     // Pastel but clear hover tone
+
+    // Utility colors
+    border: '#e0dcd5',          // Light warm gray border
+    error: '#f7b0a0',           // Soft coral-pink for errors
+    success: '#bde4c6',         // Gentle mint green for success
+    warning: '#ffe5b4',         // Warm apricot-cream warning tone
+    info: '#d0ebff',            // Clear sky-blue for info boxes
+    disabled: '#ccc7be'         // Muted beige-gray for disabled elements
     */
