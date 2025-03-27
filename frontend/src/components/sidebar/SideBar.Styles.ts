@@ -1,21 +1,68 @@
 import styled from 'styled-components';
 
+export const BulletList = styled.ul`
+  list-style: none;
+  padding: 0;
+  margin: 0;
+`;
+
+export const BulletItem = styled.li`
+  display: flex;
+  margin-bottom: 0.5rem;
+`;
+
+export const BulletIcon = styled.span`
+  margin-right: 0.5rem;
+  color: ${({ theme }) => theme.colors.accentHover};
+  transform: translateY(4px);
+`;
+
 export const SideBarContainer = styled.div`
-  width: 25%;
+  width: 20%;
   padding: ${({ theme }) => theme.spacing.lg};
+  display: flex;
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border-right: 1px solid ${({ theme }) => theme.colors.border};
   flex-shrink: 0;
   height: 100vh;
-  display: flex;
   flex-direction: column;
   position: sticky;
   top: 0;
 `;
 
+export const SummaryContainer = styled.div`
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  padding: ${({ theme }) => theme.spacing.lg};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-family: inherit;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  overflow-y: auto;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.bgLight};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.textLight};
+  }
+`;
+
 export const TextBarForm = styled.form`
+  margin-top: auto;
   position: relative;
-  height: 50%;
+  height: 45%;
   display: flex;
   flex-direction: column;
 `;
@@ -23,6 +70,8 @@ export const TextBarForm = styled.form`
 export const TextInput = styled.textarea`
   flex: 1;
   width: 100%;
+  height: 100%;
+  min-height: 30vh;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
@@ -41,6 +90,25 @@ export const TextInput = styled.textarea`
 
   &::placeholder {
     color: ${({ theme }) => theme.colors.textLight};
+  }
+
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.bgLight};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.textLight};
   }
 `;
 

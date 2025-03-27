@@ -18,35 +18,29 @@ class SummarizeService:
         Returns:
             str: The summarized text.
         """
+
+        if len(notes) == 0:
+            return "No notes added today."
+        
         text = "\n".join(notes)
         text = preprocess_text(text)
 
         prompt = f"""
-            You are an intelligent note assistant.
+            You are a helpful assistant that takes a series of notes and returns a concise set of bullet points summarizing 
+            core ideas, important tasks and reminders, and the user's personal reflections.
 
-            Summarize the following notes in a way that is clear, helpful, and personal. The user is reflecting on their week, capturing ideas, managing tasks, and writing brainstorms.
+            Summarize the following notes.
 
-            From the notes, create a structured weekly digest with the following sections:
-
-            1. Notable Ideas 
-            Extract any unique thoughts, creative brainstorms, or concepts that stood out.
-
-            2. Action Items
-            List clear tasks the user mentioned or implied (use bullet points).
-
-            3. Upcoming Goals
-            Mention anything the user wants to do soon, next week, or in the future.
-
-            4. Suggested Reflections
-            Based on the content, suggest 1–2 thoughtful questions the user might want to reflect on next week.
+            Guidelines:
+            1. 300 character limit. 
+            2. Keep the tone concise but thoughtful. 
+            3. Do not make assumptions about the user's intentions or actions unless the user has explicitly stated something.
 
             Here are the notes to summarize:
 
             ---  
             {text }
             ---
-
-            Keep the tone concise but thoughtful. Format it cleanly using headings and bullet points where appropriate.
             """
 
         response = self.client.chat.completions.create(

@@ -22,7 +22,7 @@ export class NoteService {
 
       notificationMessage = 'Successfully added note!';
 
-      if (this.containsDateTime(note.content) && note.content[0] === '/') {
+      if (NoteService.containsDateTime(note.content) && note.content[0] === '/') {
         notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
       }
     } catch (error) {
@@ -51,56 +51,43 @@ export class NoteService {
     return data || [];
   }
 
-  static async getWeeklyNotes(userId: string): Promise<Note[]> {
+  static async getDailyNotes(userId: string): Promise<Note[]> {
     const today = new Date();
     const est = new Date(today.toLocaleString('en-US', { timeZone: 'America/New_York' }));
-    est.setHours(0, 0, 0, 0);
 
-    const sevenDaysAgo = new Date(est);
-    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+    // Start of today in EST
+    est.setHours(0, 0, 0, 0);
+    const startOfDay = new Date(est);
+
+    // End of today in EST
+    const endOfDay = new Date(est);
+    endOfDay.setHours(23, 59, 59, 999);
 
     const { data } = await supabase
-      .from('notes')
-      .select('*')
-      .eq('user_id', userId)
-      .gte('created_at', sevenDaysAgo.toISOString())
-      .lt('created_at', today.toISOString())
-      .order('created_at', { ascending: false });
-
-    return data || [];
+    .from('notes')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', startOfDay.toISOString())
+    .lte('created_at', endOfDay.toISOString())
+    .order('created_at', { ascending: false });
+      return data || [];
   }
 
-  static async summarizeWeeklyNotes(userId: string): Promise<string> {
-    const notes = await this.getWeeklyNotes(userId);
-
+  static async summarizeNotes(notes: Note[]): Promise<string> {
     const response = await fetch('http://127.0.0.1:8000/summarize', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${token}`,   
       },
       body: JSON.stringify({ notes: notes.map(note => note.content) }),
     });
 
     if (!response.ok) {
       throw new Error('Summarization service request failed');
-    }
+    } 
 
     const summary = await response.json();
-
-    const doc = new jsPDF();
-    const pageWidth = doc.internal.pageSize.getWidth();
-    const margin = 20;
-    const usableWidth = pageWidth - margin * 2;
-
-    doc.setFontSize(12);
-    doc.text(summary.trim(), margin, 30, {
-      maxWidth: usableWidth,
-      align: 'left',
-    });
-
-    const today = new Date();
-    doc.save(`${today.toISOString().split('T')[0]}_weekly_report.pdf`);
 
     return summary;
   }

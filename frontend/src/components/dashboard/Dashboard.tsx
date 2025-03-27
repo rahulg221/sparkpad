@@ -1,11 +1,9 @@
 import { useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-import {
-    ButtonContainer, 
+import { 
     DashboardWrapper,
     Header,
-    SearchSection,
 } from './Dashboard.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
@@ -17,18 +15,18 @@ import { Note } from '../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
+import { Modal } from '../modal/Modal';
+import { useActions } from '../../context/ActionsContext';
+import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdArrowBack, MdHome, MdLogout } from 'react-icons/md';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
+    const { showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, isLoading, notificationMessage, showNotification, summary } = useActions();
     const navigate = useNavigate();
-    const [isLoading, setIsLoading] = useState(false);
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [searchResults, setSearchResults] = useState<Note[]>([]);
-    const [isSearching, setIsSearching] = useState(false);
-    const [showNotification, setShowNotification] = useState(false);
-    const [notificationMessage, setNotificationMessage] = useState('');
     const [notes, setNotes] = useState<Note[]>([]);
-    const [error, setError] = useState<string | null>(null);
+    const [showSettings, setShowSettings] = useState(false);
 
     const handleLogout = async () => {
         try {
@@ -47,44 +45,12 @@ export const Dashboard = () => {
         setSelectedCategory(null);
     };
 
-    const handleClustering = async () => {
-        try {
-            const notes = await NoteService.getNotes(user?.id || '');
-            if (notes.length < 16) {
-                setNotificationMessage('You need at least 15 notes to auto-organize');
-                setShowNotification(true);
-                return;
-            }
-            setIsLoading(true);
-            await NoteService.groupAndLabelNotes(notes);
-            setIsLoading(false);
-        } catch (err) {
-            setIsLoading(false);
-            console.error('Error testing clustering:', err);
-        }
-    };
-
-    const handleSummarize = async () => {
-        try {
-            setIsLoading(true);
-            const summary = await NoteService.summarizeWeeklyNotes(user?.id || '');
-            console.log(summary);
-            setIsLoading(false);
-        } catch (err) {
-            console.error('Error summarizing daily notes:', err);
-            setIsLoading(false);
-        }
-    };
-
     const handleSearch = async (query: string) => {
         if (!user?.id) return;
 
         try {
-            setIsSearching(true);
-            
             if (!query.trim()) {
                 setSearchResults([]);
-                setIsSearching(false);
                 return;
             }
 
@@ -92,9 +58,7 @@ export const Dashboard = () => {
             setSearchResults(results);
         } catch (error) {
             console.error('Search failed:', error);
-        } finally {
-            setIsSearching(false);
-        }
+        } 
     };
 
     const handleDeleteNote = async (noteId: string) => {
@@ -103,8 +67,11 @@ export const Dashboard = () => {
           setNotes(notes.filter(note => note.id !== noteId));
         } catch (err) {
           console.error('Error deleting note:', err);
-          setError('Error deleting note');
         }
+    };
+
+    const handleSettingsClick = () => {
+        setShowSettings(true);
     };
 
     const Loader = () => (
@@ -120,14 +87,28 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <SearchSection>
-                    <SearchBar onSearch={handleSearch} />
-                </SearchSection>
-                <ButtonContainer>
-                    <SecondaryButton onClick={handleSummarize}>Download Weekly Report</SecondaryButton>
-                    <SecondaryButton onClick={handleClustering}>Auto-Organize</SecondaryButton>
-                    <SecondaryButton onClick={handleLogout}>Logout</SecondaryButton>
-                </ButtonContainer>
+                <SecondaryButton onClick={handleBackClick}>
+                    <MdHome size={20}/>
+                </SecondaryButton>
+                <SearchBar onSearch={handleSearch} />
+                <SecondaryButton onClick={autoOrganizeNotes}>
+                    <MdPsychology size={20}/>
+                    Organize
+                </SecondaryButton>
+                <SecondaryButton onClick={() => showSnapshot()}>
+                    <MdCameraAlt size={20}/>
+                    Snapshot
+                </SecondaryButton>
+                <SecondaryButton onClick={autoOrganizeNotes}>
+                    <MdEventAvailable size={20}/>
+                    Calendar
+                </SecondaryButton>
+                <SecondaryButton onClick={handleSettingsClick}>
+                    <MdSettings size={20}/>
+                </SecondaryButton>
+                <SecondaryButton onClick={handleLogout}>
+                    <MdLogout size={20}/>
+                </SecondaryButton>
             </Header>
             {searchResults.length > 0 ? (
                 <>
@@ -162,7 +143,7 @@ export const Dashboard = () => {
                             {selectedCategory ? (
                                 <NotesList 
                                     category={selectedCategory}
-                            onBackClick={handleBackClick}
+    
                         />
                     ) : (
                                 <NoteCategories handleCategoryClick={handleCategoryClick} />
@@ -170,6 +151,15 @@ export const Dashboard = () => {
                         </>
                     )}
                 </>
+            )}
+            {showSettings && (
+                <Modal
+                    isOpen={true}
+                    onClose={() => setShowSettings(false)}
+                title="Settings"
+            >
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>Settings Screen</ReactMarkdown>     
+            </Modal>
             )}
             {showNotification && (
                 <Notification 

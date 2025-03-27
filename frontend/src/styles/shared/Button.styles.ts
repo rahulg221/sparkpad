@@ -22,15 +22,20 @@ export const PrimaryButton = styled.button<{ width?: string }>`
 `;
 
 export const SecondaryButton = styled.button<{ width?: string }>`
-  width: '${props => props.width || 'fit-content'};'
   padding: ${({ theme }) => theme.spacing.md};
+  margin: ${({ theme }) => theme.spacing.sm};
   background-color: transparent;
-  color: ${({ theme }) => theme.colors.primary};
-  border: 1px solid ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.textLight};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: ${({ theme }) => theme.fontSize.sm};
+
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.5rem;
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.primaryLight};
@@ -40,4 +45,4 @@ export const SecondaryButton = styled.button<{ width?: string }>`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`; 
+`;

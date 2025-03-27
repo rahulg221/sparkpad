@@ -18,7 +18,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
     <SearchContainer>
       <SearchInput
         type="text"
-        placeholder="Search notes..."
+        placeholder="Search for notes..."
         value={searchQuery}
         onChange={handleSearch}
       />

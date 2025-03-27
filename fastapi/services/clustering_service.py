@@ -122,15 +122,15 @@ class ClusteringService:
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
         if n <= 20:
-            return 2, 1  
+            return 1, 0  
         elif n <= 50:
-            return 3, 2 
+            return 2, 1
         elif n <= 100:
-            return 5, 3  
+            return 4, 2  
         elif n <= 300:
-            return 8, 5  
+            return 7, 4  
         else:
-            return 10, 7  
+            return 9, 6  
 
     def _generate_category(self, notes):
         """

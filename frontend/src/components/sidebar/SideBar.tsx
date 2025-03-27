@@ -3,27 +3,24 @@ import {
   SideBarContainer,
   TextBarForm, 
   TextInput,
+  SummaryContainer,
+  BulletIcon,
+  BulletItem,
+  BulletList,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { supabase } from '../../api/supabaseClient';
 import { Notification } from '../notif/Notification';
+import { useActions } from '../../context/ActionsContext';
+import {  MdLightbulb } from 'react-icons/md';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 
-interface SideBarProps {
-  placeholder?: string;
-  isLoading?: boolean;
-}
-
-export const SideBar = ({ 
-  placeholder = 'Brainstorm, create lists, reflect, and turn your chaos into clarity.', 
-  isLoading = false 
-}: SideBarProps) => {
+export const SideBar = () => {
   const [text, setText] = useState('');
-  const [showNotification, setShowNotification] = useState(false);
-  const [notificationMessage, setNotificationMessage] = useState('');
   const { user } = useAuth();
+  const { setNotificationMessage, setShowNotification, isLoading, notificationMessage, showNotification, summary, bulletPoints } = useActions();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -68,17 +65,38 @@ export const SideBar = ({
       console.error("Unexpected error in handleSubmit:", error);
     }
   };  
-  
+
+  const getDate = () => {
+    const date = new Date();
+    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  };
+
   return (
     <>
       <SideBarContainer>
-        <h1>AI Thought Organizer</h1>
+        <h3>AI-Powered Notes</h3>
+        { summary ? 
+        <SummaryContainer>
+          <BulletList>
+            {bulletPoints.map((bulletPoint, index) => (
+              <BulletItem key={index}>
+                <BulletIcon>
+                  <MdLightbulb size={20} />
+                </BulletIcon>
+                <span>{bulletPoint}</span>
+              </BulletItem>
+            ))}
+          </BulletList>
+        </SummaryContainer> 
+        : 
+        <p>Use Snapshot to view a condensed summary of your notes.</p>
+        }
         <TextBarForm onSubmit={handleSubmit}>
           <TextInput
             as="textarea"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder={placeholder}
+            placeholder='Capture an idea, task, or reminder...'
             disabled={isLoading}
             rows={1}
           />

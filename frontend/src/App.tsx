@@ -3,13 +3,15 @@ import { theme } from './styles/theme';
 import { GlobalStyles } from './styles/GlobalStyles';
 import { AppRoutes } from './routes/AppRoutes';
 import { AuthProvider } from './context/AuthContext';
-
+import { ActionsProvider } from './context/ActionsContext';
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <AuthProvider>
-                <GlobalStyles />
-                <AppRoutes />
+                <ActionsProvider>
+                    <GlobalStyles />
+                    <AppRoutes />
+                </ActionsProvider>
             </AuthProvider>
         </ThemeProvider>
     );

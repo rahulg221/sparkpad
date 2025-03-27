@@ -6,17 +6,18 @@ import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInf
 import { SecondaryButton } from '../../styles/shared/Button.styles';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useActions } from '../../context/ActionsContext';
 
 interface NotesListProps {
   category: string;
-  onBackClick: () => void;
 }
 
-export const NotesList = ({ category, onBackClick }: NotesListProps) => {
+export const NotesList = ({ category }: NotesListProps) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
+  const { setCurrentNotes } = useActions();
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -26,6 +27,7 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
         setIsLoading(true);
         const userNotes = await NoteService.getNotesByCategory(user.id, category);
         setNotes(userNotes);
+        setCurrentNotes(userNotes);
         setIsLoading(false);
       } catch (err) {
         setError('Failed to fetch notes');
@@ -49,7 +51,6 @@ export const NotesList = ({ category, onBackClick }: NotesListProps) => {
 
   return (
     <>
-      <SecondaryButton onClick={onBackClick}>Return to Dashboard</SecondaryButton>
       <CategoryTitle>{category}</CategoryTitle>
       <NotesContainer>
       {notes.map((note) => (
