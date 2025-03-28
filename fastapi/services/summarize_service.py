@@ -7,6 +7,10 @@ load_dotenv()
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
 class SummarizeService:
+    """
+    Service for summarizing notes.
+    """
+
     def __init__(self):
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 

@@ -91,8 +91,8 @@ export const SideBar = () => {
         : 
         <p>Use Snapshot to view a condensed summary of your notes.</p>
         }
-        <h2>New Note</h2>
         <TextBarForm onSubmit={handleSubmit}>
+          <h2>New Note</h2>
           <TextInput
             as="textarea"
             value={text}

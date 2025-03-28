@@ -1,7 +1,8 @@
 import { supabase, token } from './supabaseClient';
 import { Note } from '../models/noteModel';
-import { jsPDF } from 'jspdf';
 import CalendarMethods from './calendarService';
+
+const API_URL = import.meta.env.VITE_API_URL;
 
 export class NoteService {
   static async addNote(note: Note): Promise<string> {
@@ -74,7 +75,7 @@ export class NoteService {
   }
 
   static async summarizeNotes(notes: Note[]): Promise<string> {
-    const response = await fetch('http://127.0.0.1:8000/summarize', {
+    const response = await fetch(`${API_URL}/summarize`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -87,7 +88,9 @@ export class NoteService {
       throw new Error('Summarization service request failed');
     } 
 
-    const summary = await response.json();
+    const data = await response.json();
+
+    const summary = data.summary;
 
     return summary;
   }
@@ -119,7 +122,7 @@ export class NoteService {
   }
 
   static async groupAndLabelNotes(notes: Note[]): Promise<Note[]> {
-    const response = await fetch('http://127.0.0.1:8000/label', {
+    const response = await fetch(`${API_URL}/label`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -132,7 +135,9 @@ export class NoteService {
       throw new Error('Clustering service request failed');
     }
 
-    const clusteringResult = await response.json();
+    const data = await response.json();
+
+    const clusteringResult = data.clusters;
 
     const clusteredNotes: Note[] = clusteringResult.clusters.map((result: any, index: number) => ({
       id: notes[index].id,

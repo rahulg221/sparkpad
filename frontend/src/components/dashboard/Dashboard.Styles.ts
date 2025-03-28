@@ -11,6 +11,8 @@ export const DashboardWrapper = styled.div`
 export const Header = styled.div`
   display: flex;
   align-items: center;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.lg};
   padding-bottom: ${({ theme }) => theme.spacing.sm};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};

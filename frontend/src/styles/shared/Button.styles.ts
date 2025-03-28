@@ -23,7 +23,6 @@ export const PrimaryButton = styled.button<{ width?: string }>`
 
 export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
-  margin: ${({ theme }) => theme.spacing.sm};
   background-color: transparent;
   color: ${({ theme }) => theme.colors.textLight};
   border: 1px solid ${({ theme }) => theme.colors.border};

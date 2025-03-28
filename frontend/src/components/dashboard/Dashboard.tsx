@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { 
@@ -17,7 +17,8 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdArrowBack, MdHome, MdLogout } from 'react-icons/md';
+import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdHome, MdLogout } from 'react-icons/md';
+import CalendarService from '../../api/calendarService';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -27,6 +28,25 @@ export const Dashboard = () => {
     const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [notes, setNotes] = useState<Note[]>([]);
     const [showSettings, setShowSettings] = useState(false);
+
+    useEffect(() => {
+        const handleGoogleCallback = async () => {
+            const params = new URLSearchParams(window.location.search);
+            const code = params.get("code");
+            if (!code || !window.location.pathname.includes("/auth/google/callback")) return;
+
+            try {
+                await CalendarService.sendAuthCodeToBackend(code);
+                console.log("Calendar connected successfully");
+                //navigate("/dashboard");
+            } catch (err) {
+                console.error("Failed to complete Google OAuth callback", err);
+                //navigate("/dashboard");
+            }
+        };
+
+        handleGoogleCallback();
+    }, []);
 
     const handleLogout = async () => {
         try {
@@ -74,6 +94,16 @@ export const Dashboard = () => {
         setShowSettings(true);
     };
 
+    const handleCalendarClick = async () => {
+        try {
+            const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
+
+            window.location.href = googleAuthUrl; 
+        } catch (err) {
+            console.error("Failed to get Google auth URL", err);
+        }
+    };
+    
     const Loader = () => (
         <div style={{
           display: 'flex',
@@ -99,7 +129,7 @@ export const Dashboard = () => {
                     <MdCameraAlt size={20}/>
                     Snapshot
                 </SecondaryButton>
-                <SecondaryButton onClick={autoOrganizeNotes}>
+                <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
                     Calendar
                 </SecondaryButton>

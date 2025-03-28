@@ -3,6 +3,7 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { NoteService } from '../api/noteService';
 import { useAuth } from './AuthContext';
 import { Note } from '../models/noteModel';
+import CalendarService from '../api/calendarService';
 
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
@@ -29,6 +30,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [summary, setSummary] = useState('');
     const [bulletPoints, setBulletPoints] = useState<string[]>([]);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
+    const [googleAuthUrl, setGoogleAuthUrl] = useState('');
 
     const autoOrganizeNotes = async () => {
         try {
@@ -66,9 +68,9 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             setIsLoading(false);
         }
     };
-    
+
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes,  setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes}}>
+        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes}}>
             {children}
         </ActionsContext.Provider>
     );

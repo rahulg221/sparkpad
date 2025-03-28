@@ -11,6 +11,7 @@ export const AppRoutes = () => {
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/" element={<LoginPage />} />
+                <Route path="/auth/google/callback" element={<DashboardPage />} />
             </Routes>
         </Router>
     );

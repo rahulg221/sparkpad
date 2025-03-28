@@ -38,6 +38,7 @@ export const SummaryContainer = styled.div`
   font-size: ${({ theme }) => theme.fontSize.sm};
   color: ${({ theme }) => theme.colors.textPrimary};
   overflow-y: auto;
+  margin-bottom: auto;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -59,7 +60,9 @@ export const SummaryContainer = styled.div`
 `;
 
 export const TextBarForm = styled.form`
+  align-items: flex-start;
   margin-top: auto;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   position: relative;
   height: 45%;
   display: flex;

@@ -27,10 +27,11 @@ export const theme = {
     disabled: '#3a3a3a'
   },
   spacing: {
+    xs: '4px',
     sm: '8px',
     md: '10px',
     lg: '15px',
-    xl: '45px',
+    xl: '24px',
   },
   borderRadius: {
     sm: '4px',

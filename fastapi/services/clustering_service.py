@@ -20,10 +20,11 @@ class ClusteringService:
     """
     Service for clustering and categorizing notes.
     """
+
+    # Load the sentence transformer model
+    model = SentenceTransformer('all-MiniLM-L6-v2')
+    
     def __init__(self):
-        # Load the sentence transformer model
-        self.model = SentenceTransformer('all-MiniLM-L6-v2')
-        
         # Download resources
         nltk.download("stopwords")
         nltk.download("wordnet")
@@ -43,7 +44,7 @@ class ClusteringService:
         notes = [preprocess_text(note) for note in notes]
 
         # Encode the notes
-        embeddings = self.model.encode(notes)
+        embeddings = self.__class__.model.encode(notes)
 
         # Cluster the notes using HDBSCAN           
         labels = self._hdbscan_clustering(embeddings)
@@ -121,16 +122,18 @@ class ClusteringService:
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
+        factor = 1
+
         if n <= 20:
-            return 1, 0  
+            return 1+factor, 0+factor  
         elif n <= 50:
-            return 2, 1
+            return 2+factor, 1+factor
         elif n <= 100:
-            return 4, 2  
+            return 4+factor, 2+factor
         elif n <= 300:
-            return 7, 4  
+            return 7+factor, 4+factor  
         else:
-            return 9, 6  
+            return 9+factor, 6+factor  
 
     def _generate_category(self, notes):
         """

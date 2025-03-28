@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 from google.oauth2 import service_account
 from services.utils import extract_datetime
 from googleapiclient.discovery import build
-
+from google.oauth2 import credentials
 import pytz
 import json
 import os
@@ -15,16 +15,14 @@ class CalendarService:
     """
     Service for managing Google Calendar events.
     """
-    def __init__(self):
-        self.service_account_file = "assets/calendar_data.json"
-        self.scopes = ["https://www.googleapis.com/auth/calendar"]
-        self.calendar_id = os.getenv("CALENDAR_ID")
+    
+    def __init__(self, access_token: str):
+        self.access_token = access_token
+        self.calendar_id = "primary"
         self.service = self.get_calendar_service()
 
     def get_calendar_service(self):
-        creds = service_account.Credentials.from_service_account_file(
-            self.service_account_file, scopes=self.scopes
-        )
+        creds = credentials.Credentials(self.access_token)
         return build("calendar", "v3", credentials=creds)
 
     def create_google_event(self, text):

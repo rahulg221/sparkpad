@@ -43,6 +43,7 @@ export const Input = styled.input`
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.xs};
+  font-family: inherit;
   
   &:focus {
     outline: none;
