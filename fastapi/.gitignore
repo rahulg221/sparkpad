@@ -1,2 +1,2 @@
 .env
-assets/credentials.json
+fastapi/assets/credentials.json
