@@ -81,7 +81,7 @@ export class NoteService {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,   
       },
-      body: JSON.stringify({ notes: notes.map(note => note.content) }),
+      body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
     });
 
     if (!response.ok) {
@@ -121,49 +121,19 @@ export class NoteService {
     return data || [];
   }
 
-  static async groupAndLabelNotes(notes: Note[]): Promise<Note[]> {
+  static async groupAndLabelNotes(notes: Note[]): Promise<void> {
     const response = await fetch(`${API_URL}/label`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ notes: notes.map(note => note.content) }),
+      body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
     });
 
     if (!response.ok) {
       throw new Error('Clustering service request failed');
     }
-
-    const data = await response.json();
-
-    const clusteringResult = data.clusters;
-
-    const clusteredNotes: Note[] = clusteringResult.clusters.map((result: any, index: number) => ({
-      id: notes[index].id,
-      content: result.Note,
-      category: result.Category,
-      cluster: result.Cluster,
-      user_id: notes[index].user_id,
-      created_at: undefined,
-      updated_at: undefined,
-    }));
-
-    for (const note of clusteredNotes) {
-      const { error: noteUpdateError } = await supabase
-        .from('notes')
-        .update({
-          category: note.category,
-          cluster: note.cluster,
-        })
-        .eq('id', note.id);
-
-      if (noteUpdateError) {
-        throw noteUpdateError;
-      }
-    }
-
-    return clusteredNotes;
   }
 
   static async searchNotes(userId: string, searchQuery: string): Promise<Note[]> {

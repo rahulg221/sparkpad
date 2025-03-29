@@ -30,7 +30,8 @@ app.add_middleware(
 
 # Cluster request body that takes in a list of strings
 class Notes(BaseModel):
-    notes: list[str]
+    notes_content: list[str]
+    notes: list[dict]
 
 class Event(BaseModel):
     note: str
@@ -45,29 +46,11 @@ async def create_new_event(request_body: Event, user=Depends(AuthService().get_c
     auth_id = user["sub"]
 
     try:
-        # Fetch user ID from your app's users table
-        user_res = supabase.table("users").select("id").eq("auth_id", auth_id).single().execute()
-        if not user_res.data:
-            raise HTTPException(status_code=404, detail="User not found")
-
-        user_id = user_res.data["id"]
-
-        # Fetch Google access token
-        token_res = supabase.table("google_tokens").select("access_token").eq("user_id", user_id).single().execute()
-        if not token_res.data:
-            raise HTTPException(status_code=403, detail="Google Calendar not connected")
-
-        access_token = token_res.data["access_token"]
-
         # Create the calendar event
-        calendar_service = CalendarService(access_token)
+        calendar_service = CalendarService(auth_id)
         event = calendar_service.create_google_event(note_text)
 
         return {"event": event}
-
-    except HTTPException:
-        raise  # re-raise FastAPI validation errors
-
     except Exception as e:
         print("Failed to create calendar event:", e)
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
@@ -75,8 +58,12 @@ async def create_new_event(request_body: Event, user=Depends(AuthService().get_c
 @app.post("/label")
 async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_current_user)):
     try:
-        clusters = ClusteringService().group_and_label_notes(request_body.notes)
-        return {"clusters": clusters}
+        # Cluster the notes
+        clustering_service = ClusteringService(request_body.notes_content, request_body.notes)
+        clusterData = clustering_service.group_and_label_notes()
+        clustering_service.update_database(clusterData["clusters"])
+
+        return {"success": "Notes successfully clustered and labeled"}
     except Exception as e:
         print("Error clustering notes:", e)
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
@@ -84,7 +71,10 @@ async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_curr
 @app.post("/summarize")
 async def create_snapshot(request_body: Notes, user=Depends(AuthService().get_current_user)):
     try:
-        summary = SummarizeService().summarize_notes(request_body.notes)
+        # Summarize the notes
+        summarize_service = SummarizeService(request_body.notes_content, request_body.notes)
+        summary = summarize_service.summarize_notes()
+
         return {"summary": summary}
     except Exception as e:
         print("Error summarizing notes:", e)
@@ -93,7 +83,10 @@ async def create_snapshot(request_body: Notes, user=Depends(AuthService().get_cu
 @app.get("/auth/google/url")
 async def get_google_auth_url(user=Depends(AuthService().get_current_user)):
     try:
-        url = AuthService().get_google_auth_url()
+        # Get the Google auth URL
+        auth_service = AuthService()
+        url = auth_service.get_google_auth_url()
+
         return {"url": url}
     except Exception as e:
         print("Error generating Google OAuth URL:", e)
@@ -101,45 +94,13 @@ async def get_google_auth_url(user=Depends(AuthService().get_current_user)):
     
 @app.get("/auth/google/callback")
 async def google_callback(code: str, user=Depends(AuthService().get_current_user)):
-    auth_id = user["sub"]
+    auth_id = user["sub"]   
 
     try:
-        # Get your internal user ID based on auth_id
-        user_res = supabase.table("users").select("id").eq("auth_id", auth_id).single().execute()
-        if not user_res.data:
-            raise HTTPException(status_code=404, detail="User not found")
+        calendar_service = CalendarService(auth_id)
+        calendar_service.connect_calendar(code)
 
-        user_id = user_res.data["id"]
-
-        # Exchange authorization code for Google tokens
-        tokens = AuthService().exchange_code_for_tokens(code)
-        if not tokens.get("access_token"):
-            raise HTTPException(status_code=400, detail="Invalid token exchange response")
-        
-        existing = supabase.table("google_tokens").select("user_id").eq("user_id", user_id).execute()
-        
-        # Save or update tokens in Supabase
-        if existing.data:
-            # update instead of insert
-            supabase.table("google_tokens").update({
-                "access_token": tokens["access_token"],
-                "refresh_token": tokens.get("refresh_token"),
-                "expiry": tokens.get("expiry"),
-            }).eq("user_id", user_id).execute()
-        else:
-            # insert new record
-            supabase.table("google_tokens").insert({
-                "user_id": user_id,
-                "access_token": tokens["access_token"],
-                "refresh_token": tokens.get("refresh_token"),
-                "expiry": tokens.get("expiry"),
-            }).execute()
-
-        return {"message": "Google Calendar connected successfully"}
-
-    except HTTPException:
-        raise
-
+        return {"success": "Google Calendar connected successfully"}
     except Exception as e:
-        print("Google OAuth callback error:", e)
-        raise HTTPException(status_code=500, detail="Failed to link Google Calendar")
+        print("Error connecting to Google Calendar:", e)
+        raise HTTPException(status_code=500, detail="Failed to connect to Google Calendar")

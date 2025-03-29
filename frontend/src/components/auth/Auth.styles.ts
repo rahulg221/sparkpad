@@ -6,6 +6,7 @@ export const AuthPageContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   background-color: ${({ theme }) => theme.colors.bgDark};
 `;
 
@@ -44,7 +45,7 @@ export const Input = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.xs};
   font-family: inherit;
-  
+
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};

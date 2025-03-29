@@ -1,4 +1,4 @@
-from services.utils import preprocess_text
+from services.utils import preprocess_text, supabase_client
 from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import StandardScaler
 from collections import defaultdict
@@ -24,41 +24,60 @@ class ClusteringService:
     # Load the sentence transformer model
     model = SentenceTransformer('all-MiniLM-L6-v2')
     
-    def __init__(self):
+    def __init__(self, notes_content: list[dict], notes: list[dict]):
         # Download resources
         nltk.download("stopwords")
         nltk.download("wordnet")
         
         # OpenAI client for category generation
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+        self.notes_content = notes_content
+        self.notes = notes
 
-    def group_and_label_notes(self, notes):
+    def update_database(self, clusterData: list[dict]):
+        """
+        Updates the database with the new clusters and categories.
+        """
+
+        for i, note in enumerate(clusterData):
+            note_id = self.notes[i]["id"]
+            category = note["Category"]
+            cluster = note["Cluster"]
+
+            response = supabase_client.table("notes").update({
+                "category": category,
+                "cluster": cluster
+            }).eq("id", note_id).execute()
+            
+        return {"success": "Database updated successfully"}
+
+    def group_and_label_notes(self):
         """
         Groups notes into clusters and labels each cluster with a category.
         """
-        if not notes:
+        if not self.notes_content:
             return {"error": "No notes provided"}
         
         # Preprocess the notes
-        original_notes = notes
-        notes = [preprocess_text(note) for note in notes]
+        original_notes = self.notes_content
+        preprocessed_notes_content = [preprocess_text(content) for content in self.notes_content]
 
         # Encode the notes
-        embeddings = self.__class__.model.encode(notes)
+        embeddings = self.__class__.model.encode(preprocessed_notes_content)
 
         # Cluster the notes using HDBSCAN           
-        labels = self._hdbscan_clustering(embeddings)
+        labels = self.hdbscan_clustering(embeddings)
 
         # Create a dictionary to store a list of all notes in each cluster
         clustered_notes = defaultdict(list)
-        for note, label in zip(notes, labels):
-            clustered_notes[label].append(note)
+        for note_content, label in zip(preprocessed_notes_content, labels):
+            clustered_notes[label].append(note_content)
         
         # Concatenate all notes in each cluster into a single string and store
-        concatenated_clusters = {cluster: " ".join(notes)[:MAX_CHAR_LIMIT] for cluster, notes in clustered_notes.items()}
+        concatenated_clusters = {cluster: " ".join(preprocessed_notes_content)[:MAX_CHAR_LIMIT] for cluster, preprocessed_notes_content in clustered_notes.items()}
 
         # Generate a category name for each cluster
-        generated_categories = {cluster: "Unsorted" if cluster == -1 else self._generate_category(text) 
+        generated_categories = {cluster: "Unsorted" if cluster == -1 else self.generate_category(text) 
                                for cluster, text in concatenated_clusters.items()}
 
         # Convert the keys to integers
@@ -75,7 +94,7 @@ class ClusteringService:
 
         return {"clusters": json_result}
 
-    def _hdbscan_clustering(self, embeddings):
+    def hdbscan_clustering(self, embeddings):
         """
         Perform HDBSCAN clustering on the given embeddings.
         """
@@ -87,7 +106,7 @@ class ClusteringService:
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples
-        min_cluster_size, min_samples = self._adaptive_hdbscan_params(embeddings.shape[0])
+        min_cluster_size, min_samples = self.adaptive_hdbscan_params(embeddings.shape[0])
 
         # Run HDBSCAN
         clusterer = hdbscan.HDBSCAN(
@@ -118,7 +137,7 @@ class ClusteringService:
 
         return labels
 
-    def _adaptive_hdbscan_params(self, n):
+    def adaptive_hdbscan_params(self, n):
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
@@ -135,7 +154,7 @@ class ClusteringService:
         else:
             return 9+factor, 6+factor  
 
-    def _generate_category(self, notes):
+    def generate_category(self, notes: list[str]):
         """
         Generates a category name based on the provided notes.
         """

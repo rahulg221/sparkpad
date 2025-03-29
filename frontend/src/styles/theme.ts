@@ -49,6 +49,7 @@ export const theme = {
     md: '1rem',        // 16px
     lg: '1.125rem',    // 18px
     xl: '1.25rem',     // 20px
+    xxl: '4rem',     // 64px
   },
 };
 

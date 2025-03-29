@@ -11,22 +11,24 @@ class SummarizeService:
     Service for summarizing notes.
     """
 
-    def __init__(self):
+    def __init__(self, notes_content: list[str], notes: list[dict]):
+        self.notes_content = notes_content
+        self.notes = notes
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    def summarize_notes(self, notes):
+    def summarize_notes(self):
         """
         Summarizes the given text using the OpenAI API.
         Args:
-            notes (str): The notes to summarize.
+            notes_content (str): The notes to summarize.
         Returns:
             str: The summarized text.
         """
 
-        if len(notes) == 0:
+        if len(self.notes_content) == 0:
             return "No notes added today."
         
-        text = "\n".join(notes)
+        text = "\n".join(self.notes_content)
         text = preprocess_text(text)
 
         prompt = f"""

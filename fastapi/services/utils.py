@@ -1,6 +1,14 @@
 from imports import *
+import supabase
 
-def preprocess_text(note):
+load_dotenv()
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")  
+
+supabase_client = supabase.create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+def preprocess_text(note_content):
     """
     Preprocesses a given text by performing the following steps:
         1. Converts the text to lower case.
@@ -14,20 +22,20 @@ def preprocess_text(note):
     """
 
     # Convert to lower case
-    note = note.lower()  
+    note_content = note_content.lower()  
 
     # Remove punctuation, extra spaces, and stopwords
-    note = note.translate(str.maketrans("", "", string.punctuation))  
-    note = " ".join(note.split())  # Remove extra spaces
+    note_content = note_content.translate(str.maketrans("", "", string.punctuation))  
+    note_content = " ".join(note_content.split())  # Remove extra spaces
     
     stop_words = set(stopwords.words("english"))
-    words = [word for word in note.split() if word not in stop_words]
+    words = [word for word in note_content.split() if word not in stop_words]
     
     # Convert words to their base form
     lemmatizer = WordNetLemmatizer()
-    note = " ".join([lemmatizer.lemmatize(word) for word in words])  
+    note_content = " ".join([lemmatizer.lemmatize(word) for word in words])  
 
-    return note
+    return note_content
 
 def extract_datetime(text, base_datetime=None):
     """
