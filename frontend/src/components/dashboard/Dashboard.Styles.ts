@@ -6,6 +6,8 @@ export const DashboardWrapper = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   width: 100%;
   box-sizing: border-box;
+  background-image: radial-gradient(#ffffff11 1px, transparent 1px);
+  background-size: 20px 20px;
 `;
 
 export const Header = styled.div`

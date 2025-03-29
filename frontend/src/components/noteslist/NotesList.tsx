@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NotesContainer, NoteCard, NoteContent, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { NotesContainer, NoteCard, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useActions } from '../../context/ActionsContext';
@@ -56,9 +55,7 @@ export const NotesList = ({ category }: NotesListProps) => {
       {notes.map((note) => (
         <NoteCard key={note.id}>
           <NoteMeta>
-            <NoteContent>
-             <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
-            </NoteContent>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
             <NoteInfo>
                 {note.category}
                 <br />
@@ -66,7 +63,7 @@ export const NotesList = ({ category }: NotesListProps) => {
                   month: 'short',
                   day: 'numeric',
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 })}
                 <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
             </NoteInfo>

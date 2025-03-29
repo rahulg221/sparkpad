@@ -43,13 +43,18 @@ export class NoteService {
   }
 
   static async getNotes(userId: string): Promise<Note[]> {
-    const { data } = await supabase
-      .from('notes')
-      .select('*')
-      .eq('user_id', userId)
-      .order('created_at', { ascending: true });
+    try {
+      const { data } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: true });
 
-    return data || [];
+      return data || [];
+    } catch (error) {
+      console.error('Failed to get notes:', error);
+      return [];
+    }
   }
 
   static async getDailyNotes(userId: string): Promise<Note[]> {
@@ -64,17 +69,23 @@ export class NoteService {
     const endOfDay = new Date(est);
     endOfDay.setHours(23, 59, 59, 999);
 
-    const { data } = await supabase
-    .from('notes')
-    .select('*')
-    .eq('user_id', userId)
-    .gte('created_at', startOfDay.toISOString())
-    .lte('created_at', endOfDay.toISOString())
-    .order('created_at', { ascending: false });
-      return data || [];
+    try {
+      const { data } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .gte('created_at', startOfDay.toISOString())
+        .lte('created_at', endOfDay.toISOString())
+      .order('created_at', { ascending: false });
+
+    return data || [];
+    } catch (error) {
+      console.error('Failed to get daily notes:', error);
+      return [];
+    }
   }
 
-  static async summarizeNotes(notes: Note[]): Promise<string> {
+  static async summarizeNotes(notes: Note[], userId: string): Promise<string> {
     const response = await fetch(`${API_URL}/summarize`, {
       method: 'POST',
       headers: {
@@ -92,33 +103,56 @@ export class NoteService {
 
     const summary = data.summary;
 
+    localStorage.setItem('last_summary', summary);
+
+    // Save the summary to the user's record in the database
+    try {
+      await supabase
+        .from('users')
+        .update({ active_summary: summary })
+        .eq('id', userId);
+    } catch (error) {
+      console.error('Failed to save summary to user record:', error);
+      // Continue with the function even if saving to user table fails
+    }
+
     return summary;
   }
-
+  
   static async getNotesByCluster(userId: string, cluster: number): Promise<Note[]> {
-    const { data } = await supabase
-      .from('notes')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('cluster', cluster)
-      .order('created_at', { ascending: true });
+    try {
+      const { data } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('cluster', cluster)
+        .order('created_at', { ascending: true });
 
-    return data || [];
+      return data || [];
+    } catch (error) {
+      console.error('Failed to get notes by cluster:', error);
+      return [];
+    }
   }
 
   static async getNotesByCategory(userId: string, category: string): Promise<Note[]> {
-    const { data, error } = await supabase
-      .from('notes')
-      .select('*')
-      .eq('user_id', userId)
-      .eq('category', category)
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .eq('category', category)
+        .order('created_at', { ascending: false });
 
     if (error) {
       throw error;
     }
 
-    return data || [];
+      return data || [];
+    } catch (error) {
+      console.error('Failed to get notes by category:', error);
+      return [];
+    }
   }
 
   static async groupAndLabelNotes(notes: Note[]): Promise<void> {
@@ -137,41 +171,56 @@ export class NoteService {
   }
 
   static async searchNotes(userId: string, searchQuery: string): Promise<Note[]> {
-    const { data, error } = await supabase
-      .from('notes')
-      .select('*')
-      .eq('user_id', userId)
-      .ilike('content', `%${searchQuery}%`)
-      .order('created_at', { ascending: false });
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .ilike('content', `%${searchQuery}%`)
+        .order('created_at', { ascending: false });
 
     if (error) {
       throw error;
     }
 
-    return data || [];
+      return data || [];
+    } catch (error) {
+      console.error('Failed to search notes:', error);
+      return [];
+    }
   }
 
   static async getNotesCount(userId: string): Promise<number> {
-    const { count, error } = await supabase
-      .from('notes')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId);
+    try {
+      const { count, error } = await supabase
+        .from('notes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId);
 
     if (error) {
       throw error;
     }
 
     return count || 0;
+    } catch (error) {
+      console.error('Failed to get notes count:', error);
+      return 0;
+    }
   }
 
   static async getNotesCountByCategory(userId: string, category: string): Promise<number> {
-    const { count } = await supabase
-      .from('notes')
-      .select('*', { count: 'exact', head: true })
-      .eq('user_id', userId)
-      .eq('category', category);
+    try {
+      const { count } = await supabase
+        .from('notes')
+        .select('*', { count: 'exact', head: true })
+        .eq('user_id', userId)
+        .eq('category', category);
 
     return count || 0;
+    } catch (error) {
+      console.error('Failed to get notes count by category:', error);
+      return 0;
+    }
   }
 
   private static containsDateTime(content: string): boolean {

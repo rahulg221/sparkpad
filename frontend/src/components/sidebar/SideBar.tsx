@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   SideBarContainer,
   TextBarForm, 
@@ -11,7 +11,6 @@ import {
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
-import { supabase } from '../../api/supabaseClient';
 import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
 import {  MdLightbulb } from 'react-icons/md';
@@ -20,33 +19,20 @@ import { PrimaryButton } from '../../styles/shared/Button.styles';
 export const SideBar = () => {
   const [text, setText] = useState('');
   const { user } = useAuth();
-  const { setNotificationMessage, setShowNotification, isLoading, notificationMessage, showNotification, summary, bulletPoints } = useActions();
+  const { setNotificationMessage, setShowNotification, getLastSummary, isLoading, notificationMessage, showNotification, bulletPoints } = useActions();
+
+  useEffect(() => {
+    getLastSummary();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {
-      // Fetch the full user data
-      const { data: userData, error: userError } = await supabase
-        .from("users")
-        .select("id")
-        .eq("id", user?.id)
-        .single();
-
-      if (userError || !userData) {
-        console.error("Failed to get user ID:", userError);
-        return;
-      }
-  
-      if (!text.trim()) {
-        console.warn("Cannot submit empty note.");
-        return;
-      }
-  
+    try {  
       // Create note object
       const note: Note = {
         content: text.trim(),
-        user_id: userData.id,
+        user_id: user?.id || '',
         category: "Unsorted",
         cluster: -1,
       };
@@ -64,18 +50,12 @@ export const SideBar = () => {
     } catch (error) {
       console.error("Unexpected error in handleSubmit:", error);
     }
-  };  
-
-  const getDate = () => {
-    const date = new Date();
-    return date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-  };
+  }; 
 
   return (
     <>
       <SideBarContainer>
         <h2>Snapshot</h2>
-        { summary ? 
         <SummaryContainer>
           <BulletList>
             {bulletPoints.map((bulletPoint, index) => (
@@ -88,9 +68,6 @@ export const SideBar = () => {
             ))}
           </BulletList>
         </SummaryContainer> 
-        : 
-        <p>Use Snapshot to view a condensed summary of your notes.</p>
-        }
         <TextBarForm onSubmit={handleSubmit}>
           <h2>New Note</h2>
           <TextInput

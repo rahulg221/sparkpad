@@ -3,7 +3,6 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { NoteService } from '../api/noteService';
 import { useAuth } from './AuthContext';
 import { Note } from '../models/noteModel';
-import CalendarService from '../api/calendarService';
 
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
@@ -12,6 +11,7 @@ type ActionsContextType = {
   setShowNotification: (show: boolean) => void;
   setSummary: (summary: string) => void;
   setCurrentNotes: (notes: Note[]) => void;
+  getLastSummary: () => void;
   isLoading: boolean;
   notificationMessage: string;
   showNotification: boolean;
@@ -30,7 +30,6 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [summary, setSummary] = useState('');
     const [bulletPoints, setBulletPoints] = useState<string[]>([]);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
-    const [googleAuthUrl, setGoogleAuthUrl] = useState('');
 
     const autoOrganizeNotes = async () => {
         try {
@@ -52,7 +51,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const showSnapshot = async () => {
         try {
             setIsLoading(true);
-            const summary = await NoteService.summarizeNotes(currentNotes);
+            const summary = await NoteService.summarizeNotes(currentNotes, user?.id || '');
             setSummary(summary);
 
             const bulletpoints = summary
@@ -69,8 +68,36 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const getLastSummary = async () => {
+        let last_summary = '';
+        try {
+            setIsLoading(true);
+
+            if (localStorage.getItem('last_summary')) {
+                last_summary = localStorage.getItem('last_summary') || '';
+            } else {
+                last_summary = 'Click Snapshot to generate a summary of your current view.';
+            }
+
+            setSummary(last_summary!);
+
+            const bulletpoints = last_summary!
+            .trim()
+            .split('\n')
+            .map(line => line.replace(/^[-]\s*/, '').trim());
+
+            setBulletPoints(bulletpoints);
+            console.log(bulletpoints);
+
+            setIsLoading(false);
+        } catch (err) {
+            console.error('Error finding last summary:', err);
+            setIsLoading(false);
+        }
+    };
+
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes}}>
+        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSummary, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes}}>
             {children}
         </ActionsContext.Provider>
     );

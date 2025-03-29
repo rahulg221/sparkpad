@@ -12,12 +12,6 @@ export const ModalOverlay = styled.div`
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  animation: fadeIn 0.2s ease-out;
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
 `;
 
 export const ModalContainer = styled.div`
@@ -29,7 +23,6 @@ export const ModalContainer = styled.div`
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  animation: slideIn 0.3s ease-out;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -47,17 +40,6 @@ export const ModalContainer = styled.div`
   
   &::-webkit-scrollbar-thumb:hover {
     background: ${({ theme }) => theme.colors.textLight};
-  }
-
-  @keyframes slideIn {
-    from { 
-      transform: translateY(20px);
-      opacity: 0;
-    }
-    to { 
-      transform: translateY(0);
-      opacity: 1;
-    }
   }
 `;
 

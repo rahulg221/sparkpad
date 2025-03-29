@@ -32,6 +32,7 @@ export const theme = {
     md: '10px',
     lg: '15px',
     xl: '24px',
+    xxl: '48px',
   },
   borderRadius: {
     sm: '4px',
@@ -49,7 +50,7 @@ export const theme = {
     md: '1rem',        // 16px
     lg: '1.125rem',    // 18px
     xl: '1.25rem',     // 20px
-    xxl: '4rem',     // 64px
+    xxl: '3rem',     // 48px
   },
 };
 

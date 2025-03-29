@@ -22,10 +22,6 @@ export const NotesContainer = styled.div`
   gap: ${({ theme }) => theme.spacing.md};
 `;
 
-export const Spacer = styled.div`
-  flex: 1;
-`;
-
 export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -37,12 +33,6 @@ export const NoteCard = styled.div`
   &:hover {
     transform: translateY(-2px);
   }
-`;
-
-export const NoteContent = styled.p`
-  color: ${({ theme }) => theme.colors.textPrimary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-  white-space: pre-wrap;
 `;
 
 export const NoteInfo = styled.p`

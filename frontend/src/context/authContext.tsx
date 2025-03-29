@@ -2,6 +2,7 @@ import { createContext, useContext, ReactNode, useState, useEffect } from 'react
 import { AuthService } from '../api/authService';
 import { User } from '../models/userModel';
 import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../api/supabaseClient';
 
 interface AuthContextType {
     user: User | null;
@@ -18,6 +19,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
+        let mounted = true;
+
         const fetchUser = async () => {
             try {
                 const user = await AuthService.getCurrentUser();
@@ -28,7 +31,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                 setIsLoading(false);
             }
         };
-        fetchUser();
+        fetchUser();     
     }, []);
 
     const signIn = async (email: string, password: string) => {

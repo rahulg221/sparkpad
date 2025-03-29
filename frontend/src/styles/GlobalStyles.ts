@@ -31,10 +31,6 @@ export const GlobalStyles = createGlobalStyle`
     font-size: ${({ theme }) => theme.fontSize.lg};
   }
 
-  h3 {
-    font-size: ${({ theme }) => theme.fontSize.xxl};
-  }
-
   p {
     font-size: ${({ theme }) => theme.fontSize.md};
   }

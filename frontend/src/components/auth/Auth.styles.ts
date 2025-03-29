@@ -8,13 +8,13 @@ export const AuthPageContainer = styled.div`
   align-items: center;
   justify-content: center;
   background-color: ${({ theme }) => theme.colors.bgDark};
+  background-image: radial-gradient(#ffffff11 1px, transparent 1px);
+  background-size: 20px 20px;
 `;
 
 export const FormContainer = styled.div`
-  max-width: 400px;
-  width: 90%;
-  margin: ${({ theme }) => theme.spacing.xl} auto;
-  padding: ${({ theme }) => theme.spacing.xl};
+  margin: ${({ theme }) => theme.spacing.xxl};
+  padding: ${({ theme }) => theme.spacing.xxl};
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);

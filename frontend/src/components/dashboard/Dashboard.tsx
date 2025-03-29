@@ -10,7 +10,7 @@ import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
 import { SearchBar } from '../searchbar/SearchBar';
-import { NoteCard, NoteContent, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../noteslist/NotesList.Styles';
+import { NoteCard, NoteMeta, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -38,10 +38,8 @@ export const Dashboard = () => {
             try {
                 await CalendarService.sendAuthCodeToBackend(code);
                 console.log("Calendar connected successfully");
-                //navigate("/dashboard");
             } catch (err) {
                 console.error("Failed to complete Google OAuth callback", err);
-                //navigate("/dashboard");
             }
         };
 
@@ -63,6 +61,7 @@ export const Dashboard = () => {
 
     const handleBackClick = () => {
         setSelectedCategory(null);
+        setSearchResults([]);
     };
 
     const handleSearch = async (query: string) => {
@@ -147,9 +146,7 @@ export const Dashboard = () => {
                 {searchResults.map((note) => (
                   <NoteCard key={note.id}>
                     <NoteMeta>
-                      <NoteContent>
                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
-                      </NoteContent>
                       <NoteInfo>
                           {note.category}
                           <br />
