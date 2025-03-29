@@ -17,19 +17,6 @@ export const BulletIcon = styled.span`
   transform: translateY(4px);
 `;
 
-export const SideBarContainer = styled.div`
-  width: 20%;
-  padding: ${({ theme }) => theme.spacing.lg};
-  display: flex;
-  background-color: ${({ theme }) => theme.colors.bgElevated};
-  border-right: 1px solid ${({ theme }) => theme.colors.border};
-  flex-shrink: 0;
-  height: 100vh;
-  flex-direction: column;
-  position: sticky;
-  top: 0;
-`;
-
 export const SummaryContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};

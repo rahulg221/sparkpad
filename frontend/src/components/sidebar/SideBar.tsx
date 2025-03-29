@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { 
-  SideBarContainer,
   TextBarForm, 
   TextInput,
   SummaryContainer,
@@ -15,6 +14,7 @@ import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
 import {  MdLightbulb } from 'react-icons/md';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
+import { ResizableSidebar } from '../resize/Resize';
 
 export const SideBar = () => {
   const [text, setText] = useState('');
@@ -54,33 +54,33 @@ export const SideBar = () => {
 
   return (
     <>
-      <SideBarContainer>
+      <ResizableSidebar>
         <h2>Snapshot</h2>
         <SummaryContainer>
-          <BulletList>
-            {bulletPoints.map((bulletPoint, index) => (
-              <BulletItem key={index}>
-                <BulletIcon>
-                  <MdLightbulb size={20} />
-                </BulletIcon>
-                <span>{bulletPoint}</span>
-              </BulletItem>
-            ))}
-          </BulletList>
-        </SummaryContainer> 
-        <TextBarForm onSubmit={handleSubmit}>
-          <h2>New Note</h2>
-          <TextInput
-            as="textarea"
-            value={text}
-            onChange={(e) => setText(e.target.value)}
-            placeholder='Capture an idea, task, or reminder...'
-            disabled={isLoading}
-            rows={1}
-          />
-          <PrimaryButton width="100%" type="submit" disabled={isLoading}>Create Note</PrimaryButton>
+        <BulletList>
+          {bulletPoints.map((bulletPoint, index) => (
+            <BulletItem key={index}>
+              <BulletIcon>
+                <MdLightbulb size={20} />
+              </BulletIcon>
+              <span>{bulletPoint}</span>
+            </BulletItem>
+          ))}
+        </BulletList>
+      </SummaryContainer> 
+      <TextBarForm onSubmit={handleSubmit}>
+        <h2>New Note</h2>
+        <TextInput
+          as="textarea"
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder='Capture an idea, task, or reminder...'
+          disabled={isLoading}
+          rows={1}
+        />
+        <PrimaryButton width="100%" type="submit" disabled={isLoading}>Create Note</PrimaryButton>
         </TextBarForm>
-      </SideBarContainer>
+      </ResizableSidebar>
       {showNotification && (
         <Notification 
           message={notificationMessage} 
