@@ -17,6 +17,36 @@ export const BulletIcon = styled.span`
   transform: translateY(4px);
 `;
 
+export const EventsContainer = styled.div`
+  padding: ${({ theme }) => theme.spacing.lg};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textPrimary};
+  overflow: visible;  
+  height: auto;
+  max-height: none;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.bgLight};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.textLight};
+  }
+`;
+
 export const SummaryContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
@@ -24,8 +54,9 @@ export const SummaryContainer = styled.div`
   border: 1px solid ${({ theme }) => theme.colors.border};
   font-size: ${({ theme }) => theme.fontSize.sm};
   color: ${({ theme }) => theme.colors.textPrimary};
-  overflow-y: auto;
-  margin-bottom: auto;
+  overflow: visible;  
+  height: auto;
+  max-height: none;
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -49,9 +80,7 @@ export const SummaryContainer = styled.div`
 export const TextBarForm = styled.form`
   align-items: flex-start;
   margin-top: auto;
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
   position: relative;
-  height: 45%;
   display: flex;
   flex-direction: column;
 `;
@@ -59,8 +88,7 @@ export const TextBarForm = styled.form`
 export const TextInput = styled.textarea`
   flex: 1;
   width: 100%;
-  height: 100%;
-  min-height: 30vh;
+  min-height: 25vh;
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
@@ -125,32 +153,4 @@ export const SubmitButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
-`;
-
-export const NotesList = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.lg};
-  flex: 1;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: ${({ theme }) => theme.spacing.md};
-`;
-
-export const NoteItem = styled.div`
-  padding: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.bgLight};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-`;
-
-export const NoteContent = styled.p`
-  margin: 0;
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  color: ${({ theme }) => theme.colors.textPrimary};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
-`;
-
-export const NoteDate = styled.span`
-  font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textLight};
 `;

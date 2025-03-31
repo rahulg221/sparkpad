@@ -58,28 +58,7 @@ class CalendarService:
             name = event.get("summary", "No Title")
             start = event.get("start", {}).get("dateTime")
 
-            if start:
-                dt = parser.isoparse(start).astimezone(eastern)
-                delta = dt - now
-                total_minutes = int(delta.total_seconds() / 60)
-
-                days = total_minutes // 1440
-                hours = (total_minutes % 1440) // 60
-                minutes = total_minutes % 60
-
-                if days > 0:
-                    countdown = f"{days}d {hours}h {minutes}m"
-                elif hours > 0:
-                    countdown = f"{hours}h {minutes}m"
-                else:
-                    countdown = f"{minutes}m"
-
-                events_list.append(f"{name} in {countdown}")
-
-            else:
-                events_list.append(f"{name} [No start time]")
-
-        print(events_list)
+            events_list.append(f"{start}#{name}")
 
         return events_list
 

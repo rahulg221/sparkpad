@@ -3,6 +3,7 @@ import { createContext, ReactNode, useContext, useState } from 'react';
 import { NoteService } from '../api/noteService';
 import { useAuth } from './AuthContext';
 import { Note } from '../models/noteModel';
+import CalendarService from '../api/calendarService';
 
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
@@ -11,12 +12,13 @@ type ActionsContextType = {
   setShowNotification: (show: boolean) => void;
   setSummary: (summary: string) => void;
   setCurrentNotes: (notes: Note[]) => void;
-  getLastSummary: () => void;
+  getLastSnapshot: () => void;
   isLoading: boolean;
   notificationMessage: string;
   showNotification: boolean;
   summary: string;
   bulletPoints: string[];
+  calendarEvents: string[];
   currentNotes: Note[];
 };
 
@@ -30,6 +32,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [summary, setSummary] = useState('');
     const [bulletPoints, setBulletPoints] = useState<string[]>([]);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
+    const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
 
     const autoOrganizeNotes = async () => {
         try {
@@ -52,13 +55,19 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         try {
             setIsLoading(true);
             const summary = await NoteService.summarizeNotes(currentNotes, user?.id || '');
+            const events = await CalendarService.getCalendarEvents();
+
             setSummary(summary);
+
+            localStorage.setItem('last_summary', summary);
+            localStorage.setItem('last_events', JSON.stringify(events));
 
             const bulletpoints = summary
             .trim()
             .split('\n')
             .map(line => line.replace(/^[-]\s*/, '').trim());
 
+            setCalendarEvents(events);
             setBulletPoints(bulletpoints);
             console.log(bulletpoints);
             setIsLoading(false);
@@ -68,8 +77,10 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const getLastSummary = async () => {
+    const getLastSnapshot = async () => {
         let last_summary = '';
+        let last_events = [];
+
         try {
             setIsLoading(true);
 
@@ -79,6 +90,12 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
                 last_summary = 'Click Snapshot to generate a summary of your current view.';
             }
 
+            if (localStorage.getItem('last_events')) {
+                last_events = JSON.parse(localStorage.getItem('last_events') || '[]');
+            } else {
+                last_events = [];
+            }   
+
             setSummary(last_summary!);
 
             const bulletpoints = last_summary!
@@ -86,8 +103,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             .split('\n')
             .map(line => line.replace(/^[-]\s*/, '').trim());
 
+            setCalendarEvents(last_events);
             setBulletPoints(bulletpoints);
-            console.log(bulletpoints);
 
             setIsLoading(false);
         } catch (err) {
@@ -97,7 +114,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSummary, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes}}>
+        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents}}>
             {children}
         </ActionsContext.Provider>
     );

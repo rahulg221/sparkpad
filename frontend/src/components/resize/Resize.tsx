@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { DragHandle, SidebarContainer } from "./Resize.Styles";
 
-const MIN_WIDTH = 180;
+const MIN_WIDTH = 160;
 const MAX_WIDTH = 500;
 
 export const ResizableSidebar = ({ children }: { children: React.ReactNode }) => {

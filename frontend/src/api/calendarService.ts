@@ -45,6 +45,24 @@ export class CalendarService {
     return notificationMessage;
   }
 
+  static async getCalendarEvents(): Promise<string[]> {
+    const response = await fetch(`${API_URL}/getevents`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`, 
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to get calendar events');
+    }   
+
+    const data = await response.json(); 
+
+    return data.events;
+  }
+
   static async getGoogleAuthUrl(): Promise<string> {
     const response = await fetch(`${API_URL}/auth/google/url`, {
       method: 'GET',

@@ -8,6 +8,15 @@ export class NoteService {
   static async addNote(note: Note): Promise<string> {
     let notificationMessage = '';
 
+    if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
+      notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
+
+      return notificationMessage;
+    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
+      notificationMessage = await CalendarMethods.createCalendarTask(note.content);
+
+      return notificationMessage;
+    }
     try {
       await supabase
         .from('notes')
@@ -22,12 +31,6 @@ export class NoteService {
         .select();
 
       notificationMessage = 'Successfully added note!';
-
-      if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
-        notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
-      } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
-        notificationMessage = await CalendarMethods.createCalendarTask(note.content);
-      }
 
     } catch (error) {
       notificationMessage = 'Failed to add note';
@@ -105,19 +108,6 @@ export class NoteService {
     const data = await response.json();
 
     const summary = data.summary;
-
-    localStorage.setItem('last_summary', summary);
-
-    // Save the summary to the user's record in the database
-    try {
-      await supabase
-        .from('users')
-        .update({ active_summary: summary })
-        .eq('id', userId);
-    } catch (error) {
-      console.error('Failed to save summary to user record:', error);
-      // Continue with the function even if saving to user table fails
-    }
 
     return summary;
   }

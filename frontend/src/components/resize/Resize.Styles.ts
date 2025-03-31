@@ -9,6 +9,25 @@ export const SidebarContainer = styled.div`
   position: relative;
   flex-shrink: 0;
   padding: ${({ theme }) => theme.spacing.lg};
+  overflow-y: auto; 
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: ${({ theme }) => theme.colors.bgLight};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: ${({ theme }) => theme.colors.border};
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+  
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.textLight};
+  }
 `;
 
 export const DragHandle = styled.div`

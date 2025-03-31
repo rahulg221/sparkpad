@@ -95,6 +95,19 @@ async def create_snapshot(request_body: Notes, user=Depends(AuthService().get_cu
     except Exception as e:
         print("Error summarizing notes:", e)
         raise HTTPException(status_code=500, detail="Failed to summarize notes")
+    
+@app.get("/getevents")
+async def get_events(user=Depends(AuthService().get_current_user)):
+    auth_id = user["sub"]
+
+    try:
+        calendar_service = CalendarService(auth_id)
+        events = calendar_service.get_calendar_events() 
+
+        return {"events": events}
+    except Exception as e:
+        print("Error getting calendar events:", e)
+        raise HTTPException(status_code=500, detail="Failed to get calendar events")
 
 @app.get("/auth/google/url")
 async def get_google_auth_url(user=Depends(AuthService().get_current_user)):

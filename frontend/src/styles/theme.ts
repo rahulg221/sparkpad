@@ -1,30 +1,28 @@
 export const theme = {
   colors: {
-    // Backgrounds
-    bgDark: '#0a0a0a',
-    bgElevated: '#121212',
-    bgLight: '#1c1c1c',
+    bgDark: '#0a0a0a',      // Almost black background
+    bgElevated: '#1a1625',     // Dark purple for cards, modals
+    bgLight: '#241c35',        // Slightly lighter purple for inputs, code blocks
 
-    // Text
-    textPrimary: '#ffffff',
-    textLight: '#aab1bc',
+    // Text colors (light + readable)
+    textPrimary: '#f3e5fd',    // Very light purple-white (for high contrast)
+    textLight: '#b5adc6',      // Muted lavender-gray (for secondary text)
 
-    // Primary — Coral core
-    primary: '#ff6b6b',                 // Coral
-    primaryHover: '#ff8585',            // Lighter coral hover
-    primaryLight: 'rgba(255, 107, 107, 0.15)',
+    // Accent colors (calm purples)
+    primary: '#b388ff',         // Light purple (main interactive elements)
+    primaryHover: '#c9a9ff',    // Brighter purple for hover/active states
+    primaryLight: 'rgba(179, 136, 255, 0.15)',  // Transparent background fill
 
-    // Accent (optional)
-    accent: '#ffc107',                  // Golden neural glow
-    accentHover: '#ffe082',
+    accent: '#9575cd',          // Mid purple for icons, outlines, tags
+    accentHover: '#b39ddb',     // Hovered accent purple
 
-    // Utility / Semantic
-    border: '#2a2a2a',
-    error: '#ef5350',
-    success: '#66bb6a',
-    warning: '#fbc02d',
-    info: '#81d4fa',
-    disabled: '#3a3a3a'
+    // Utility colors
+    border: '#2d2440',          // Deep purple border lines
+    error: '#ef9a9a',           // Keeping red for errors
+    success: '#a5d6a7',         // Keeping green for success
+    warning: '#ffecb3',         // Keeping yellow for warnings
+    info: '#b39ddb',           // Light purple for info boxes
+    disabled: '#4a4255'         // Muted gray-purple for disabled elements
   },
   spacing: {
     xs: '4px',
@@ -57,6 +55,30 @@ export const theme = {
 export type Theme = typeof theme; 
 
 /*
+bgDark: '#0a0a0a',
+    bgElevated: '#121212',
+    bgLight: '#1c1c1c',
+
+    // Text
+    textPrimary: '#ffffff',
+    textLight: '#aab1bc',
+
+    // Primary — Coral core
+    primary: '#ff6b6b',                 // Coral
+    primaryHover: '#ff8585',            // Lighter coral hover
+    primaryLight: 'rgba(255, 107, 107, 0.15)',
+
+    // Accent (optional)
+    accent: '#ffc107',                  // Golden neural glow
+    accentHover: '#ffe082',
+
+    // Utility / Semantic
+    border: '#2a2a2a',
+    error: '#ef5350',
+    success: '#66bb6a',
+    warning: '#fbc02d',
+    info: '#81d4fa',
+    disabled: '#3a3a3a'
  // Backgrounds
     bgDark: '#ffffff',         // App background: pure white
     bgElevated: '#f5f5f5',     // Light gray for cards, modals
