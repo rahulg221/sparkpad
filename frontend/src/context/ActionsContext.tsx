@@ -13,6 +13,8 @@ type ActionsContextType = {
   setSummary: (summary: string) => void;
   setCurrentNotes: (notes: Note[]) => void;
   getLastSnapshot: () => void;
+  semanticSearch: (query: string) => void;
+  searchResults: Note[];
   isLoading: boolean;
   notificationMessage: string;
   showNotification: boolean;
@@ -33,6 +35,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [bulletPoints, setBulletPoints] = useState<string[]>([]);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
+    const [searchResults, setSearchResults] = useState<Note[]>([]);
 
     const autoOrganizeNotes = async () => {
         try {
@@ -54,7 +57,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const showSnapshot = async () => {
         try {
             setIsLoading(true);
-            const summary = await NoteService.summarizeNotes(currentNotes, user?.id || '');
+            const summary = await NoteService.summarizeNotes(currentNotes);
             const events = await CalendarService.getCalendarEvents();
 
             setSummary(summary);
@@ -113,8 +116,19 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const semanticSearch = async (query: string) => {
+        try {
+            setIsLoading(true);
+            const results = await NoteService.semanticSearch(query);
+            setSearchResults(results);
+            setIsLoading(false);
+        } catch (err) {
+            console.error('Error semantic searching:', err);    
+        }
+    };
+    
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes,  isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents}}>
+        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults}}>
             {children}
         </ActionsContext.Provider>
     );

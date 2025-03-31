@@ -16,7 +16,7 @@ import dateparser
 
 load_dotenv()
 
-class CalendarService:
+class GoogleService:
     """
     Service for managing Google Calendar events.
     """

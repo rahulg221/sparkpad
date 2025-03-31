@@ -141,7 +141,7 @@ class ClusteringService:
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
-        factor = 0
+        factor = 1
 
         if n <= 20:
             return 1+factor, 0+factor  

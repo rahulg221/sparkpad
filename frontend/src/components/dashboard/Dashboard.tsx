@@ -3,6 +3,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
+    Divider,
     Header,
 } from './Dashboard.Styles';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
@@ -22,10 +23,9 @@ import CalendarService from '../../api/calendarService';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
-    const { showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, isLoading, notificationMessage, showNotification, summary } = useActions();
+    const { semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, isLoading, notificationMessage, showNotification, summary, searchResults } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [notes, setNotes] = useState<Note[]>([]);
     const [showSettings, setShowSettings] = useState(false);
 
@@ -61,20 +61,15 @@ export const Dashboard = () => {
 
     const handleBackClick = () => {
         setSelectedCategory(null);
-        setSearchResults([]);
     };
 
     const handleSearch = async (query: string) => {
         if (!user?.id) return;
 
         try {
-            if (!query.trim()) {
-                setSearchResults([]);
-                return;
-            }
+            await semanticSearch(query);
 
-            const results = await NoteService.searchNotes(user.id, query);
-            setSearchResults(results);
+            console.log("searchResults", searchResults);
         } catch (error) {
             console.error('Search failed:', error);
         } 
@@ -118,6 +113,7 @@ export const Dashboard = () => {
             <Header>
                 <SecondaryButton onClick={handleBackClick}>
                     <MdHome size={20}/>
+                    Home
                 </SecondaryButton>
                 <SearchBar onSearch={handleSearch} />
                 <SecondaryButton onClick={autoOrganizeNotes}>
@@ -132,11 +128,14 @@ export const Dashboard = () => {
                     <MdEventAvailable size={20}/>
                     Calendar
                 </SecondaryButton>
+                <Divider />
                 <SecondaryButton onClick={handleSettingsClick}>
                     <MdSettings size={20}/>
+                    Settings
                 </SecondaryButton>
                 <SecondaryButton onClick={handleLogout}>
                     <MdLogout size={20}/>
+                    Logout
                 </SecondaryButton>
             </Header>
             {searchResults.length > 0 ? (

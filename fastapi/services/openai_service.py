@@ -6,17 +6,39 @@ load_dotenv()
 
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-class SummarizeService:
+class OpenAIService:
     """
-    Service for summarizing notes.
+    Service for generating summaries of notes and semantic embeddings.
     """
 
-    def __init__(self, notes_content: list[str], notes: list[dict]):
-        self.notes_content = notes_content
-        self.notes = notes
+    def __init__(self):
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
-    def summarize_notes(self):
+    def generate_embeddings(self, note_content: str) -> list[float]:
+        """
+        Generates a semantic embedding for a single note.
+        Returns:
+            A list of floats representing the embedding vector.
+        Raises:
+            Exception if the OpenAI API fails.
+        """
+
+        if not note_content or not note_content.strip():
+            raise ValueError("Note text is empty or invalid.")
+
+        text = preprocess_text(note_content)
+
+        try:
+            response = self.client.embeddings.create(
+                model="text-embedding-3-small",  
+                input=text,
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            print(f"Error generating embedding: {e}")
+            raise e
+
+    def summarize_notes(self, notes_content: list[str]):
         """
         Summarizes the given text using the OpenAI API.
         Args:
@@ -25,10 +47,10 @@ class SummarizeService:
             str: The summarized text.
         """
 
-        if len(self.notes_content) == 0:
+        if len(notes_content) == 0:
             return "No notes added today."
         
-        text = "\n".join(self.notes_content)
+        text = "\n".join(notes_content)
         text = preprocess_text(text)
 
         prompt = f"""
@@ -54,6 +76,6 @@ class SummarizeService:
             messages=[{"role": "user", "content": prompt}],
             max_tokens=1000,
         )
-    
+
         summary = response.choices[0].message.content
         return summary

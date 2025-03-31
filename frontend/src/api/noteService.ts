@@ -1,4 +1,4 @@
-import { supabase, token } from './supabaseClient';
+import { supabase, getToken } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import CalendarMethods from './calendarService';
 
@@ -6,18 +6,35 @@ const API_URL = import.meta.env.VITE_API_URL;
 
 export class NoteService {
   static async addNote(note: Note): Promise<string> {
+    const token = await getToken();
+    // Initialize notification message and OpenAI client
     let notificationMessage = '';
 
     if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
       notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
 
       return notificationMessage;
-    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
+    } else if (note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
     }
+
     try {
+      const response = await fetch(`${API_URL}/embed`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ note_content: note.content }),
+      });
+  
+      const embedding = await response.json();
+      const embeddingData = embedding.embedding;
+
+      console.log("embeddingData", embeddingData);
+      
       await supabase
         .from('notes')
         .insert([
@@ -26,6 +43,7 @@ export class NoteService {
             category: note.category,
             cluster: note.cluster,
             user_id: note.user_id,
+            embedding: embeddingData,
           },
         ])
         .select();
@@ -91,25 +109,32 @@ export class NoteService {
     }
   }
 
-  static async summarizeNotes(notes: Note[], userId: string): Promise<string> {
-    const response = await fetch(`${API_URL}/summarize`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,   
-      },
-      body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
-    });
+  static async summarizeNotes(notes: Note[]): Promise<string> {
+    const token = await getToken();
 
-    if (!response.ok) {
-      throw new Error('Summarization service request failed');
-    } 
+    try { 
+      const response = await fetch(`${API_URL}/summarize`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,   
+        },
+        body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
+      });
 
-    const data = await response.json();
+      if (!response.ok) {
+        throw new Error('Summarization service request failed');
+      } 
 
-    const summary = data.summary;
+      const data = await response.json();
 
-    return summary;
+      const summary = data.summary;
+
+      return summary;
+    } catch (error) {
+      console.error('Failed to summarize notes:', error);
+      return '';
+    }
   }
   
   static async getNotesByCluster(userId: string, cluster: number): Promise<Note[]> {
@@ -149,17 +174,22 @@ export class NoteService {
   }
 
   static async groupAndLabelNotes(notes: Note[]): Promise<void> {
-    const response = await fetch(`${API_URL}/label`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
-    });
+    const token = await getToken();
+    try {
+      const response = await fetch(`${API_URL}/label`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
+      });
 
-    if (!response.ok) {
-      throw new Error('Clustering service request failed');
+      if (!response.ok) {
+          throw new Error('Clustering service request failed');
+      }
+    } catch (error) {
+      console.error('Failed to group and label notes:', error);
     }
   }
 
@@ -179,6 +209,32 @@ export class NoteService {
       return data || [];
     } catch (error) {
       console.error('Failed to search notes:', error);
+      return [];
+    }
+  }
+
+  static async semanticSearch(searchQuery: string): Promise<Note[]> {
+    const token = await getToken();
+    console.log("searchQuery", searchQuery);
+    try {
+      const response = await fetch(`${API_URL}/semantic_search`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ note_content: searchQuery }),
+      }); 
+
+      if (!response.ok) {
+        throw new Error('Semantic search service request failed');
+      }
+
+      const data = await response.json();
+      console.log("data", data);
+      return data || [];
+    } catch (error) {
+      console.error('Failed to semantic search:', error);
       return [];
     }
   }

@@ -2,9 +2,9 @@
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from services.auth_service import AuthService
-from services.calendar_service import CalendarService
+from services.google_service import GoogleService
 from services.clustering_service import ClusteringService
-from services.summarize_service import SummarizeService
+from services.openai_service import OpenAIService
 from pydantic import BaseModel
 from supabase import create_client
 import os
@@ -33,8 +33,14 @@ class Notes(BaseModel):
     notes_content: list[str]
     notes: list[dict]
 
+class Note(BaseModel):
+    note_content: str
+
 class Event(BaseModel):
-    note: str
+    note_content: str
+
+class Task(BaseModel):
+    note_content: str
     
 @app.get("/")
 def main(user = Depends(AuthService().get_current_user)):
@@ -42,14 +48,13 @@ def main(user = Depends(AuthService().get_current_user)):
 
 @app.post("/event")
 async def create_new_event(request_body: Event, user=Depends(AuthService().get_current_user)):
-    note_text = request_body.note
+    note_content = request_body.note_content
     auth_id = user["sub"]
 
     try:
         # Create the calendar event
-        calendar_service = CalendarService(auth_id)
-        event = calendar_service.create_google_event(note_text)
-        calendar_events = calendar_service.get_calendar_events()
+        google_service = GoogleService(auth_id)
+        event = google_service.create_google_event(note_content)
 
         return {"event": event}
     except Exception as e:
@@ -57,14 +62,14 @@ async def create_new_event(request_body: Event, user=Depends(AuthService().get_c
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
     
 @app.post("/task")
-async def create_new_task(request_body: Event, user=Depends(AuthService().get_current_user)):
-    note_text = request_body.note
+async def create_new_task(request_body: Task, user=Depends(AuthService().get_current_user)):
+    note_content = request_body.note_content
     auth_id = user["sub"]
 
     try:
         # Create the calendar task  
-        calendar_service = CalendarService(auth_id)
-        task = calendar_service.create_google_task(note_text)
+        google_service = GoogleService(auth_id)
+        task = google_service.create_google_task(note_content)
 
         return {"task": task}
     except Exception as e:  
@@ -85,24 +90,53 @@ async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_curr
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
 
 @app.post("/summarize")
-async def create_snapshot(request_body: Notes, user=Depends(AuthService().get_current_user)):
+async def create_summary(request_body: Notes, user=Depends(AuthService().get_current_user)):
     try:
         # Summarize the notes
-        summarize_service = SummarizeService(request_body.notes_content, request_body.notes)
-        summary = summarize_service.summarize_notes()
+        openai_service = OpenAIService()
+        summary = openai_service.summarize_notes(request_body.notes_content)
 
         return {"summary": summary}
     except Exception as e:
         print("Error summarizing notes:", e)
         raise HTTPException(status_code=500, detail="Failed to summarize notes")
     
+@app.post("/embed")
+async def embed_note(request_body: Note, user=Depends(AuthService().get_current_user)):
+    try:
+        openai_service = OpenAIService()
+        embedding = openai_service.generate_embeddings(request_body.note_content)
+
+        return {"embedding": embedding}
+    except Exception as e:
+        print("Error embedding note:", e)
+        raise HTTPException(status_code=500, detail="Failed to embed note")
+    
+@app.post("/semantic_search")
+async def semantic_search(request_body: Note, user = Depends(AuthService().get_current_user)):
+    # Get embedding for the query
+    openai_service = OpenAIService()
+    print("request_body", request_body)
+    query_embedding = openai_service.generate_embeddings(request_body.note_content)
+
+    # Call Supabase RPC function 
+    results = supabase.rpc("match_notes", {
+        "query_embedding": query_embedding,
+        "match_threshold": 0.2,
+        "match_count": 10
+    }).execute()
+
+    print("results", results)
+    print("results", results.data)
+    return results.data
+    
 @app.get("/getevents")
 async def get_events(user=Depends(AuthService().get_current_user)):
     auth_id = user["sub"]
 
     try:
-        calendar_service = CalendarService(auth_id)
-        events = calendar_service.get_calendar_events() 
+        google_service = GoogleService(auth_id)
+        events = google_service.get_calendar_events() 
 
         return {"events": events}
     except Exception as e:
@@ -126,8 +160,8 @@ async def google_callback(code: str, user=Depends(AuthService().get_current_user
     auth_id = user["sub"]   
 
     try:
-        calendar_service = CalendarService(auth_id)
-        calendar_service.connect_calendar(code)
+        google_service = GoogleService(auth_id)
+        google_service.connect_calendar(code)
 
         return {"success": "Google Calendar connected successfully"}
     except Exception as e:

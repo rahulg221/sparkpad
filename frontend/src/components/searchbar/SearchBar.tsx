@@ -11,7 +11,12 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
   const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     const query = e.target.value;
     setSearchQuery(query);
-    onSearch(query);
+  };
+
+  const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      onSearch(searchQuery);
+    }
   };
 
   return (
@@ -20,6 +25,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
       placeholder="Search for notes..."
       value={searchQuery}
       onChange={handleSearch}
+      onKeyDown={handleSubmit}
     />
   );
 };

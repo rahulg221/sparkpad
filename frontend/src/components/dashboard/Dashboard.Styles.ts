@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+export const Divider = styled.div`
+  height: 5vh;
+  width: 1px;
+  background-color: ${({ theme }) => theme.colors.border};
+  margin: 0 12px;
+`;
+
 export const DashboardWrapper = styled.div`
   flex: 1;
   min-height: 100vh;

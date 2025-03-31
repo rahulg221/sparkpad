@@ -19,8 +19,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        let mounted = true;
-
         const fetchUser = async () => {
             try {
                 const user = await AuthService.getCurrentUser();

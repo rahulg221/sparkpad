@@ -10,7 +10,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-family: 'Fira Code', monospace;
+    font-family: monospace;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

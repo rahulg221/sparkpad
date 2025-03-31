@@ -1,28 +1,29 @@
 export const theme = {
   colors: {
-    bgDark: '#0a0a0a',      // Almost black background
-    bgElevated: '#1a1625',     // Dark purple for cards, modals
-    bgLight: '#241c35',        // Slightly lighter purple for inputs, code blocks
+    bgDark: '#0a0a0a',
+    bgElevated: '#121212',
+    bgLight: '#1c1c1c',
 
-    // Text colors (light + readable)
-    textPrimary: '#f3e5fd',    // Very light purple-white (for high contrast)
-    textLight: '#b5adc6',      // Muted lavender-gray (for secondary text)
+    // Text
+    textPrimary: '#ffffff',
+    textLight: '#aab1bc',
 
-    // Accent colors (calm purples)
-    primary: '#b388ff',         // Light purple (main interactive elements)
-    primaryHover: '#c9a9ff',    // Brighter purple for hover/active states
-    primaryLight: 'rgba(179, 136, 255, 0.15)',  // Transparent background fill
+    // Primary — Coral core
+    primary: '#ff6b6b',                 // Coral
+    primaryHover: '#ff8585',            // Lighter coral hover
+    primaryLight: 'rgba(255, 107, 107, 0.15)',
 
-    accent: '#9575cd',          // Mid purple for icons, outlines, tags
-    accentHover: '#b39ddb',     // Hovered accent purple
+    // Accent (optional)
+    accent: '#ffc107',                  // Golden neural glow
+    accentHover: '#ffe082',
 
-    // Utility colors
-    border: '#2d2440',          // Deep purple border lines
-    error: '#ef9a9a',           // Keeping red for errors
-    success: '#a5d6a7',         // Keeping green for success
-    warning: '#ffecb3',         // Keeping yellow for warnings
-    info: '#b39ddb',           // Light purple for info boxes
-    disabled: '#4a4255'         // Muted gray-purple for disabled elements
+    // Utility / Semantic
+    border: '#2a2a2a',
+    error: '#ef5350',
+    success: '#66bb6a',
+    warning: '#fbc02d',
+    info: '#81d4fa',
+    disabled: '#3a3a3a'
   },
   spacing: {
     xs: '4px',
@@ -33,8 +34,8 @@ export const theme = {
     xxl: '48px',
   },
   borderRadius: {
-    sm: '4px',
-    md: '8px',
+    sm: '6px',
+    md: '12px',
   },
   fonts: {
     primary: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -55,6 +56,30 @@ export const theme = {
 export type Theme = typeof theme; 
 
 /*
+// Background Colors
+    bgDark: '#F5EFE6',            // Soft, warm beige as the primary background
+    bgElevated: '#EDE4D9',        // Slightly darker beige for cards/modals
+    bgLight: '#E4DACC',           // Neutral beige-gray for inputs, subtle highlights
+
+    // Text Colors (crisp readability)
+    textPrimary: '#121212',       // Pure black text for maximum contrast
+    textLight: '#59544E',         // Muted dark-gray for secondary text
+
+    // Accent Colors (warm, professional accents)
+    primary: '#403B36',           // Rich dark chocolate-brown for interactive elements
+    primaryHover: '#575048',      // Slightly lighter brown for hover states
+    primaryLight: 'rgba(64,59,54,0.1)', // Gentle transparent brown highlights
+
+    accent: '#8C7A6B',            // Muted mocha beige for icons and outlines
+    accentHover: '#A39284',       // Slightly lighter mocha beige on hover
+
+    // Utility Colors (clear, neutral shades)
+    border: '#D1C5B7',            // Subtle beige-gray borders
+    error: '#D84315',             // Warm burnt-orange red for errors
+    success: '#558B2F',           // Subdued olive-green for successes
+    warning: '#F9A825',           // Deep gold-yellow for warnings
+    info: '#1976D2',              // Soft blue for informational messages
+    disabled: '#BEB6AD'           // Muted beige-gray for disabled elements
 bgDark: '#0a0a0a',
     bgElevated: '#121212',
     bgLight: '#1c1c1c',

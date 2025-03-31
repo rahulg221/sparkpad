@@ -97,6 +97,7 @@ export const TextInput = styled.textarea`
   font-size: ${({ theme }) => theme.fontSize.sm};
   resize: none;
   line-height: 1.5;
+  font-family: inherit;
   
   &:focus {
     outline: none;
