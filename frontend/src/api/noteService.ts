@@ -23,9 +23,12 @@ export class NoteService {
 
       notificationMessage = 'Successfully added note!';
 
-      if (NoteService.containsDateTime(note.content) && note.content[0] === '/') {
+      if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
         notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
+      } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
+        notificationMessage = await CalendarMethods.createCalendarTask(note.content);
       }
+
     } catch (error) {
       notificationMessage = 'Failed to add note';
     }

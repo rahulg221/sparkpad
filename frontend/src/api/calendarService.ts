@@ -24,6 +24,27 @@ export class CalendarService {
     return notificationMessage;
   }
 
+  static async createCalendarTask(text: string): Promise<string> {
+    let notificationMessage = '';
+
+    const response = await fetch(`${API_URL}/task`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
+      },
+      body: JSON.stringify({ note: text }),
+    });
+
+    if (!response.ok) {
+      notificationMessage = 'Failed to create calendar task';
+    } else {
+      notificationMessage = 'Calendar task created';
+    }
+
+    return notificationMessage;
+  }
+
   static async getGoogleAuthUrl(): Promise<string> {
     const response = await fetch(`${API_URL}/auth/google/url`, {
       method: 'GET',

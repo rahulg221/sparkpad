@@ -11,7 +11,7 @@ CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 CLIENT_SECRET = os.getenv("GOOGLE_CLIENT_SECRET")
 REDIRECT_URI = os.getenv("GOOGLE_REDIRECT_URI")
 
-SCOPES = ["https://www.googleapis.com/auth/calendar"]
+SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/tasks"]
 
 class AuthService:
     """
@@ -85,5 +85,9 @@ class AuthService:
         return {
             "access_token": credentials.token,
             "refresh_token": credentials.refresh_token,
-            "expiry": credentials.expiry.isoformat()
+            "expiry": credentials.expiry.isoformat(),
+            "token_uri": credentials.token_uri,
+            "client_id": credentials.client_id,
+            "client_secret": credentials.client_secret
         }
+    

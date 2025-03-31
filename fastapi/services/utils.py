@@ -140,3 +140,66 @@ def extract_datetime(text, base_datetime=None):
         return google_calendar_format
     
     return None
+
+def remove_filler_phrases(text):
+    for pattern in filler_phrases:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+    return text.strip()
+
+def remove_time_keywords(text):
+    for pattern in time_keywords:
+        text = re.sub(pattern, "", text, flags=re.IGNORECASE)
+    return text.strip()
+
+filler_phrases = [
+    r"\blet'?s\b",
+    r"\btry\b",
+    r"\bmaybe\b",
+    r"\bprobably\b",
+    r"\bjust\b",
+    r"\bkind of\b",
+    r"\bwe\b",
+    r"\bshould\b",
+    r"\bcan\b",
+    r"\bgonna\b",
+    r"\bgoin[g']? to\b",
+    r"\bsee if\b",
+    r"\bneed to\b",
+    r"\bhave to\b",
+    r"\bwanna\b",
+    r"\bwant to\b",
+    r"\bget to\b",
+    r"\bmake sure\b",
+    r"\basap\b",
+    r"\beventually\b",
+    r"\btry to\b",
+    r"\bsoon\b",
+    r"\bsometime\b",
+    r"\bhopefully\b",
+    r"\bmight\b",
+    r"\bby the way\b",
+    r"\bI think\b",
+    r"\ba bit\b",
+    r"\bkind of\b",
+    r"\bsort of\b",
+    r"\bto be honest\b",
+    r"\bno rush\b",
+    r"\ba little\b",
+    r"\baround\b",
+    r"\babout\b",
+    r"\bthis\b",
+    r"\bthat\b",
+    r"\bit\b",
+    r"\bon\b",
+    r"\bin\b",
+    r"\bat\b",
+    r"\bthe\b",
+    r"\bfor\b",
+    r"\bwith\b",
+    r"\bif possible\b",
+    r"\bif you can\b",
+]
+
+time_keywords = [
+            r"\b(?:on|at|by|around|this|next|the|a|an|in|to|from|between|today|tomorrow|noon|midnight|morning|evening|afternoon|night|pm|am|[0-9]{1,2}(:[0-9]{2})?\s?(am|pm)?)\b"
+        ]

@@ -49,11 +49,27 @@ async def create_new_event(request_body: Event, user=Depends(AuthService().get_c
         # Create the calendar event
         calendar_service = CalendarService(auth_id)
         event = calendar_service.create_google_event(note_text)
+        calendar_events = calendar_service.get_calendar_events()
 
         return {"event": event}
     except Exception as e:
         print("Failed to create calendar event:", e)
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
+    
+@app.post("/task")
+async def create_new_task(request_body: Event, user=Depends(AuthService().get_current_user)):
+    note_text = request_body.note
+    auth_id = user["sub"]
+
+    try:
+        # Create the calendar task  
+        calendar_service = CalendarService(auth_id)
+        task = calendar_service.create_google_task(note_text)
+
+        return {"task": task}
+    except Exception as e:  
+        print("Failed to create calendar task:", e)
+        raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
 async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_current_user)):
