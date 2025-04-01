@@ -15,7 +15,7 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.bgElevated};
+  background-color: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   width: 90%;

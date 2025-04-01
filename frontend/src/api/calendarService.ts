@@ -130,6 +130,31 @@ export class CalendarService {
       throw error;
     }
   }
+
+  static async getTasks(): Promise<string[]> {
+    const token = await getToken();
+    
+    try {
+      const response = await fetch(`${API_URL}/gettasks`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`, 
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get tasks');
+      }
+
+      const data = await response.json();
+
+      return data.tasks;
+    } catch (error) {
+      console.error('Failed to get tasks:', error);
+      throw error;
+    }
+  }
 }
 
 export default CalendarService;

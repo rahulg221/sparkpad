@@ -1,29 +1,30 @@
 export const theme = {
   colors: {
-    bgDark: '#0a0a0a',
-    bgElevated: '#121212',
-    bgLight: '#1c1c1c',
+    bgDark: '#f5f1e6',         // Light beige (base background)
+    bgElevated: '#fdf6c3',     // Muted post-it yellow (elevated cards or notes)#fdf6c3'
+    bgLight: '#f5f1e6',        // Bulletin board beige (slightly darker)
+    
+    textPrimary: '#000000',    // Black color for primary text
+    textLight: '#000000',
 
-    // Text
-    textPrimary: '#ffffff',
-    textLight: '#aab1bc',
-
-    // Primary — Coral core
-    primary: '#ff6b6b',                 // Coral
-    primaryHover: '#ff8585',            // Lighter coral hover
+    colorOne: '#FFD966', 
+    colorTwo: '#fbd28e',
+    colorThree: '#fce4b3',
+    colorFour: '#f1e3c8',
+    
+    primary: '#f67280',         
+    primaryHover: '#3b2f2f',
     primaryLight: 'rgba(255, 107, 107, 0.15)',
-
-    // Accent (optional)
-    accent: '#ffc107',                  // Golden neural glow
-    accentHover: '#ffe082',
-
-    // Utility / Semantic
-    border: '#2a2a2a',
-    error: '#ef5350',
-    success: '#66bb6a',
+    
+    accent: '#D64545',       // Less saturated muted red
+    accentHover: '#D64545',
+    
+    border: '#c8b79a',          // Soft brown border
+    error: '#c62828',
+    success: '#388e3c',
     warning: '#fbc02d',
-    info: '#81d4fa',
-    disabled: '#3a3a3a'
+    info: '#64b5f6',
+    disabled: '#d1c4a6',        // Muted tan    
   },
   spacing: {
     xs: '4px',
@@ -34,8 +35,8 @@ export const theme = {
     xxl: '48px',
   },
   borderRadius: {
-    sm: '6px',
-    md: '12px',
+    sm: '4px',
+    md: '8px',
   },
   fonts: {
     primary: `-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',

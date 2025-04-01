@@ -14,6 +14,9 @@ type ActionsContextType = {
   setCurrentNotes: (notes: Note[]) => void;
   getLastSnapshot: () => void;
   semanticSearch: (query: string) => void;
+  setSearchResults: (results: Note[]) => void;
+  updateTasks: () => void;
+  updateEvents: () => void;
   searchResults: Note[];
   isLoading: boolean;
   notificationMessage: string;
@@ -21,6 +24,7 @@ type ActionsContextType = {
   summary: string;
   bulletPoints: string[];
   calendarEvents: string[];
+  tasks: string[];
   currentNotes: Note[];
 };
 
@@ -36,6 +40,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
     const [searchResults, setSearchResults] = useState<Note[]>([]);
+    const [tasks, setTasks] = useState<string[]>([]);
 
     const autoOrganizeNotes = async () => {
         try {
@@ -53,24 +58,22 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             console.error('Error testing clustering:', err);
         }
     };
-
+    
     const showSnapshot = async () => {
         try {
             setIsLoading(true);
+            await updateTasks();
+            await updateEvents();
             const summary = await NoteService.summarizeNotes(currentNotes);
-            const events = await CalendarService.getCalendarEvents();
-
             setSummary(summary);
 
             localStorage.setItem('last_summary', summary);
-            localStorage.setItem('last_events', JSON.stringify(events));
 
             const bulletpoints = summary
             .trim()
             .split('\n')
             .map(line => line.replace(/^[-]\s*/, '').trim());
 
-            setCalendarEvents(events);
             setBulletPoints(bulletpoints);
             console.log(bulletpoints);
             setIsLoading(false);
@@ -80,9 +83,30 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
+    const updateTasks = async () => {
+        try {
+            const tasks = await CalendarService.getTasks(); 
+            localStorage.setItem('last_tasks', JSON.stringify(tasks));
+            setTasks(tasks);
+        } catch (err) {
+            console.error("Failed to update tasks:", err);
+        }
+    };
+        
+    const updateEvents = async () => {
+        try {
+            const events = await CalendarService.getCalendarEvents(); 
+            localStorage.setItem('last_events', JSON.stringify(events));
+            setCalendarEvents(events); 
+        } catch (err) {
+            console.error("Failed to update events:", err);
+        }
+    };      
+
     const getLastSnapshot = async () => {
         let last_summary = '';
         let last_events = [];
+        let last_tasks = [];
 
         try {
             setIsLoading(true);
@@ -99,6 +123,12 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
                 last_events = [];
             }   
 
+            if (localStorage.getItem('last_tasks')) {
+                last_tasks = JSON.parse(localStorage.getItem('last_tasks') || '[]');
+            } else {
+                last_tasks = [];
+            }
+
             setSummary(last_summary!);
 
             const bulletpoints = last_summary!
@@ -107,6 +137,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             .map(line => line.replace(/^[-]\s*/, '').trim());
 
             setCalendarEvents(last_events);
+            setTasks(last_tasks);
             setBulletPoints(bulletpoints);
 
             setIsLoading(false);
@@ -128,7 +159,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };
     
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults}}>
+        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, setSearchResults, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults, tasks, updateTasks, updateEvents}}>
             {children}
         </ActionsContext.Provider>
     );

@@ -10,7 +10,7 @@ export const GlobalStyles = createGlobalStyle`
 
   body {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-family: monospace;
+    font-family: 'Nunito', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }

@@ -25,7 +25,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: transparent;
   color: ${({ theme }) => theme.colors.textLight};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1.25px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;

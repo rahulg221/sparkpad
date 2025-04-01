@@ -52,24 +52,24 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       <CategoryTitle>{category}</CategoryTitle>
       <NotesContainer>
-      {notes.map((note) => (
-        <NoteCard key={note.id}>
-          <NoteMeta>
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
-            <NoteInfo>
-                {note.category}
-                <br />
-                {new Date(note.created_at!).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-            </NoteInfo>
-          </NoteMeta>
-        </NoteCard>
-      ))}
+        {notes.map((note) => (
+          <NoteCard key={note.id}>
+            <NoteMeta>
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
+              <NoteInfo>
+                  {note.category}
+                  <br />
+                  {new Date(note.created_at!).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                  <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+              </NoteInfo>
+            </NoteMeta>
+          </NoteCard>
+        ))}
     </NotesContainer>
     </>
   );

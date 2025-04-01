@@ -8,50 +8,47 @@ export class NoteService {
   static async addNote(note: Note): Promise<string> {
     const token = await getToken();
     // Initialize notification message and OpenAI client
-    let notificationMessage = '';
+    let notificationMessage = 'Include a date or time in your note to create a calendar event or task';
 
     if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
       notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
 
       return notificationMessage;
-    } else if (note.content.startsWith('/t')) {
+    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
-    }
-
-    try {
-      const response = await fetch(`${API_URL}/embed`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ note_content: note.content }),
-      });
-  
-      const embedding = await response.json();
-      const embeddingData = embedding.embedding;
-
-      console.log("embeddingData", embeddingData);
-      
-      await supabase
-        .from('notes')
-        .insert([
-          {
-            content: note.content,
-            category: note.category,
-            cluster: note.cluster,
-            user_id: note.user_id,
-            embedding: embeddingData,
+    } else if (!(note.content.startsWith('/e') || note.content.startsWith('/t'))) {
+      try {
+        const response = await fetch(`${API_URL}/embed`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
           },
-        ])
-        .select();
+          body: JSON.stringify({ note_content: note.content }),
+        });
+    
+        const embedding = await response.json();
+        const embeddingData = embedding.embedding;
 
-      notificationMessage = 'Successfully added note!';
-
-    } catch (error) {
-      notificationMessage = 'Failed to add note';
+        await supabase
+          .from('notes')
+          .insert([
+            {
+              content: note.content,
+              category: note.category,
+              cluster: note.cluster,
+              user_id: note.user_id,
+              embedding: embeddingData,
+            },
+          ])
+          .select();
+  
+        notificationMessage = 'Successfully added note!';
+      } catch (error) {
+        notificationMessage = 'Failed to add note';
+      }
     }
 
     return notificationMessage;

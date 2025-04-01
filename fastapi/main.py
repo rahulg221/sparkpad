@@ -129,6 +129,19 @@ async def semantic_search(request_body: Note, user = Depends(AuthService().get_c
     print("results", results)
     print("results", results.data)
     return results.data
+
+@app.get("/gettasks")
+async def get_tasks(user=Depends(AuthService().get_current_user)):
+    auth_id = user["sub"]
+
+    try:
+        google_service = GoogleService(auth_id)
+        tasks = google_service.get_tasks()        
+
+        return {"tasks": tasks}
+    except Exception as e:
+        print("Error getting tasks:", e)
+        raise HTTPException(status_code=500, detail="Failed to get tasks")
     
 @app.get("/getevents")
 async def get_events(user=Depends(AuthService().get_current_user)):

@@ -2,8 +2,8 @@ import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
 
 export const TrashIcon = styled(MdDeleteOutline)`
-  width: 30px;
-  height: 30px;
+  width: 25px;
+  height: 25px;
   color: ${({ theme }) => theme.colors.textLight};
   cursor: pointer;
   transition: color 0.2s ease;
@@ -24,11 +24,12 @@ export const NotesContainer = styled.div`
 
 export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border: 1.5px solid ${({ theme }) => theme.colors.textPrimary};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   padding-left: ${({ theme }) => theme.spacing.lg};
   padding-right: ${({ theme }) => theme.spacing.lg};
   transition: all 0.2s ease;
+  min-height: 40vh;
 
   &:hover {
     transform: translateY(-2px);

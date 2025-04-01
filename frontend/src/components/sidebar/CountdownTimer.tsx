@@ -39,7 +39,7 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
 
   return (
     <span>
-      {summary} in {timeLeft}
+      [{timeLeft}] {summary}
     </span>
   );
 };

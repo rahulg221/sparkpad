@@ -57,6 +57,7 @@ export const SummaryContainer = styled.div`
   overflow: visible;  
   height: auto;
   max-height: none;
+  
 
   &::-webkit-scrollbar {
     width: 8px;
@@ -109,7 +110,6 @@ export const TextInput = styled.textarea`
     color: ${({ theme }) => theme.colors.textLight};
   }
 
-  
   &::-webkit-scrollbar {
     width: 8px;
   }

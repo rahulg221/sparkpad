@@ -32,6 +32,41 @@ class GoogleService:
         self.calendar_service = self.get_calendar_service()
         self.tasks_service = self.get_tasks_service()
 
+    def get_tasks(self):
+        """
+        Gets all tasks from the user's Google Tasks.
+        """
+
+        eastern = pytz.timezone("America/New_York")
+        now = datetime.now(eastern)
+        next_week = now + timedelta(days=7)
+
+        # List task lists and pick the primary one (or use a specific task list ID)
+        tasklists_result = self.tasks_service.tasklists().list().execute()
+        tasklists = tasklists_result.get("items", [])
+        
+        if not tasklists:
+            return []
+
+        primary_tasklist_id = tasklists[0]["id"]
+
+        # Fetch tasks from the task list
+        tasks_result = self.tasks_service.tasks().list(
+            tasklist=primary_tasklist_id,
+            dueMax=next_week.isoformat(),
+            showCompleted=False,
+            showDeleted=False
+        ).execute()
+
+        tasks = tasks_result.get("items", [])
+        tasks_list = []
+
+        for task in tasks:
+            title = task.get("title", "No Title")
+            tasks_list.append({title})
+
+        return tasks_list
+
     def get_calendar_events(self):
         """
         Gets all events from the user's Google Calendar.

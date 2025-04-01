@@ -13,16 +13,16 @@ import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
-import {  MdLightbulb, MdEvent } from 'react-icons/md';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
+import { FaThumbtack } from 'react-icons/fa';
 
 export const SideBar = () => {
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
   const { user } = useAuth();
-  const { setNotificationMessage, setShowNotification, getLastSnapshot, isLoading, notificationMessage, showNotification, bulletPoints, calendarEvents} = useActions();
+  const { setNotificationMessage, setShowNotification, getLastSnapshot, updateTasks, updateEvents, isLoading, notificationMessage, showNotification, bulletPoints, calendarEvents, tasks} = useActions();
 
   useEffect(() => {
     getLastSnapshot();
@@ -43,6 +43,12 @@ export const SideBar = () => {
   
       // Insert note into database
       const notificationMessage = await NoteService.addNote(note);
+
+      if (notificationMessage === "Calendar task created") {
+        updateTasks();
+      } else if (notificationMessage === "Calendar event created") {
+        updateEvents();
+      }
   
       // Show notification after successful note creation
       setNotificationMessage(notificationMessage);
@@ -73,13 +79,26 @@ export const SideBar = () => {
             {noteLoading ? "Creating..." : "Create Note"}
           </PrimaryButton>
         </TextBarForm>
+        <h2>Upcoming tasks</h2>
+        <EventsContainer>
+          <BulletList>
+              {tasks.map((string, index) => (
+                <BulletItem key={index}>
+                  <BulletIcon>
+                    <FaThumbtack size={18} />
+                  </BulletIcon>
+                  <span>{string}</span>
+                </BulletItem>
+              ))}
+          </BulletList>
+        </EventsContainer>
         <h2>Upcoming events</h2>
         <EventsContainer>
           <BulletList>
               {calendarEvents.map((event, index) => (
                 <BulletItem key={index}>
                   <BulletIcon>
-                    <MdEvent size={20} />
+                    <FaThumbtack size={18} />
                   </BulletIcon>
                   <CountdownTimer eventString={event} />
                 </BulletItem>
@@ -92,7 +111,7 @@ export const SideBar = () => {
             {bulletPoints.map((bulletPoint, index) => (
               <BulletItem key={index}>
                 <BulletIcon>
-                  <MdLightbulb size={20} />
+                  <FaThumbtack size={18} />
                 </BulletIcon>
                 <span>{bulletPoint}</span>
               </BulletItem>

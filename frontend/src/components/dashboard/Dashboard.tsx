@@ -23,7 +23,7 @@ import CalendarService from '../../api/calendarService';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
-    const { semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, isLoading, notificationMessage, showNotification, summary, searchResults } = useActions();
+    const { semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, setSearchResults, isLoading, notificationMessage, showNotification, summary, searchResults } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [notes, setNotes] = useState<Note[]>([]);
@@ -61,12 +61,18 @@ export const Dashboard = () => {
 
     const handleBackClick = () => {
         setSelectedCategory(null);
+        setSearchResults([]);
     };
 
     const handleSearch = async (query: string) => {
         if (!user?.id) return;
 
         try {
+            if (!query.trim()) {
+                setSearchResults([]);
+                return;
+            }
+
             await semanticSearch(query);
 
             console.log("searchResults", searchResults);
