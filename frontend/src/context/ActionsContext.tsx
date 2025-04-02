@@ -1,7 +1,7 @@
 // context/AppActionsContext.tsx
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { NoteService } from '../api/noteService';
-import { useAuth } from './AuthContext';
+import { useAuth } from './authContext';
 import { Note } from '../models/noteModel';
 import CalendarService from '../api/calendarService';
 

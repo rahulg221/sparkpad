@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/authContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { NotesContainer, NoteCard, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
