@@ -85,7 +85,7 @@ export const SideBar = () => {
               {tasks.map((string, index) => (
                 <BulletItem key={index}>
                   <BulletIcon>
-                    <FaThumbtack size={18} />
+                    <FaThumbtack size={16} />
                   </BulletIcon>
                   <span>{string}</span>
                 </BulletItem>
@@ -98,7 +98,7 @@ export const SideBar = () => {
               {calendarEvents.map((event, index) => (
                 <BulletItem key={index}>
                   <BulletIcon>
-                    <FaThumbtack size={18} />
+                    <FaThumbtack size={16} />
                   </BulletIcon>
                   <CountdownTimer eventString={event} />
                 </BulletItem>
@@ -111,7 +111,7 @@ export const SideBar = () => {
             {bulletPoints.map((bulletPoint, index) => (
               <BulletItem key={index}>
                 <BulletIcon>
-                  <FaThumbtack size={18} />
+                  <FaThumbtack size={16} />
                 </BulletIcon>
                 <span>{bulletPoint}</span>
               </BulletItem>

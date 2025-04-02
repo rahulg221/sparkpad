@@ -21,6 +21,7 @@ import { useActions } from '../../context/ActionsContext';
 import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdHome, MdLogout, MdPages, MdNewspaper, MdLightbulb } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { FaLightbulb } from 'react-icons/fa';
+import { ThemeToggle } from '../themetoggle/ThemeToggle';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -189,9 +190,10 @@ export const Dashboard = () => {
                 <Modal
                     isOpen={true}
                     onClose={() => setShowSettings(false)}
-                title="Settings"
-            >
+                    title="Settings"
+                >
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>Settings Screen</ReactMarkdown>     
+                <ThemeToggle />
             </Modal>
             )}
             {showNotification && (

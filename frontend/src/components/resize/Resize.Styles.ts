@@ -7,15 +7,11 @@ export const SidebarContainer = styled.div`
   flex-shrink: 0;
   padding: ${({ theme }) => theme.spacing.lg};
   overflow-y: auto;
-
   background-color: ${({ theme }) => theme.colors.bgDark};
 
-  /*
-  background-image: 
-    radial-gradient(#d2b48c 1px, transparent 0.6px),
-    radial-gradient(#e4c59e 1px, transparent 0.6px);
-  background-size: 20px 20px;
-  background-position: 0 0, 7px 7px;*/
+  h2 {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
 
   &::-webkit-scrollbar {
     width: 2px;

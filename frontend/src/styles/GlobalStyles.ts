@@ -1,6 +1,7 @@
 import { createGlobalStyle } from 'styled-components';
+import { lightTheme, darkTheme } from './theme';
 
-export const GlobalStyles = createGlobalStyle`
+export const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme | typeof darkTheme }>`
   html, body, #root {
     min-height: 100vh;
     background-color: ${({ theme }) => theme.colors.bgDark};

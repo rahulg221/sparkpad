@@ -64,4 +64,5 @@ export const BackButton = styled.button`
 
 export const CategoryTitle = styled.h2`
   margin-bottom: ${({ theme }) => theme.spacing.lg};
+  color: ${({ theme }) => theme.colors.textPrimary};
 `;

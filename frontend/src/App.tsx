@@ -2,15 +2,15 @@ import { GlobalStyles } from './styles/GlobalStyles';
 import { AppRoutes } from './routes/AppRoutes';
 import { AuthProvider } from './context/AuthContext';
 import { ActionsProvider } from './context/ActionsContext';
-import { ThemeProvider } from 'styled-components';
-import { theme } from './styles/theme';
+import { ThemeProvider } from './context/ThemeContext';
+import { lightTheme, darkTheme } from './styles/theme';
 
 function App() {
     return (
-        <ThemeProvider theme={theme}>
+        <ThemeProvider>
             <AuthProvider>
                 <ActionsProvider>
-                    <GlobalStyles />
+                    <GlobalStyles theme={lightTheme} />
                     <AppRoutes />
                 </ActionsProvider>
             </AuthProvider>
