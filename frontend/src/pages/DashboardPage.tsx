@@ -9,11 +9,19 @@ const PageLayout = styled.div`
   overflow: hidden;
 `;
 
+const MainContent = styled.div`
+  flex: 1;
+  height: 100vh;
+  overflow-y: auto;
+`;
+
 export const DashboardPage = () => {
   return (
     <PageLayout>
       <SideBar/>
-      <Dashboard />
+      <MainContent>
+        <Dashboard />
+      </MainContent>
     </PageLayout>
   );
 };

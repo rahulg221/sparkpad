@@ -11,8 +11,8 @@ export const darkTheme = {
     textSecondary: '#ffffff',
 
     // Primary (white UI elements)
-    primary: '#ffffff',          // For buttons/icons on dark background
-    primaryHover: '#e5e5e5',     // Slightly muted white hover
+    primary: '#F06464',            // For buttons/icons on dark background
+    primaryHover: '#F57A7A',
     primaryLight: 'rgba(255, 255, 255, 0.1)',
 
     // Accent (Red/Orange highlights)
@@ -77,8 +77,9 @@ export const lightTheme = {
   textSecondary: '#0a0a0a',              // Replaces dark theme white secondary
 
   // Primary (dark UI elements on light background)
-  primary: '#0a0a0a',                    // Black for buttons/icons
-  primaryHover: '#1a1a1a',               // Slightly darker on hover
+  primary: '#F06464',                      // Black for buttons/icons
+  primaryHover: '#F57A7A',
+
   primaryLight: 'rgba(0, 0, 0, 0.05)',   // Transparent black background
 
   // Accent (red/orange highlights)

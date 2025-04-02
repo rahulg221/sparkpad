@@ -123,6 +123,7 @@ export const Dashboard = () => {
                     Home
                 </SecondaryButton>
                 <SearchBar onSearch={handleSearch} />
+                <Divider />
                 <SecondaryButton onClick={autoOrganizeNotes}>
                     <MdPsychology size={20}/>
                     Organize
@@ -139,10 +140,6 @@ export const Dashboard = () => {
                 <SecondaryButton onClick={handleSettingsClick}>
                     <MdSettings size={20}/>
                     Settings
-                </SecondaryButton>
-                <SecondaryButton onClick={handleLogout}>
-                    <MdLogout size={20}/>
-                    Logout
                 </SecondaryButton>
             </Header>
             {searchResults.length > 0 ? (
@@ -191,8 +188,12 @@ export const Dashboard = () => {
                     onClose={() => setShowSettings(false)}
                     title="Settings"
                 >
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>Settings Screen</ReactMarkdown>     
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>Under construction</ReactMarkdown>     
                 <ThemeToggle />
+                <SecondaryButton onClick={handleLogout}>
+                    <MdLogout size={20}/>
+                    Logout
+                </SecondaryButton>
             </Modal>
             )}
             {showNotification && (

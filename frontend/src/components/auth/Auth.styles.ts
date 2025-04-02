@@ -94,4 +94,5 @@ export const LinkText = styled.p`
   text-align: center;
   margin-top: ${({ theme }) => theme.spacing.xl};
   font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textLight};
 `; 
