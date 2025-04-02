@@ -90,8 +90,8 @@ export const lightTheme = {
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: '#FFD966',                   // Highlight color
-  colorTwo: '#e0e0e0',                   // Light gray folder tab
-  colorThree: '#f1f1f1',                 // Slightly lighter folder body
+  colorTwo: '#2b2b2b',           // Dark grey folder tab
+  colorThree: '#3a3a3a',         // Slightly lighter dark grey for folder body
   colorFour: '#fafafa',
 
   // Utility / Semantic

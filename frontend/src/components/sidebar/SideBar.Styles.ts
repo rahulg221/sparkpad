@@ -1,5 +1,12 @@
 import styled from 'styled-components';
 
+export const Divider = styled.div`
+  width: 100%;
+  height: 1px;
+  background-color: ${({ theme }) => theme.colors.border};
+  margin: ${({ theme }) => theme.spacing.lg} 0;
+`;
+
 export const BulletList = styled.ul`
   list-style: none;
   padding: 0;

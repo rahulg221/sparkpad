@@ -62,8 +62,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const showSnapshot = async () => {
         try {
             setIsLoading(true);
-            await updateTasks();
-            await updateEvents();
+            //await updateTasks();
+            //await updateEvents();
             const summary = await NoteService.summarizeNotes(currentNotes);
             setSummary(summary);
 

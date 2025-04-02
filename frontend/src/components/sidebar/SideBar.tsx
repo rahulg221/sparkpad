@@ -16,8 +16,8 @@ import { useActions } from '../../context/ActionsContext';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
-import { FaThumbtack } from 'react-icons/fa';
-
+import { FaLightbulb, FaRegCalendarCheck, FaThumbtack } from 'react-icons/fa';
+import { Divider } from './SideBar.Styles';
 export const SideBar = () => {
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
@@ -79,7 +79,7 @@ export const SideBar = () => {
             {noteLoading ? "Creating..." : "Create Note"}
           </PrimaryButton>
         </TextBarForm>
-        <h2>Upcoming tasks</h2>
+        <h2>My Calendar</h2>
         <EventsContainer>
           <BulletList>
               {tasks.map((string, index) => (
@@ -90,28 +90,26 @@ export const SideBar = () => {
                   <span>{string}</span>
                 </BulletItem>
               ))}
-          </BulletList>
-        </EventsContainer>
-        <h2>Upcoming events</h2>
-        <EventsContainer>
-          <BulletList>
+              <Divider />
+              <BulletList>
               {calendarEvents.map((event, index) => (
                 <BulletItem key={index}>
                   <BulletIcon>
-                    <FaThumbtack size={16} />
+                    <FaRegCalendarCheck size={16} />
                   </BulletIcon>
                   <CountdownTimer eventString={event} />
                 </BulletItem>
               ))}
           </BulletList>
+          </BulletList>
         </EventsContainer>
-        <h2>Summary</h2>
+        <h2>My Summary</h2>
         <SummaryContainer>
           <BulletList>
             {bulletPoints.map((bulletPoint, index) => (
               <BulletItem key={index}>
                 <BulletIcon>
-                  <FaThumbtack size={16} />
+                  <FaLightbulb size={16} />
                 </BulletIcon>
                 <span>{bulletPoint}</span>
               </BulletItem>
