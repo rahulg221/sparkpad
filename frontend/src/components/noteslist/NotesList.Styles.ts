@@ -20,12 +20,12 @@ export const NotesContainer = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: ${({ theme }) => theme.spacing.md};
+  
 `;
 
 export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  border: 1.5px solid ${({ theme }) => theme.colors.textPrimary};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding-left: ${({ theme }) => theme.spacing.lg};
   padding-right: ${({ theme }) => theme.spacing.lg};
   transition: all 0.2s ease;
@@ -38,7 +38,7 @@ export const NoteCard = styled.div`
 
 export const NoteInfo = styled.p`
   margin-top: auto;
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.sm};
   display: flex;
   justify-content: space-between;
@@ -47,7 +47,7 @@ export const NoteInfo = styled.p`
 export const NoteMeta = styled.div`
   display: flex;
   flex-direction: column;
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.xs};
   height: 100%;
 `;

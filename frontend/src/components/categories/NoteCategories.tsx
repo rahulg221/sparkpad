@@ -39,12 +39,15 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
   return (
     <><CategoriesContainer>
           {categories.map((category) => (
+            <div>
               <CategoryBox
                   key={category}
                   onClick={() => handleCategoryClick(category)}
               >
-                  <CategoryName>{category}</CategoryName>
+                  
               </CategoryBox>
+              <CategoryName>{category}</CategoryName>
+            </div>
           ))}
       </CategoriesContainer></>
   );

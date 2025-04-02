@@ -19,7 +19,7 @@ export const BulletIcon = styled.span`
 
 export const EventsContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.bgLight};
+  background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border};
   font-size: ${({ theme }) => theme.fontSize.sm};
@@ -49,7 +49,7 @@ export const EventsContainer = styled.div`
 
 export const SummaryContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.bgLight};
+  background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border: 1px solid ${({ theme }) => theme.colors.border};
   font-size: ${({ theme }) => theme.fontSize.sm};

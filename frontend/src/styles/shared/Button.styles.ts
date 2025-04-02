@@ -23,7 +23,7 @@ export const PrimaryButton = styled.button<{ width?: string }>`
 
 export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.colors.bgDark};
   color: ${({ theme }) => theme.colors.textLight};
   border: 1.25px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
@@ -41,7 +41,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   }
 
   &:disabled {
-    opacity: 0.6;
+
     cursor: not-allowed;
   }
 `;

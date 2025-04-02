@@ -8,18 +8,17 @@ export const SidebarContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   overflow-y: auto;
 
-  background-color: ${({ theme }) => theme.colors.colorFour};
+  background-color: ${({ theme }) => theme.colors.bgDark};
 
+  /*
   background-image: 
     radial-gradient(#d2b48c 1px, transparent 0.6px),
     radial-gradient(#e4c59e 1px, transparent 0.6px);
   background-size: 20px 20px;
-  background-position: 0 0, 7px 7px;
-
-  border-right: 2px solid #d6b88d;
+  background-position: 0 0, 7px 7px;*/
 
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 2px;
   }
   
   &::-webkit-scrollbar-track {
@@ -28,12 +27,12 @@ export const SidebarContainer = styled.div`
   }
   
   &::-webkit-scrollbar-thumb {
-    background: #bca98f;
+    background: ${({ theme }) => theme.colors.bgLight};
     border-radius: ${({ theme }) => theme.borderRadius.sm};
   }
   
   &::-webkit-scrollbar-thumb:hover {
-    background: #9e8a6f;
+    background: ${({ theme }) => theme.colors.textLight};
   }
 `;
 

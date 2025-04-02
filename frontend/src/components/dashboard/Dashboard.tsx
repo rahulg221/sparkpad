@@ -18,8 +18,9 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdHome, MdLogout } from 'react-icons/md';
+import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdHome, MdLogout, MdPages, MdNewspaper, MdLightbulb } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
+import { FaLightbulb } from 'react-icons/fa';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -127,8 +128,8 @@ export const Dashboard = () => {
                     Organize
                 </SecondaryButton>
                 <SecondaryButton onClick={() => showSnapshot()}>
-                    <MdCameraAlt size={20}/>
-                    Snapshot
+                    <MdLightbulb size={20}/>
+                    Summarize
                 </SecondaryButton>
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
