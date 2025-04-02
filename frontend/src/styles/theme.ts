@@ -57,7 +57,7 @@ export const darkTheme = {
     xs: '0.75rem',     // 12px
     sm: '0.875rem',    // 14px
     base: '0.9375rem', // 15px
-    md: '1rem',        // 16px
+    md: '0.9375rem',        // 15px
     lg: '1rem',    // 16px
     xl: '1.25rem',     // 20px
     xxl: '3rem',     // 48px

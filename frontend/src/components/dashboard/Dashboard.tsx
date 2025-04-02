@@ -18,9 +18,8 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdCameraAlt, MdEventAvailable, MdSettings, MdHome, MdLogout, MdPages, MdNewspaper, MdLightbulb } from 'react-icons/md';
+import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdGridOn, MdList } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
-import { FaLightbulb } from 'react-icons/fa';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 
 export const Dashboard = () => {
@@ -149,25 +148,25 @@ export const Dashboard = () => {
             {searchResults.length > 0 ? (
                 <>
                 <CategoryTitle>Search Results</CategoryTitle>
-                <NotesContainer>
-                {searchResults.map((note) => (
-                  <NoteCard key={note.id}>
-                    <NoteMeta>
-                       <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
-                      <NoteInfo>
-                          {note.category}
-                          <br />
-                          {new Date(note.created_at!).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit'
-                          })}
-                          <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                      </NoteInfo>
-                    </NoteMeta>
-                  </NoteCard>
-                ))}
+                <NotesContainer viewMode='list'>
+                    {searchResults.map((note) => (
+                    <NoteCard key={note.id}>
+                        <NoteMeta>
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
+                        <NoteInfo>
+                            {note.category}
+                            <br />
+                            {new Date(note.created_at!).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                            })}
+                            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                        </NoteInfo>
+                        </NoteMeta>
+                    </NoteCard>
+                    ))}
               </NotesContainer>
               </>
             ) : (

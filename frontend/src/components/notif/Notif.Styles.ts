@@ -5,7 +5,7 @@ export const NotificationContainer = styled.div`
   bottom: 20px;
   right: 20px;
   background-color: ${({ theme }) => theme.colors.bgLight};
-  color: black;
+  color: ${({ theme }) => theme.colors.textPrimary};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);

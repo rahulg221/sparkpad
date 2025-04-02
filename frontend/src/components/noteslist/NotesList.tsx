@@ -6,6 +6,8 @@ import { NotesContainer, NoteCard, NoteMeta, CategoryTitle, NoteInfo, TrashIcon 
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useActions } from '../../context/ActionsContext';
+import { MdList, MdGridOn } from 'react-icons/md';
+import { SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface NotesListProps {
   category: string;
@@ -17,6 +19,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { setCurrentNotes } = useActions();
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -50,8 +53,15 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   return (
     <>
-      <CategoryTitle>{category}</CategoryTitle>
-      <NotesContainer>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <CategoryTitle>
+          {category}
+        </CategoryTitle>
+        <SecondaryButton onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
+          {viewMode === 'grid' ? <MdList size={20}/> : <MdGridOn size={20}/>}
+        </SecondaryButton>
+      </div>
+      <NotesContainer viewMode={viewMode}>
         {notes.map((note) => (
           <NoteCard key={note.id}>
             <NoteMeta>

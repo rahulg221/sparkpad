@@ -110,13 +110,13 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
 
         try {
             setIsLoading(true);
-
+            
             if (localStorage.getItem('last_summary')) {
                 last_summary = localStorage.getItem('last_summary') || '';
             } else {
                 last_summary = 'Click Snapshot to generate a summary of your current view.';
             }
-
+            
             if (localStorage.getItem('last_events')) {
                 last_events = JSON.parse(localStorage.getItem('last_events') || '[]');
             } else {

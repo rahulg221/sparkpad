@@ -1,6 +1,10 @@
 import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
 
+interface NotesContainerProps {
+  viewMode: 'grid' | 'list';
+}
+
 export const TrashIcon = styled(MdDeleteOutline)`
   width: 25px;
   height: 25px;
@@ -13,14 +17,15 @@ export const TrashIcon = styled(MdDeleteOutline)`
   }
 `;
 
-export const NotesContainer = styled.div`
+export const NotesContainer = styled.div<NotesContainerProps>`
   padding-bottom: calc(${({ theme }) => theme.spacing.lg} + 160px);
   max-width: 1200px;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: ${({ viewMode }) => (viewMode === 'list' ? 'flex' : 'grid')};
+  flex-direction: ${({ viewMode }) => (viewMode === 'list' ? 'column' : 'initial')};
+  grid-template-columns: ${({ viewMode }) =>
+    viewMode === 'grid' ? 'repeat(3, 1fr)' : 'none'};
   gap: ${({ theme }) => theme.spacing.md};
-  
 `;
 
 export const NoteCard = styled.div`
@@ -29,8 +34,7 @@ export const NoteCard = styled.div`
   padding-left: ${({ theme }) => theme.spacing.lg};
   padding-right: ${({ theme }) => theme.spacing.lg};
   transition: all 0.2s ease;
-  min-height: 40vh;
-
+  
   &:hover {
     transform: translateY(-2px);
   }
@@ -39,7 +43,7 @@ export const NoteCard = styled.div`
 export const NoteInfo = styled.p`
   margin-top: auto;
   color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.xs};
   display: flex;
   justify-content: space-between;
 `;
@@ -48,7 +52,6 @@ export const NoteMeta = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: ${({ theme }) => theme.fontSize.xs};
   height: 100%;
 `;
 
