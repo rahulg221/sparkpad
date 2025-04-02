@@ -5,7 +5,7 @@ const MIN_WIDTH = 180;
 const MAX_WIDTH = 500;
 
 export const ResizableSidebar = ({ children }: { children: React.ReactNode }) => {
-    const [width, setWidth] = useState(240); // initial width in px
+    const [width, setWidth] = useState(300); // initial width in px
     const isResizing = useRef(false);
   
     useEffect(() => {
