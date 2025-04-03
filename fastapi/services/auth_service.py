@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 import jwt
 from google_auth_oauthlib.flow import Flow
+from typing import Optional
 
 load_dotenv()
 
@@ -18,14 +19,18 @@ class AuthService:
     Service for handling authentication.
     """
 
-    security = HTTPBearer()
+    security = HTTPBearer(auto_error=True)
+    security_optional = HTTPBearer(auto_error=False)
     SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 
     @classmethod
-    def get_current_user(cls, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
+    def get_current_user(cls, request: Request, credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)):
         if request.method == "OPTIONS":
             return None  # CORS preflight request
         
+        if not credentials:
+            raise HTTPException(status_code=401, detail="Missing authorization token")
+    
         token = credentials.credentials
     
         try:
