@@ -6,8 +6,9 @@ WORKDIR /app
 
 # Copy requirement file and install dependencies first (for better caching)
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
+RUN pip install --no-cache-dir -r requirements.txt \
+ && python -m nltk.downloader stopwords wordnet
+ 
 # Copy the rest of your app code into the container
 COPY . .
 
