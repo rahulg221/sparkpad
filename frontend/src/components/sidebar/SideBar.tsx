@@ -9,7 +9,7 @@ import {
   EventsContainer,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/authContext';
 import { Note } from '../../models/noteModel';
 import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
