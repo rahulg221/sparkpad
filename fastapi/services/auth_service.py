@@ -23,10 +23,10 @@ class AuthService:
 
     @classmethod
     def get_current_user(cls, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
-        token = credentials.credentials
-
         if request.method == "OPTIONS":
             return None  # CORS preflight request
+        
+        token = credentials.credentials
     
         try:
             payload = jwt.decode(
