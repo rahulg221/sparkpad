@@ -1,5 +1,4 @@
-
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, Response
 from fastapi.middleware.cors import CORSMiddleware
 from services.auth_service import AuthService
 from services.google_service import GoogleService
@@ -22,7 +21,7 @@ app = FastAPI()
 # Allow requests from http://localhost:3000
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://clusterms.vercel.app", "http://localhost:3000"],
+    allow_origins=["https://clusterms.vercel.app", "http://localhost:3000", "https://clusterms.fly.dev"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
