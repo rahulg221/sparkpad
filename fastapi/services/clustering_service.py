@@ -21,18 +21,19 @@ class ClusteringService:
     Service for clustering and categorizing notes.
     """
 
-    # Load the sentence transformer model
-    model = SentenceTransformer('all-MiniLM-L6-v2')
-    
     def __init__(self, notes_content: list[dict], notes: list[dict]):
-        # Download resources
-        nltk.download("stopwords")
-        nltk.download("wordnet")
-        
         # OpenAI client for category generation
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.notes_content = notes_content
         self.notes = notes
+        self._model = None  # Lazy-load the odel
+
+    @property
+    def model(self):
+        if self._model is None:
+            from sentence_transformers import SentenceTransformer
+            self._model = SentenceTransformer('all-MiniLM-L6-v2')
+        return self._model
 
     def update_database(self, clusterData: list[dict]):
         """
@@ -63,7 +64,7 @@ class ClusteringService:
         preprocessed_notes_content = [preprocess_text(content) for content in self.notes_content]
 
         # Encode the notes
-        embeddings = self.__class__.model.encode(preprocessed_notes_content)
+        embeddings = self.model.encode(preprocessed_notes_content)
 
         # Cluster the notes using HDBSCAN           
         labels = self.hdbscan_clustering(embeddings)
@@ -141,7 +142,7 @@ class ClusteringService:
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
-        factor = 1
+        factor = 1 # Must be >0
 
         if n <= 20:
             return 1+factor, 0+factor  
