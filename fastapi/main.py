@@ -43,11 +43,11 @@ class Task(BaseModel):
     note_content: str
     
 @app.get("/")
-def main(user = Depends(AuthService().get_current_user)):
+def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
 
 @app.post("/event")
-async def create_new_event(request_body: Event, user=Depends(AuthService().get_current_user)):
+async def create_new_event(request_body: Event, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     auth_id = user["sub"]
 
@@ -62,7 +62,7 @@ async def create_new_event(request_body: Event, user=Depends(AuthService().get_c
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
     
 @app.post("/task")
-async def create_new_task(request_body: Task, user=Depends(AuthService().get_current_user)):
+async def create_new_task(request_body: Task, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     auth_id = user["sub"]
 
@@ -77,7 +77,7 @@ async def create_new_task(request_body: Task, user=Depends(AuthService().get_cur
         raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
-async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_current_user)):
+async def cluster_notes(request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes
         clustering_service = ClusteringService(request_body.notes_content, request_body.notes)
@@ -90,7 +90,7 @@ async def cluster_notes(request_body: Notes, user=Depends(AuthService().get_curr
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
 
 @app.post("/summarize")
-async def create_summary(request_body: Notes, user=Depends(AuthService().get_current_user)):
+async def create_summary(request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Summarize the notes
         openai_service = OpenAIService()
@@ -102,7 +102,7 @@ async def create_summary(request_body: Notes, user=Depends(AuthService().get_cur
         raise HTTPException(status_code=500, detail="Failed to summarize notes")
     
 @app.post("/embed")
-async def embed_note(request_body: Note, user=Depends(AuthService().get_current_user)):
+async def embed_note(request_body: Note, user=Depends(AuthService.get_current_user)):
     try:
         openai_service = OpenAIService()
         embedding = openai_service.generate_embeddings(request_body.note_content)
@@ -113,7 +113,7 @@ async def embed_note(request_body: Note, user=Depends(AuthService().get_current_
         raise HTTPException(status_code=500, detail="Failed to embed note")
     
 @app.post("/semantic_search")
-async def semantic_search(request_body: Note, user = Depends(AuthService().get_current_user)):
+async def semantic_search(request_body: Note, user = Depends(AuthService.get_current_user)):
     # Get embedding for the query
     openai_service = OpenAIService()
     print("request_body", request_body)
@@ -131,7 +131,7 @@ async def semantic_search(request_body: Note, user = Depends(AuthService().get_c
     return results.data
 
 @app.get("/gettasks")
-async def get_tasks(user=Depends(AuthService().get_current_user)):
+async def get_tasks(user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     try:
@@ -144,7 +144,7 @@ async def get_tasks(user=Depends(AuthService().get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get tasks")
     
 @app.get("/getevents")
-async def get_events(user=Depends(AuthService().get_current_user)):
+async def get_events(user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     try:
@@ -157,7 +157,7 @@ async def get_events(user=Depends(AuthService().get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get calendar events")
 
 @app.get("/auth/google/url")
-async def get_google_auth_url(user=Depends(AuthService().get_current_user)):
+async def get_google_auth_url(user=Depends(AuthService.get_current_user)):
     try:
         # Get the Google auth URL
         auth_service = AuthService()
@@ -169,7 +169,7 @@ async def get_google_auth_url(user=Depends(AuthService().get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get Google auth URL")
     
 @app.get("/auth/google/callback")
-async def google_callback(code: str, user=Depends(AuthService().get_current_user)):
+async def google_callback(code: str, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]   
 
     try:

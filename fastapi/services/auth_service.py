@@ -1,4 +1,4 @@
-from fastapi import Depends, HTTPException, status
+from fastapi import Depends, HTTPException, Request, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 import os
 from dotenv import load_dotenv
@@ -22,9 +22,12 @@ class AuthService:
     SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 
     @classmethod
-    def get_current_user(cls, credentials: HTTPAuthorizationCredentials = Depends(security)):
+    def get_current_user(cls, request: Request, credentials: HTTPAuthorizationCredentials = Depends(security)):
         token = credentials.credentials
 
+        if request.method == "OPTIONS":
+            return None  # CORS preflight request
+    
         try:
             payload = jwt.decode(
                 token,
