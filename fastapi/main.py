@@ -21,7 +21,7 @@ app = FastAPI()
 # Allow requests from http://localhost:3000
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://clusterms.vercel.app", "http://localhost:3000", "https://clusterms.fly.dev"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -44,6 +44,10 @@ class Task(BaseModel):
 @app.get("/")
 def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
+
+@app.options("/{full_path:path}")
+async def preflight_handler(full_path: str):
+    return Response(status_code=200)
 
 @app.post("/event")
 async def create_new_event(request_body: Event, user=Depends(AuthService.get_current_user)):
