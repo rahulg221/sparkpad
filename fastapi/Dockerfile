@@ -4,11 +4,20 @@ FROM python:3.11-slim
 # Set working directory inside the container
 WORKDIR /app
 
-# Copy requirement file and install dependencies first (for better caching)
+# Install system dependencies required for packages like nltk, numpy, etc.
+RUN apt-get update && apt-get install -y \
+    build-essential \
+    gcc \
+    libffi-dev \
+    libssl-dev \
+    python3-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy requirement file and install dependencies
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt \
  && python -m nltk.downloader stopwords wordnet
- 
+
 # Copy the rest of your app code into the container
 COPY . .
 
