@@ -37,6 +37,8 @@ export class AuthService {
 
   static async signOut(): Promise<void> {
     const { error } = await supabase.auth.signOut();
+    //localStorage.clear();
+
     if (error) {
       throw error;
     }

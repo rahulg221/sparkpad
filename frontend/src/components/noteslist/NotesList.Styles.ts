@@ -31,8 +31,8 @@ export const NotesContainer = styled.div<NotesContainerProps>`
 export const NoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgElevated};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  padding-left: ${({ theme }) => theme.spacing.lg};
-  padding-right: ${({ theme }) => theme.spacing.lg};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  padding: ${({ theme }) => theme.spacing.lg};
   transition: all 0.2s ease;
   
   &:hover {
@@ -41,18 +41,20 @@ export const NoteCard = styled.div`
 `;
 
 export const NoteInfo = styled.p`
-  margin-top: auto;
   color: ${({ theme }) => theme.colors.textSecondary};
   font-size: ${({ theme }) => theme.fontSize.xs};
   display: flex;
   justify-content: space-between;
+  margin-bottom: auto;
 `;
 
 export const NoteMeta = styled.div`
   display: flex;
   flex-direction: column;
   color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: ${({ theme }) => theme.fontSize.sm};
   height: 100%;
+  margin-bottom: auto;
 `;
 
 export const BackButton = styled.button`

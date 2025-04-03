@@ -63,6 +63,7 @@ class OpenAIService:
             1. 300 character limit. 
             2. Keep the tone concise but thoughtful. 
             3. Do not make assumptions about the user's intentions or actions unless the user has explicitly stated something.
+            4. Only use alphabetical characters and spaces. 
 
             Here are the notes to summarize:
 

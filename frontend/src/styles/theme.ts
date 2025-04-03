@@ -2,7 +2,7 @@ export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
     bgDark: '#0a0a0a',           // Pure black app background
-    bgElevated: 'rgba(255, 255, 255, 0.1)',
+    bgElevated: 'rgba(255, 255, 255, 0.0)',
     bgLight: '#1a1a1a',          // Dark gray for inputs, blocks
 
     // Text colors (inverted from light mode)
@@ -68,7 +68,7 @@ export const lightTheme = {
   colors: {
   // Backgrounds
   bgDark: '#ffffff',                     // White app background
-  bgElevated: 'rgba(0, 0, 0, 0.04)',     // Subtle card background
+  bgElevated: 'rgba(0, 0, 0, 0.0)',     // Subtle card background
   bgLight: '#f5f5f5',                    // Light gray for inputs, code blocks
 
   // Text colors
@@ -79,7 +79,6 @@ export const lightTheme = {
   // Primary (dark UI elements on light background)
   primary: '#F06464',                      // Black for buttons/icons
   primaryHover: '#F57A7A',
-
   primaryLight: 'rgba(0, 0, 0, 0.05)',   // Transparent black background
 
   // Accent (red/orange highlights)
@@ -87,7 +86,7 @@ export const lightTheme = {
   accentHover: '#ff6666',                // Slightly lighter red hover
 
   // Dot color (reversed for light bg)
-  dotColor: 'rgba(0, 0, 0, 0.15)',
+  dotColor: 'rgba(0, 0, 0, 0.25)',
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: '#FFD966',                   // Highlight color
@@ -130,3 +129,5 @@ export const lightTheme = {
     xxl: '3rem',     // 48px
   },
 };
+
+export type ThemeType = typeof darkTheme;

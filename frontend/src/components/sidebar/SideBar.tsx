@@ -9,7 +9,7 @@ import {
   EventsContainer,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
-import { useAuth } from '../../context/authContext';
+import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
@@ -103,7 +103,7 @@ export const SideBar = () => {
           </BulletList>
           </BulletList>
         </EventsContainer>
-        <h2>My Summary</h2>
+        <h2>My Snapshot</h2>
         <SummaryContainer>
           <BulletList>
             {bulletPoints.map((bulletPoint, index) => (

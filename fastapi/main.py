@@ -117,16 +117,25 @@ async def embed_note(request_body: Note, user=Depends(AuthService.get_current_us
     
 @app.post("/semantic_search")
 async def semantic_search(request_body: Note, user = Depends(AuthService.get_current_user)):
+    auth_id = user["sub"]
+
     # Get embedding for the query
     openai_service = OpenAIService()
     print("request_body", request_body)
     query_embedding = openai_service.generate_embeddings(request_body.note_content)
 
+    # Query the users table to get the internal user ID
+    response = supabase.table("users").select("id").eq("auth_id", auth_id).single().execute()
+
+    if response.data is None:
+        raise Exception("User not found in database.")
+    
     # Call Supabase RPC function 
     results = supabase.rpc("match_notes", {
         "query_embedding": query_embedding,
         "match_threshold": 0.2,
-        "match_count": 10
+        "match_count": 10,
+        "input_user_id": response.data["id"]
     }).execute()
 
     print("results", results)

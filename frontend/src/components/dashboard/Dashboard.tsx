@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/authContext';
+import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
@@ -130,7 +130,7 @@ export const Dashboard = () => {
                 </SecondaryButton>
                 <SecondaryButton onClick={() => showSnapshot()}>
                     <MdLightbulb size={20}/>
-                    Summarize
+                    Snapshot
                 </SecondaryButton>
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
