@@ -20,3 +20,4 @@ google-auth-oauthlib
 google-auth-httplib2
 pytz
 PyJWT
+supabase
