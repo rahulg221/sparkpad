@@ -42,6 +42,11 @@ class Event(BaseModel):
 class Task(BaseModel):
     note_content: str
     
+# Temporary fix for CORS preflight requests
+@app.options("/{full_path:path}")
+async def preflight_handler(full_path: str):
+    return Response(status_code=200)
+
 @app.get("/")
 def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
