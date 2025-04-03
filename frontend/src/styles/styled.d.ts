@@ -1,8 +1,8 @@
 import 'styled-components';
-import { Theme } from './theme';
+import { ThemeType } from './theme';
 
 declare module 'styled-components' {
-  export interface DefaultTheme extends Theme {}
+  export interface DefaultTheme extends ThemeType {}
 } 
 
 declare module 'react-chrome-dino' {
