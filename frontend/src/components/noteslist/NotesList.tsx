@@ -19,7 +19,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { setCurrentNotes } = useActions();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('list');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   useEffect(() => {
     const fetchNotes = async () => {

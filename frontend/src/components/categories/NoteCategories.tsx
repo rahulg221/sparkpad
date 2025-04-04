@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../api/noteService';
-import { useAuth } from '../../context/authContext';
+import { useAuth } from '../../context/AuthContext';
 import { CategoriesContainer, CategoryBox, CategoryName } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
 

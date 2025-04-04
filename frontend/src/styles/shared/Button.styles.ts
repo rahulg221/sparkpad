@@ -4,7 +4,7 @@ export const PrimaryButton = styled.button<{ width?: string }>`
   width: ${props => props.width || '80%'};
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.bgLight};
+  color: ${({ theme }) => theme.colors.textPrimary};
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
