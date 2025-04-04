@@ -12,15 +12,15 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
 
       const difference = target.getTime() - now.getTime();
 
-      if (difference <= 0) {
-        setTimeLeft('progress');
-        return;
-      }
-
       const days = Math.floor(difference / (1000 * 60 * 60 * 24));
       const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
       const minutes = Math.floor((difference / (1000 * 60)) % 60);
       const seconds = Math.floor((difference / 1000) % 60);
+
+      if (difference <= 0) {
+        setTimeLeft(`In Progress - ${-1*hours}h ${-1*minutes}m ago`);
+        return;
+      }
 
       if (days > 0) {
         setTimeLeft(`${days}d ${hours}h ${minutes}m`);

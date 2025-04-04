@@ -107,13 +107,13 @@ export const Dashboard = () => {
     
     const Loader = () => (
         <div style={{
-          display: 'flex',
+            display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
         }}>
             <h1>Loading...</h1>
         </div>
-      );
+    );
 
     return (
         <DashboardWrapper>
@@ -130,11 +130,11 @@ export const Dashboard = () => {
                 </SecondaryButton>
                 <SecondaryButton onClick={() => showSnapshot()}>
                     <MdLightbulb size={20}/>
-                    Snapshot
+                    Summarize
                 </SecondaryButton>
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
-                    Calendar
+                    Connect
                 </SecondaryButton>
                 <Divider />
                 <SecondaryButton onClick={handleSettingsClick}>
