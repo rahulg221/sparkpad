@@ -76,6 +76,10 @@ export const FloatingButton = styled.button`
   &:hover {
     background-color: ${({ theme }) => theme.colors.accentHover};
   }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
 `;
 
 export const SummaryContainer = styled.div`

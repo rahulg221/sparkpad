@@ -19,6 +19,7 @@ import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.style
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
 import { FaLightbulb, FaRegCalendarCheck, FaThumbtack } from 'react-icons/fa';
+import { MdClose, MdMenu } from 'react-icons/md';
 
 export const SideBar = () => {
   const [text, setText] = useState('');
@@ -77,8 +78,8 @@ export const SideBar = () => {
 
   return (
     <>
-      <FloatingButton onClick={() => setSidebarOpen(true)}>
-        +
+      <FloatingButton onClick={() => setSidebarOpen(prev => !prev)}>
+        {sidebarOpen ? <MdClose size={28} /> : <MdMenu size={28} />}
       </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>

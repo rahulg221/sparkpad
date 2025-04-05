@@ -38,5 +38,13 @@ export const Header = styled.div`
   p {
     font-size: ${({ theme }) => theme.fontSize.md};
   }
+
+  .text-label {
+    display: inline-block;
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
 `;
 

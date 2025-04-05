@@ -121,26 +121,26 @@ export const Dashboard = () => {
             <Header>
                 <SecondaryButton onClick={handleBackClick}>
                     <MdHome size={20}/>
-                    Home
+                    <span className='text-label'>Home</span>
                 </SecondaryButton>
                 <SearchBar onSearch={handleSearch} />
                 <Divider />
                 <SecondaryButton onClick={autoOrganizeNotes}>
                     <MdPsychology size={20}/>
-                    Organize
+                    <span className='text-label'>Organize</span>
                 </SecondaryButton>
                 <SecondaryButton onClick={() => showSnapshot()}>
                     <MdLightbulb size={20}/>
-                    Summarize
+                    <span className='text-label'>Summarize</span>
                 </SecondaryButton>
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
-                    Connect
+                    <span className='text-label'>Connect</span>
                 </SecondaryButton>
                 <Divider />
                 <SecondaryButton onClick={handleSettingsClick}>
                     <MdSettings size={20}/>
-                    Settings
+                    <span className='text-label'>Settings</span>
                 </SecondaryButton>
             </Header>
             {searchResults.length > 0 ? (
