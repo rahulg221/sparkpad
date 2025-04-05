@@ -43,7 +43,9 @@ export const SideBar = () => {
 
   useEffect(() => {
     getLastSnapshot();
-    
+  }, []);  
+
+  useEffect(() => {
     if (sidebarOpen) {
       document.body.style.overflow = 'hidden';
     } else {
