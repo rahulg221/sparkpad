@@ -18,7 +18,7 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdGridOn, MdList } from 'react-icons/md';
+import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { AnimatePresence, motion } from "framer-motion";
@@ -75,7 +75,7 @@ export const Dashboard = () => {
                 return;
             }
 
-            await semanticSearch(query);
+            semanticSearch(query);
 
             console.log("searchResults", searchResults);
         } catch (error) {
@@ -86,7 +86,7 @@ export const Dashboard = () => {
     const handleDeleteNote = async (noteId: string) => {
         try {
           await NoteService.deleteNote(noteId);
-          setNotes(notes.filter(note => note.id !== noteId));
+          setSearchResults(searchResults.filter(note => note.id !== noteId));
         } catch (err) {
           console.error('Error deleting note:', err);
         }
@@ -148,22 +148,22 @@ export const Dashboard = () => {
                 <CategoryTitle>Search Results</CategoryTitle>
                 <NotesContainer viewMode='list'>
                     {searchResults.map((note) => (
-                    <NoteCard key={note.id}>
-                        <NoteMeta>
-                        <ReactMarkdown remarkPlugins={[remarkGfm]}>{note.content}</ReactMarkdown>
-                        <NoteInfo>
-                            {note.category}
-                            <br />
-                            {new Date(note.created_at!).toLocaleDateString('en-US', {
-                                month: 'short',
-                                day: 'numeric',
-                                hour: '2-digit',
-                                minute: '2-digit'
-                            })}
-                            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                        </NoteInfo>
-                        </NoteMeta>
-                    </NoteCard>
+                        <NoteCard key={note.id}>
+                            <NoteMeta>
+                                {note.content}
+                                <NoteInfo>
+                                    {note.category}
+                                    <br />
+                                    {new Date(note.created_at!).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit'
+                                    })}
+                                    <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                                </NoteInfo>
+                            </NoteMeta>
+                        </NoteCard>
                     ))}
               </NotesContainer>
               </>
@@ -174,21 +174,21 @@ export const Dashboard = () => {
                             <AnimatePresence mode="wait">
                                 {selectedCategory ? (
                                     <motion.div
-                                    key="notes-list"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.1 }}
+                                        key="notes-list"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.1 }}
                                     >
                                     <NotesList category={selectedCategory} />
                                     </motion.div>
                                 ) : (
                                     <motion.div
-                                    key="note-categories"
-                                    initial={{ opacity: 0, y: 10 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    exit={{ opacity: 0, y: -10 }}
-                                    transition={{ duration: 0.1 }}
+                                        key="note-categories"
+                                        initial={{ opacity: 0, y: 10 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0, y: -10 }}
+                                        transition={{ duration: 0.1 }}
                                     >
                                     <NoteCategories handleCategoryClick={handleCategoryClick} />
                                     </motion.div>

@@ -103,7 +103,7 @@ export const SideBar = () => {
           </BulletList>
           </BulletList>
         </EventsContainer>
-        <h2>My Snapshot</h2>
+        <h2>My Summary</h2>
         <SummaryContainer>
           <BulletList>
             {bulletPoints.map((bulletPoint, index) => (
