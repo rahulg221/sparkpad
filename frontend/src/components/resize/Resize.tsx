@@ -19,37 +19,15 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
 
   return isMobile ? (
     <MotionSidebar
-      initial={{ x: "-100%" }}
       animate={{ x: isOpen ? 0 : "-100%" }}
+      initial={{ x: "-100%" }}
       transition={{ duration: 0.25 }}
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
         height: "100vh",
-        width: "80vw",
-        zIndex: 1000,
-        overflowY: "auto",
-        background: "var(--sidebar-bg)",
-        boxShadow: "2px 0 10px rgba(0,0,0,0.1)",
-        touchAction: "pan-y",
+        overflowY: "auto", // ✅ this is key
+        WebkitOverflowScrolling: "touch", // ✅ smooth on iOS
       }}
     >
-      {/* Optional Close Button */}
-      <button
-        onClick={() => setIsOpen(false)}
-        style={{
-          position: "absolute",
-          top: 16,
-          right: 16,
-          background: "none",
-          border: "none",
-          fontSize: "1.5rem",
-          cursor: "pointer",
-        }}
-      >
-        ×
-      </button>
       {children}
     </MotionSidebar>
   ) : (

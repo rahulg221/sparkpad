@@ -79,7 +79,7 @@ export const SideBar = () => {
   return (
     <>
       <FloatingButton onClick={() => setSidebarOpen(prev => !prev)}>
-        {sidebarOpen ? <MdClose size={28} /> : <MdMenu size={28} />}
+        {sidebarOpen ? '+' : 'x'}
       </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>

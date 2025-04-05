@@ -124,7 +124,6 @@ export const Dashboard = () => {
                     <span className='text-label'>Home</span>
                 </SecondaryButton>
                 <SearchBar onSearch={handleSearch} />
-                <Divider />
                 <SecondaryButton onClick={autoOrganizeNotes}>
                     <MdPsychology size={20}/>
                     <span className='text-label'>Organize</span>
@@ -137,7 +136,6 @@ export const Dashboard = () => {
                     <MdEventAvailable size={20}/>
                     <span className='text-label'>Connect</span>
                 </SecondaryButton>
-                <Divider />
                 <SecondaryButton onClick={handleSettingsClick}>
                     <MdSettings size={20}/>
                     <span className='text-label'>Settings</span>
