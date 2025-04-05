@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { SidebarContainer } from "../resize/Resize.Styles";
 import { motion } from "framer-motion";
+import { SidebarContainer } from "../resize/Resize.Styles";
 
 const MotionSidebar = motion(SidebarContainer);
 
@@ -23,23 +23,14 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
       initial={{ x: "-100%" }}
       transition={{ duration: 0.25 }}
       style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        height: "100vh",
-        width: "80vw",
-        zIndex: 1000,
-        touchAction: "none", // 👈 prevents motion/scroll gesture clash
-        background: "var(--sidebar-bg)",
+        touchAction: "none", // 🛡️ prevent gesture conflict on mobile
       }}
     >
-      {/* ✅ Inner scrollable container */}
       <div
         style={{
           height: "100%",
           overflowY: "auto",
           WebkitOverflowScrolling: "touch",
-          padding: "1rem", // optional for spacing
         }}
       >
         {children}
