@@ -54,6 +54,30 @@ export const EventsContainer = styled.div`
   }
 `;
 
+export const FloatingButton = styled.button`
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background-color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.accentHover};
+  }
+`;
+
 export const SummaryContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgDark};

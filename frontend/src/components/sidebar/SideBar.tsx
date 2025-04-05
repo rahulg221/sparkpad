@@ -8,6 +8,7 @@ import {
   BulletList,
   EventsContainer,
   Divider,
+  FloatingButton,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
@@ -76,9 +77,9 @@ export const SideBar = () => {
 
   return (
     <>
-      <SecondaryButton onClick={() => setSidebarOpen(true)}>
-        Open Sidebar
-      </SecondaryButton>
+      <FloatingButton onClick={() => setSidebarOpen(true)}>
+        +
+      </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>
           <h2>Capture a thought</h2>
