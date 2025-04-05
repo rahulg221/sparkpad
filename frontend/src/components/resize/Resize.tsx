@@ -23,14 +23,31 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
       initial={{ x: "-100%" }}
       transition={{ duration: 0.25 }}
       style={{
+        position: "fixed",
+        top: 0,
+        left: 0,
         height: "100vh",
-        overflowY: "auto", 
-        WebkitOverflowScrolling: "touch", 
+        width: "80vw",
+        zIndex: 1000,
+        touchAction: "none", // 👈 prevents motion/scroll gesture clash
+        background: "var(--sidebar-bg)",
       }}
     >
-      {children}
+      {/* ✅ Inner scrollable container */}
+      <div
+        style={{
+          height: "100%",
+          overflowY: "auto",
+          WebkitOverflowScrolling: "touch",
+          padding: "1rem", // optional for spacing
+        }}
+      >
+        {children}
+      </div>
     </MotionSidebar>
   ) : (
-    <SidebarContainer style={{ width: 300 }}>{children}</SidebarContainer>
+    <SidebarContainer style={{ width: 300 }}>
+      {children}
+    </SidebarContainer>
   );
 };
