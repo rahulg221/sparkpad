@@ -82,6 +82,13 @@ export const ErrorMessage = styled.div`
   font-size: ${({ theme }) => theme.fontSize.sm};
 `;
 
+export const SuccessMessage = styled.div`
+  color: ${({ theme }) => theme.colors.success};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  text-align: center;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+`;
+
 export const StyledLink = styled(Link)`
   color: ${({ theme }) => theme.colors.primary};
   text-decoration: none;

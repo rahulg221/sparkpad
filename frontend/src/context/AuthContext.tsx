@@ -1,8 +1,6 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { AuthService } from '../api/authService';
 import { User } from '../models/userModel';
-import { createClient } from '@supabase/supabase-js';
-import { supabase } from '../api/supabaseClient';
 
 interface AuthContextType {
     user: User | null;
@@ -39,11 +37,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const signUp = async (email: string, password: string) => {
-        await AuthService.signUp(email, password);
+        const message = await AuthService.signUp(email, password);
         const user = await AuthService.getCurrentUser();
         setUser(user);
+        return message; 
     };
-
+      
     const signOut = async () => {
         await AuthService.signOut();
         setUser(null);

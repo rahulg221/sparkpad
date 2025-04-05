@@ -3,13 +3,43 @@ import { User } from '../models/userModel';
 
 export class AuthService {
   static async signIn(email: string, password: string): Promise<void> {
-    const { data, error } = await supabase.auth.signInWithPassword({
+    const { error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
 
     if (error) {
       throw error;
+    }
+  }
+
+  static async signOut(): Promise<void> {
+    const { error } = await supabase.auth.signOut();
+    //localStorage.clear();
+
+    if (error) {
+      throw error;
+    }
+  }
+
+  static async signUp(email: string, password: string): Promise<string> {
+    if (!email || !email.includes('@')) {
+      return "Invalid email format.";
+    }
+  
+    if (!password || password.length < 6) {
+      return "Password must be at least 6 characters.";
+    }
+  
+    const { data, error } = await supabase.auth.signUp({ email, password });
+  
+    if (error) {
+      const msg = error.message.toLowerCase();
+
+      if (msg.includes("invalid email")) return "Please enter a valid email address.";
+      if (msg.includes("user already registered")) return "This email is already registered.";
+
+      return "Something went wrong. Please try again.";
     }
 
     // Add user to users table if they don't exist yet
@@ -33,35 +63,10 @@ export class AuthService {
         console.error('Error creating user record:', insertError);
       }
     }
+
+    return "Signup successful. Please log in.";
   }
-
-  static async signOut(): Promise<void> {
-    const { error } = await supabase.auth.signOut();
-    //localStorage.clear();
-
-    if (error) {
-      throw error;
-    }
-  }
-
-  static async signUp(email: string, password: string): Promise<void> {
-    if (!email || !email.includes('@')) {
-      throw new Error('Invalid email format');
-    }
-    if (!password || password.length < 6) {
-      throw new Error('Password must be at least 6 characters');
-    }
-
-    const { error } = await supabase.auth.signUp({
-      email,
-      password,
-    });
-
-    if (error) {
-      throw error;
-    }
-  }
-
+  
   static async getCurrentUser(): Promise<User | null> {
     try {
       const {

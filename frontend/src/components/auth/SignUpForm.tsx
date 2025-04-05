@@ -10,7 +10,8 @@ import {
     Input,
     ErrorMessage,
     StyledLink,
-    LinkText
+    LinkText,
+    SuccessMessage
 } from './Auth.styles';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
 
@@ -19,24 +20,25 @@ export const SignUpForm = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const { signUp, isLoading } = useAuth();
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
-
+        setSuccess(''); 
+        
         if (password !== confirmPassword) {
             setError('Passwords do not match');
             return;
         }
-
-        try {
-            await signUp(email, password);
-            setError('Check your email to confirm your account.');
-        } catch (err) {
-            setError('Failed to create account');
-            console.error('Signup failed:', err);
+        
+        const message = await signUp(email, password);
+        console.log("Message:", message);
+        if (message === 'Signup successful. Please log in.') {
+            setSuccess(message);
+        } else {
+            setError(message);
         }
     };
 
@@ -46,6 +48,7 @@ export const SignUpForm = () => {
                 <Title>Sign Up</Title>
                 <Form onSubmit={handleSubmit}>
                     {error && <ErrorMessage>{error}</ErrorMessage>}
+                    {success && <SuccessMessage>{success}</SuccessMessage>}
                     <FormGroup>
                         <Input
                             type="email"
