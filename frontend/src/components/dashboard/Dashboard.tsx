@@ -21,6 +21,7 @@ import { useActions } from '../../context/ActionsContext';
 import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdGridOn, MdList } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
+import { AnimatePresence, motion } from "framer-motion";
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -169,15 +170,31 @@ export const Dashboard = () => {
             ) : (
                 <>
                     {isLoading ? <Loader /> : (
-                        <>
-                            {selectedCategory ? (
-                                <NotesList 
-                                    category={selectedCategory}
-    
-                        />
-                    ) : (
-                                <NoteCategories handleCategoryClick={handleCategoryClick} />
-                            )}
+                        <>  
+                            <AnimatePresence mode="wait">
+                                {selectedCategory ? (
+                                    <motion.div
+                                    key="notes-list"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.1 }}
+                                    >
+                                    <NotesList category={selectedCategory} />
+                                    </motion.div>
+                                ) : (
+                                    <motion.div
+                                    key="note-categories"
+                                    initial={{ opacity: 0, y: 10 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.1 }}
+                                    >
+                                    <NoteCategories handleCategoryClick={handleCategoryClick} />
+                                    </motion.div>
+                                )}
+                                </AnimatePresence>
+
                         </>
                     )}
                 </>
