@@ -14,7 +14,7 @@ import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { Notification } from '../notif/Notification';
 import { useActions } from '../../context/ActionsContext';
-import { PrimaryButton } from '../../styles/shared/Button.styles';
+import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
 import { FaLightbulb, FaRegCalendarCheck, FaThumbtack } from 'react-icons/fa';
@@ -76,25 +76,9 @@ export const SideBar = () => {
 
   return (
     <>
-      {/* 🟠 Mobile toggle button */}
-      <button
-        onClick={() => setSidebarOpen(true)}
-        style={{
-          position: 'fixed',
-          top: 16,
-          left: 16,
-          zIndex: 9999,
-          fontSize: 24,
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          display: window.innerWidth <= 768 ? 'block' : 'none'
-        }}
-        aria-label="Open sidebar"
-      >
-        ☰
-      </button>
-
+      <SecondaryButton onClick={() => setSidebarOpen(true)}>
+        Open Sidebar
+      </SecondaryButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>
           <h2>Capture a thought</h2>

@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { DragHandle, SidebarContainer } from "../resize/Resize.Styles";
-import { motion, useAnimation } from "framer-motion";
+import { DragHandle, SidebarContainer } from "../resize/Resize.Styles.ts";
+import { motion, useMotionValue, useAnimation } from "framer-motion";
 
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 500;
@@ -12,18 +12,19 @@ interface ResizableSidebarProps {
 }
 
 export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSidebarProps) => {
-  const [width, setWidth] = useState(300);
+  const [width, setWidth] = useState(300); // desktop width
   const isResizing = useRef(false);
   const controls = useAnimation();
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
+  const MotionSidebarContainer = motion(SidebarContainer);
 
-  // Detect mobile on mount
+  // Detect mobile once
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
   }, []);
 
-  // Resize logic for desktop
+  // Desktop resizing
   useEffect(() => {
     if (isMobile) return;
 
@@ -46,25 +47,21 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
     };
   }, [isMobile]);
 
-  // Animate open/close on mobile
-  useEffect(() => {
-    controls.start({ x: isOpen ? 0 : "-100%" });
-  }, [isOpen]);
-
-  // Swipe close logic
+  // Mobile drag toggle logic
   const handleDragEnd = (_: any, info: { offset: { x: number } }) => {
     if (info.offset.x < -100) {
       setIsOpen(false);
+      controls.start({ x: "-100%" });
     } else if (info.offset.x > 100) {
       setIsOpen(true);
+      controls.start({ x: 0 });
     } else {
       controls.start({ x: isOpen ? 0 : "-100%" });
     }
   };
 
-  // 🔁 Return motion drawer on mobile, resizable sidebar on desktop
   return isMobile ? (
-    <motion.div
+    <MotionSidebarContainer
       ref={sidebarRef}
       drag="x"
       dragConstraints={{ left: 0, right: 0 }}
@@ -72,20 +69,38 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
       animate={controls}
       initial={{ x: "-100%" }}
       style={{
+        x: 0,
         position: "fixed",
         top: 0,
         left: 0,
         height: "100vh",
         width: "80vw",
-        background: "#fff",
         zIndex: 1000,
         boxShadow: "2px 0 10px rgba(0,0,0,0.1)",
         touchAction: "pan-y",
         overflowY: "auto",
+        background: "var(--sidebar-bg)"
       }}
     >
+      <button
+        onClick={() => setIsOpen(false)}
+        style={{
+          position: "absolute",
+          top: 16,
+          right: 16,
+          background: "none",
+          border: "none",
+          fontSize: "1.5rem",
+          cursor: "pointer",
+          zIndex: 1100,
+        }}
+        aria-label="Close sidebar"
+      >
+        ×
+      </button>
+  
       {children}
-    </motion.div>
+    </MotionSidebarContainer>
   ) : (
     <SidebarContainer style={{ width }}>
       {children}
@@ -95,5 +110,5 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
         }}
       />
     </SidebarContainer>
-  );
+  );  
 };
