@@ -1,24 +1,29 @@
 import { useState, useRef, useEffect } from "react";
-import { DragHandle, SidebarContainer } from "../resize/Resize.Styles.ts";
-import { motion, useMotionValue, useAnimation } from "framer-motion";
+import { DragHandle, SidebarContainer } from "../resize/Resize.Styles";
+import { motion, useAnimation } from "framer-motion";
 
 const MIN_WIDTH = 180;
 const MAX_WIDTH = 500;
 
-export const ResizableSidebar = ({ children }: { children: React.ReactNode }) => {
-  const [width, setWidth] = useState(300); // desktop width
+interface ResizableSidebarProps {
+  children: React.ReactNode;
+  isOpen: boolean;
+  setIsOpen: (v: boolean) => void;
+}
+
+export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSidebarProps) => {
+  const [width, setWidth] = useState(300);
   const isResizing = useRef(false);
   const controls = useAnimation();
   const sidebarRef = useRef<HTMLDivElement | null>(null);
   const [isMobile, setIsMobile] = useState(false);
-  const [isOpen, setIsOpen] = useState(false);
 
-  // Detect mobile once
+  // Detect mobile on mount
   useEffect(() => {
     setIsMobile(window.innerWidth <= 768);
   }, []);
 
-  // Desktop resizing
+  // Resize logic for desktop
   useEffect(() => {
     if (isMobile) return;
 
@@ -41,19 +46,23 @@ export const ResizableSidebar = ({ children }: { children: React.ReactNode }) =>
     };
   }, [isMobile]);
 
-  // Mobile drag toggle logic
+  // Animate open/close on mobile
+  useEffect(() => {
+    controls.start({ x: isOpen ? 0 : "-100%" });
+  }, [isOpen]);
+
+  // Swipe close logic
   const handleDragEnd = (_: any, info: { offset: { x: number } }) => {
     if (info.offset.x < -100) {
       setIsOpen(false);
-      controls.start({ x: "-100%" });
     } else if (info.offset.x > 100) {
       setIsOpen(true);
-      controls.start({ x: 0 });
     } else {
       controls.start({ x: isOpen ? 0 : "-100%" });
     }
   };
 
+  // 🔁 Return motion drawer on mobile, resizable sidebar on desktop
   return isMobile ? (
     <motion.div
       ref={sidebarRef}
@@ -71,7 +80,8 @@ export const ResizableSidebar = ({ children }: { children: React.ReactNode }) =>
         background: "#fff",
         zIndex: 1000,
         boxShadow: "2px 0 10px rgba(0,0,0,0.1)",
-        touchAction: "pan-y"
+        touchAction: "pan-y",
+        overflowY: "auto",
       }}
     >
       {children}

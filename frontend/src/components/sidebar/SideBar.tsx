@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
-import { 
-  TextBarForm, 
+import {
+  TextBarForm,
   TextInput,
   SummaryContainer,
   BulletIcon,
   BulletItem,
   BulletList,
   EventsContainer,
+  Divider,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
@@ -17,12 +18,26 @@ import { PrimaryButton } from '../../styles/shared/Button.styles';
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
 import { FaLightbulb, FaRegCalendarCheck, FaThumbtack } from 'react-icons/fa';
-import { Divider } from './SideBar.Styles';
+
 export const SideBar = () => {
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
   const { user } = useAuth();
-  const { setNotificationMessage, setShowNotification, getLastSnapshot, updateTasks, updateEvents, isLoading, notificationMessage, showNotification, bulletPoints, calendarEvents, tasks} = useActions();
+  const {
+    setNotificationMessage,
+    setShowNotification,
+    getLastSnapshot,
+    updateTasks,
+    updateEvents,
+    isLoading,
+    notificationMessage,
+    showNotification,
+    bulletPoints,
+    calendarEvents,
+    tasks,
+  } = useActions();
 
   useEffect(() => {
     getLastSnapshot();
@@ -31,40 +46,56 @@ export const SideBar = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    try {  
+    try {
       setNoteLoading(true);
-      // Create note object
+
       const note: Note = {
         content: text.trim(),
         user_id: user?.id || '',
-        category: "Unsorted",
+        category: 'Unsorted',
         cluster: -1,
       };
-  
-      // Insert note into database
+
       const notificationMessage = await NoteService.addNote(note);
 
-      if (notificationMessage === "Calendar task created") {
+      if (notificationMessage === 'Calendar task created') {
         updateTasks();
-      } else if (notificationMessage === "Calendar event created") {
+      } else if (notificationMessage === 'Calendar event created') {
         updateEvents();
       }
-  
-      // Show notification after successful note creation
+
       setNotificationMessage(notificationMessage);
       setShowNotification(true);
-  
-      console.log("Note added:", note);
-      setText(""); // Clear text input after successful insert
-      setNoteLoading(false);
+      setText('');
     } catch (error) {
-      console.error("Unexpected error in handleSubmit:", error);
+      console.error('Unexpected error in handleSubmit:', error);
+    } finally {
+      setNoteLoading(false);
     }
-  }; 
+  };
 
   return (
     <>
-      <ResizableSidebar>
+      {/* 🟠 Mobile toggle button */}
+      <button
+        onClick={() => setSidebarOpen(true)}
+        style={{
+          position: 'fixed',
+          top: 16,
+          left: 16,
+          zIndex: 9999,
+          fontSize: 24,
+          background: 'transparent',
+          border: 'none',
+          cursor: 'pointer',
+          display: window.innerWidth <= 768 ? 'block' : 'none'
+        }}
+        aria-label="Open sidebar"
+      >
+        ☰
+      </button>
+
+      <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>
           <h2>Capture a thought</h2>
           <TextInput
@@ -76,33 +107,33 @@ export const SideBar = () => {
             rows={1}
           />
           <PrimaryButton width="100%" type="submit" disabled={isLoading || noteLoading}>
-            {noteLoading ? "Creating..." : "Create Note"}
+            {noteLoading ? 'Creating...' : 'Create Note'}
           </PrimaryButton>
         </TextBarForm>
+
         <h2>My Calendar</h2>
         <EventsContainer>
           <BulletList>
-              {tasks.map((string, index) => (
-                <BulletItem key={index}>
-                  <BulletIcon>
-                    <FaThumbtack size={16} />
-                  </BulletIcon>
-                  <span>{string}</span>
-                </BulletItem>
-              ))}
-              <Divider />
-              <BulletList>
-              {calendarEvents.map((event, index) => (
-                <BulletItem key={index}>
-                  <BulletIcon>
-                    <FaRegCalendarCheck size={16} />
-                  </BulletIcon>
-                  <CountdownTimer eventString={event} />
-                </BulletItem>
-              ))}
-          </BulletList>
+            {tasks.map((string, index) => (
+              <BulletItem key={index}>
+                <BulletIcon>
+                  <FaThumbtack size={16} />
+                </BulletIcon>
+                <span>{string}</span>
+              </BulletItem>
+            ))}
+            <Divider />
+            {calendarEvents.map((event, index) => (
+              <BulletItem key={index}>
+                <BulletIcon>
+                  <FaRegCalendarCheck size={16} />
+                </BulletIcon>
+                <CountdownTimer eventString={event} />
+              </BulletItem>
+            ))}
           </BulletList>
         </EventsContainer>
+
         <h2>My Summary</h2>
         <SummaryContainer>
           <BulletList>
@@ -115,16 +146,16 @@ export const SideBar = () => {
               </BulletItem>
             ))}
           </BulletList>
-        </SummaryContainer> 
+        </SummaryContainer>
       </ResizableSidebar>
+
       {showNotification && (
-        <Notification 
-          message={notificationMessage} 
-          onClose={() => setShowNotification(false)} 
+        <Notification
+          message={notificationMessage}
+          onClose={() => setShowNotification(false)}
         />
       )}
     </>
   );
-}; 
-
+};
 
