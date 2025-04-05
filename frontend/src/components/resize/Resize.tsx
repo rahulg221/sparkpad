@@ -24,8 +24,8 @@ export const ResizableSidebar = ({ children, isOpen, setIsOpen }: ResizableSideb
       transition={{ duration: 0.25 }}
       style={{
         height: "100vh",
-        overflowY: "auto", // ✅ this is key
-        WebkitOverflowScrolling: "touch", // ✅ smooth on iOS
+        overflowY: "auto", 
+        WebkitOverflowScrolling: "touch", 
       }}
     >
       {children}

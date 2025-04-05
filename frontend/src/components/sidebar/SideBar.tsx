@@ -43,7 +43,17 @@ export const SideBar = () => {
 
   useEffect(() => {
     getLastSnapshot();
-  }, []);
+    
+    if (sidebarOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [sidebarOpen]);  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -79,7 +89,7 @@ export const SideBar = () => {
   return (
     <>
       <FloatingButton onClick={() => setSidebarOpen(prev => !prev)}>
-        {sidebarOpen ? '+' : 'x'}
+        {sidebarOpen ? '-' : '+'}
       </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <TextBarForm onSubmit={handleSubmit}>
