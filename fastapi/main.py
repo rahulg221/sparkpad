@@ -67,6 +67,10 @@ class Task(BaseModel):
 def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
 
+@app.options("/{full_path:path}")
+async def preflight_handler(full_path: str):
+    return Response(status_code=200)
+
 @app.post("/event")
 @limiter.limit("100/day")
 async def create_new_event(request: Request, request_body: Event, user=Depends(AuthService.get_current_user)):
