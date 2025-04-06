@@ -40,12 +40,12 @@ app.add_middleware(SlowAPIMiddleware)
 @app.middleware("http")
 async def attach_user_to_request(request: Request, call_next):
     try:
-        user = await AuthService.get_current_user(request)
+        user = AuthService.get_current_user(request)
         request.state.user = user
-        print("Rate limit key:", user["sub"])
-    except:
-        request.state.user = {}
-        print("Falling back to IP:", request.client.host)
+        print("Authenticated:", user["sub"])
+    except Exception as e:
+        request.state.user = None
+        print(f"Falling back to IP: {request.client.host} — Error: {e}")
 
     return await call_next(request)
 
@@ -104,7 +104,7 @@ async def create_new_task(request: Request, request_body: Task, user=Depends(Aut
         raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
-@limiter.limit("10/day")
+@limiter.limit("3/day")
 async def cluster_notes(request: Request, request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes

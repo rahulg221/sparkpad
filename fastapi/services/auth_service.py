@@ -24,15 +24,16 @@ class AuthService:
     SUPABASE_JWT_SECRET = os.getenv("SUPABASE_JWT_SECRET")
 
     @classmethod
-    def get_current_user(cls, request: Request, credentials: Optional[HTTPAuthorizationCredentials] = Depends(security_optional)):
+    def get_current_user(cls, request: Request, token: Optional[str] = None):
         if request.method == "OPTIONS":
-            return None  # CORS preflight request
+            return None  # CORS preflight
+
+        if token is None:
+            auth_header = request.headers.get("Authorization")
+            if not auth_header or not auth_header.startswith("Bearer "):
+                raise HTTPException(status_code=401, detail="Missing authorization token")
+            token = auth_header.split("Bearer ")[1]
         
-        if not credentials:
-            raise HTTPException(status_code=401, detail="Missing authorization token")
-    
-        token = credentials.credentials
-    
         try:
             payload = jwt.decode(
                 token,
@@ -42,7 +43,7 @@ class AuthService:
             )
             return payload
 
-        except jwt.PyJWTError:
+        except jwt.PyJWTError as e:
             raise HTTPException(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 detail="Invalid or expired token",
