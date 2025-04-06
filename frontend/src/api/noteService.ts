@@ -184,7 +184,7 @@ export class NoteService {
 
       if (response.status === 429) {
         const errorData = await response.json();
-        alert(errorData.detail || "Rate limit for this action has been exceeded. Try again later.");
+        //alert(errorData.detail || "Rate limit for this action has been exceeded. Try again later.");
         return;
       }
 
