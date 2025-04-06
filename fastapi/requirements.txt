@@ -5,6 +5,10 @@ umap-learn
 pydantic
 scikit-learn
 sentence-transformers
+transformers
+torch
+accelerate
+safetensors
 numpy
 pandas
 python-dotenv
