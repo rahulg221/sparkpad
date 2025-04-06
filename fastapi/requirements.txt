@@ -21,3 +21,4 @@ google-auth-httplib2
 pytz
 PyJWT
 supabase
+slowapi
