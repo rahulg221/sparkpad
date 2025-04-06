@@ -54,19 +54,23 @@ class OpenAIService:
         text = preprocess_text(text)
 
         prompt = f"""
-            You are a helpful assistant that takes a series of notes and returns a concise set of bullet points summarizing 
-            core ideas, important tasks and reminders, and the user's personal reflections.
+            You are a smart assistant that takes unstructured notes and converts them into a clean, prioritized bullet list.
 
-            Summarize the following notes.
+            Please organize the information from most important to least important using bullet points.
 
             Guidelines:
-            1. 300 character limit. 
-            2. Keep the tone concise but thoughtful. 
-            3. Do not make assumptions about the user's intentions or actions unless the user has explicitly stated something.
-            4. Only use alphabetical characters and spaces. 
-            5. Avoid using more than five bulletpoints. Condense if necessary.
 
-            Here are the notes to summarize:
+            1. Use clear and simple language
+
+            2. Eliminate redundant or irrelevant points
+
+            3. Do not include an intro, closing paragraph, or any headers. 
+
+            4. Avoid using more than five bullet points. Combine related points into one.
+
+            5. Do not include any other text or formatting. Use only alphabetical characters.
+
+            Here's the content to organize:
 
             ---  
             {text }

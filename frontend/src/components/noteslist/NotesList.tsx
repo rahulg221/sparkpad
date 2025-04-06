@@ -2,12 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NotesContainer, NoteCard, NoteMeta, CategoryTitle, NoteInfo, TrashIcon } from './NotesList.Styles';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
+import { NotesContainer, NoteCard, NoteContent, CategoryTitle, NoteInfo, TrashIcon} from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { MdList, MdGridOn } from 'react-icons/md';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { Modal } from '../modal/Modal';
+import { ModalContent } from '../modal/Modal.Styles';
 
 interface NotesListProps {
   category: string;
@@ -20,6 +20,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const { user } = useAuth();
   const { setCurrentNotes } = useActions();
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [openNote, setOpenNote] = useState<Note | null>(null);
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -63,24 +64,32 @@ export const NotesList = ({ category }: NotesListProps) => {
       </div>
       <NotesContainer viewMode={viewMode}>
         {notes.map((note) => (
-          <NoteCard key={note.id}>
-            <NoteMeta>
+          <NoteCard key={note.id} onClick={() => setOpenNote(note)}>
+            <NoteContent>
               {note.content}
-              <NoteInfo>
-                  {note.category}
-                  <br />
-                  {new Date(note.created_at!).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                  <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-              </NoteInfo>
-            </NoteMeta>
+            </NoteContent>
+            <NoteInfo>
+                {note.category}
+                <br />
+                {new Date(note.created_at!).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+            </NoteInfo>
           </NoteCard>
         ))}
     </NotesContainer>
+    {openNote && (
+      <Modal 
+          isOpen={!!openNote}   
+          title={'Expanded Note'}
+          children={openNote?.content}
+          onClose={() => setOpenNote(null)}
+      />
+    )}
     </>
   );
 }; 

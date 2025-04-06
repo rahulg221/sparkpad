@@ -2,22 +2,22 @@ export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
     bgDark: '#0a0a0a',           // Pure black app background
-    bgElevated: 'rgba(255, 255, 255, 0.0)',
+    bgElevated: ' rgba(255, 193, 7, 0.1)',
     bgLight: '#1a1a1a',          // Dark gray for inputs, blocks
 
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
     textLight: '#d1d1d1',        // Soft gray for secondary text
-    textSecondary: '#ffffff',
+    textSecondary: 'rgb(0, 0, 0)',
 
-    // Primary (white UI elements)
-    primary: '#F06464',            // For buttons/icons on dark background
-    primaryHover: '#F57A7A',
+    // Primary color
+    primary: ' rgb(255, 193, 7)',            // For buttons/icons on dark background
+    primaryHover: 'rgb(252, 200, 45)',
     primaryLight: 'rgba(255, 255, 255, 0.1)',
 
     // Accent (Red/Orange highlights)
-    accent: '#ff4444',           // Bright red for emphasis
-    accentHover: '#ff6666',      // Slightly lighter red hover
+    accent: 'rgb(255, 193, 7)',                     // Bright red for emphasis
+    accentHover: 'rgba(255, 193, 7, 0.5)',                // Slightly lighter red hover
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.2)',
@@ -60,7 +60,7 @@ export const darkTheme = {
     md: '0.9375rem',        // 15px
     lg: '1rem',    // 16px
     xl: '1.25rem',     // 20px
-    xxl: '3rem',     // 48px
+    xxl: '1.35rem',     
   },
 };
 
@@ -68,22 +68,22 @@ export const lightTheme = {
   colors: {
   // Backgrounds
   bgDark: '#ffffff',                     // White app background
-  bgElevated: 'rgba(0, 0, 0, 0.0)',     // Subtle card background
+  bgElevated: 'rgba(255, 193, 7, 0.1)',     // Subtle card background
   bgLight: '#f5f5f5',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text
   textLight: '#444444',                  // Dark gray for secondary text
-  textSecondary: '#0a0a0a',              // Replaces dark theme white secondary
+  textSecondary: 'rgb(255, 255, 255)',              // Replaces dark theme white secondary
 
   // Primary (dark UI elements on light background)
-  primary: '#F06464',                      // Black for buttons/icons
-  primaryHover: '#F57A7A',
-  primaryLight: 'rgba(0, 0, 0, 0.05)',   // Transparent black background
+  primary: ' rgb(0, 0, 0)',            // For buttons/icons on dark background
+  primaryHover: 'rgb(252, 200, 45)',
+  primaryLight: 'rgba(255, 255, 255, 0.1)',
 
   // Accent (red/orange highlights)
-  accent: '#ff4444',                     // Bright red for emphasis
-  accentHover: '#ff6666',                // Slightly lighter red hover
+  accent: 'rgb(252, 200, 45)',                     // Bright red for emphasis
+  accentHover: 'rgba(252, 200, 45, 0.5)',                // Slightly lighter red hover
 
   // Dot color (reversed for light bg)
   dotColor: 'rgba(0, 0, 0, 0.25)',
@@ -126,7 +126,7 @@ export const lightTheme = {
     md: '1rem',        // 16px
     lg: '1rem',    // 16px
     xl: '1.25rem',     // 20px
-    xxl: '3rem',     // 48px
+    xxl: '1.35rem',     // 48px
   },
 };
 

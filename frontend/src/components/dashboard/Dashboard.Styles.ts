@@ -10,7 +10,8 @@ export const Divider = styled.div`
 export const DashboardWrapper = styled.div`
   flex: 1;
   min-height: 100vh;
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.xl};
+  padding-left: ${({ theme }) => theme.spacing.lg};
   width: 100%;
   box-sizing: border-box;
   background-color: ${({ theme }) => theme.colors.bgDark};
@@ -28,6 +29,7 @@ export const Header = styled.div`
   flex-direction: row;
   gap: ${({ theme }) => theme.spacing.sm};
   margin-bottom: ${({ theme }) => theme.spacing.md};
+  padding-top: ${({ theme }) => theme.spacing.md};
   padding-bottom: ${({ theme }) => theme.spacing.md};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};    
 

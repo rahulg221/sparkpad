@@ -1,5 +1,24 @@
 import styled from 'styled-components';
 
+export const ScrollableContent = styled.div`
+  flex: 1;
+  overflow-y: auto;
+  margin-left: ${({ theme }) => theme.spacing.sm};
+  margin-right: ${({ theme }) => theme.spacing.sm};
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    border-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: ${({ theme }) => theme.colors.textLight};
+  }
+`;
+
 export const Divider = styled.div`
   width: 100%;
   height: 1px;
@@ -16,20 +35,35 @@ export const BulletList = styled.ul`
 export const BulletItem = styled.li`
   display: flex;
   margin-bottom: 0.5rem;
+  color: ${({ theme }) => theme.colors.textLight};
+  font-size: ${({ theme }) => theme.fontSize.sm};
 `;
 
 export const BulletIcon = styled.span`
   margin-right: 0.5rem;
-  color: ${({ theme }) => theme.colors.accentHover};
+  color: ${({ theme }) => theme.colors.accent};
   transform: translateY(4px);
 `;
 
+export const Header = styled.div`
+  padding-bottom: ${({ theme }) => theme.spacing.md};
+
+  h2 {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textLight};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+  }
+`;
+
 export const EventsContainer = styled.div`
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-top: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.textPrimary};
   overflow: visible;  
   height: auto;
@@ -83,11 +117,10 @@ export const FloatingButton = styled.button`
 `;
 
 export const SummaryContainer = styled.div`
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-top: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  border-top: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.textPrimary};
   overflow: visible;  
   height: auto;
@@ -124,6 +157,7 @@ export const TextInput = styled.textarea`
   flex: 1;
   width: 100%;
   min-height: 25vh;
+  margin-top: ${({ theme }) => theme.spacing.md};
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};

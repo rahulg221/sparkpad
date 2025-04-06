@@ -33,6 +33,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme | typeo
   }
 
   p {
-    font-size: ${({ theme }) => theme.fontSize.md};
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-size: ${({ theme }) => theme.fontSize.sm};
   }
 `;

@@ -18,7 +18,7 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
       const seconds = Math.floor((difference / 1000) % 60);
 
       if (difference <= 0) {
-        setTimeLeft(`In Progress - ${-1*hours}h ${-1*minutes}m ago`);
+        setTimeLeft(`In progress`);
         return;
       }
 
@@ -39,7 +39,7 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
 
   return (
     <span>
-      [{timeLeft}] {summary}
+      {timeLeft} - {summary}
     </span>
   );
 };

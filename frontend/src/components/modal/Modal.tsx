@@ -65,13 +65,13 @@ export const Modal: React.FC<ModalProps> = ({
       <ModalContainer ref={modalRef}>
         <ModalHeader>
           <ModalTitle>{title}</ModalTitle>
-          <CloseButton onClick={onClose}>
-            <CloseIcon />
-          </CloseButton>
         </ModalHeader>
         <ModalContent>
           {children}
         </ModalContent>
+        <CloseButton onClick={onClose}>
+            <ModalContent>Close</ModalContent>
+        </CloseButton>
         {footer && <ModalFooter>{footer}</ModalFooter>}
       </ModalContainer>
     </ModalOverlay>,

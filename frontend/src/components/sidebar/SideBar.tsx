@@ -9,6 +9,8 @@ import {
   EventsContainer,
   Divider,
   FloatingButton,
+  ScrollableContent,
+  Header,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
@@ -94,59 +96,65 @@ export const SideBar = () => {
         {sidebarOpen ? '-' : '+'}
       </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
+        <ScrollableContent>
+          <Header>
+            <h1>Spark Journal</h1>
+            <p>Capture the spark before it fades.</p>
+          </Header>
+          <h2>My Tasks</h2>
+          <EventsContainer>
+            <BulletList>
+              {tasks.map((string, index) => (
+                <BulletItem key={index}>
+                  <BulletIcon>
+                    <FaThumbtack size={16} />
+                  </BulletIcon>
+                  <span>{string}</span>
+                </BulletItem>
+              ))}
+            </BulletList>
+          </EventsContainer>
+          <h2>My Events</h2>
+          <EventsContainer>
+            <BulletList>
+              {calendarEvents.map((event, index) => (
+                <BulletItem key={index}>
+                  <BulletIcon>
+                    <FaRegCalendarCheck size={16} />
+                  </BulletIcon>
+                  <CountdownTimer eventString={event} />
+                </BulletItem>
+              ))}
+            </BulletList>
+          </EventsContainer>
+          <h2>My Snapshot</h2>
+          <SummaryContainer>
+            <BulletList>
+              {bulletPoints.map((bulletPoint, index) => (
+                <BulletItem key={index}>
+                  <BulletIcon>
+                    <FaLightbulb size={16} />
+                  </BulletIcon>
+                  <span>{bulletPoint}</span>
+                </BulletItem>
+              ))}
+            </BulletList>
+          </SummaryContainer>
+        </ScrollableContent>
         <TextBarForm onSubmit={handleSubmit}>
-          <h2>Capture a thought</h2>
           <TextInput
             as="textarea"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="What's on your mind?"
+            placeholder="Write here..."
             disabled={isLoading}
             rows={1}
           />
-          <PrimaryButton width="100%" type="submit" disabled={isLoading || noteLoading}>
+          <PrimaryButton type="submit" disabled={isLoading || noteLoading}>
             {noteLoading ? 'Creating...' : 'Create Note'}
           </PrimaryButton>
         </TextBarForm>
-
-        <h2>My Calendar</h2>
-        <EventsContainer>
-          <BulletList>
-            {tasks.map((string, index) => (
-              <BulletItem key={index}>
-                <BulletIcon>
-                  <FaThumbtack size={16} />
-                </BulletIcon>
-                <span>{string}</span>
-              </BulletItem>
-            ))}
-            <Divider />
-            {calendarEvents.map((event, index) => (
-              <BulletItem key={index}>
-                <BulletIcon>
-                  <FaRegCalendarCheck size={16} />
-                </BulletIcon>
-                <CountdownTimer eventString={event} />
-              </BulletItem>
-            ))}
-          </BulletList>
-        </EventsContainer>
-
-        <h2>My Summary</h2>
-        <SummaryContainer>
-          <BulletList>
-            {bulletPoints.map((bulletPoint, index) => (
-              <BulletItem key={index}>
-                <BulletIcon>
-                  <FaLightbulb size={16} />
-                </BulletIcon>
-                <span>{bulletPoint}</span>
-              </BulletItem>
-            ))}
-          </BulletList>
-        </SummaryContainer>
       </ResizableSidebar>
-
       {showNotification && (
         <Notification
           message={notificationMessage}
