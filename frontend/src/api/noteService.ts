@@ -182,6 +182,12 @@ export class NoteService {
         body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
       });
 
+      if (response.status === 429) {
+        const errorData = await response.json();
+        alert(errorData.detail || "Rate limit for this action has been exceeded. Try again later.");
+        return;
+      }
+
       if (!response.ok) {
           throw new Error('Clustering service request failed');
       }
@@ -222,6 +228,12 @@ export class NoteService {
         },
         body: JSON.stringify({ note_content: searchQuery }),
       }); 
+
+      if (response.status === 429) {
+        const errorData = await response.json();
+        alert(errorData.detail || "Rate limit for this action has been exceeded. Try again later.");
+        return [];
+      }
 
       if (!response.ok) {
         throw new Error('Semantic search service request failed');
