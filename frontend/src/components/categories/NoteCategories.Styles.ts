@@ -5,7 +5,11 @@ export const CategoriesContainer = styled.div`
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: ${({ theme }) => theme.spacing.sm};
   margin: 0 auto;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.sm};
+
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(2, 1fr); 
+  }
 `;
 
 export const CategoryBox = styled.div`
@@ -13,10 +17,9 @@ export const CategoryBox = styled.div`
   background-color: ${({ theme }) => theme.colors.colorThree};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.sm};
-  min-height: 22vh;
-  width: 20vh;
-  max-width: 90%;
-  margin: 0 auto; /* ✅ removed top/bottom margin */
+  height: 20vh;
+  width: 16vh;
+  margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: center;

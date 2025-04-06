@@ -115,7 +115,6 @@ export const SummaryContainer = styled.div`
 
 export const TextBarForm = styled.form`
   align-items: flex-start;
-  margin-bottom: auto;
   position: relative;
   display: flex;
   flex-direction: column;
