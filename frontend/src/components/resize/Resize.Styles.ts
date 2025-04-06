@@ -33,15 +33,9 @@ export const SidebarContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100vh;
-    width: 80vw;
+    height: 100%;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    z-index: 1000;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
   }
 `;
 

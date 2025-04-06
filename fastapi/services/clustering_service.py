@@ -160,7 +160,10 @@ class ClusteringService:
         Generates a category name based on the provided notes.
         """
         input_string = "".join(notes)
-        prompt = f"Create a 1-3 word category name for the following text: {input_string}"
+        prompt = f"""Create a category name for the following text: {input_string}
+          1. The category name should be a single word or phrase that captures the main idea of the notes.
+          2. Avoid non-alphabetical characters other than spaces. 
+        """
 
         # Generate response
         res = self.client.chat.completions.create(

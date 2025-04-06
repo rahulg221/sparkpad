@@ -1,5 +1,7 @@
-from fastapi import FastAPI, Depends, HTTPException, Response
+from fastapi import FastAPI, Depends, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
+from slowapi.middleware import SlowAPIMiddleware
+from services.utils import get_user_key
 from services.auth_service import AuthService
 from services.google_service import GoogleService
 from services.clustering_service import ClusteringService
@@ -8,6 +10,8 @@ from pydantic import BaseModel
 from supabase import create_client
 import os
 from dotenv import load_dotenv
+from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi.errors import RateLimitExceeded
 
 load_dotenv()
 
@@ -15,8 +19,12 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")  
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+limiter = Limiter(key_func=get_user_key)
 
 app = FastAPI()
+
+app.state.limiter = limiter
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 # Allow requests from http://localhost:3000
 app.add_middleware(
@@ -26,6 +34,20 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SlowAPIMiddleware)
+
+@app.middleware("http")
+async def attach_user_to_request(request: Request, call_next):
+    try:
+        user = await AuthService.get_current_user(request)
+        request.state.user = user
+        print("Rate limit key:", user["sub"])
+    except:
+        request.state.user = {}
+        print("Falling back to IP:", request.client.host)
+
+    return await call_next(request)
 
 # Cluster request body that takes in a list of strings
 class Notes(BaseModel):
@@ -40,17 +62,14 @@ class Event(BaseModel):
 
 class Task(BaseModel):
     note_content: str
-    
+
 @app.get("/")
 def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
 
-@app.options("/{full_path:path}")
-async def preflight_handler(full_path: str):
-    return Response(status_code=200)
-
 @app.post("/event")
-async def create_new_event(request_body: Event, user=Depends(AuthService.get_current_user)):
+@limiter.limit("100/day")
+async def create_new_event(request: Request, request_body: Event, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     auth_id = user["sub"]
 
@@ -65,7 +84,8 @@ async def create_new_event(request_body: Event, user=Depends(AuthService.get_cur
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
     
 @app.post("/task")
-async def create_new_task(request_body: Task, user=Depends(AuthService.get_current_user)):
+@limiter.limit("100/day")
+async def create_new_task(request: Request, request_body: Task, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     auth_id = user["sub"]
 
@@ -80,7 +100,8 @@ async def create_new_task(request_body: Task, user=Depends(AuthService.get_curre
         raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
-async def cluster_notes(request_body: Notes, user=Depends(AuthService.get_current_user)):
+@limiter.limit("10/day")
+async def cluster_notes(request: Request, request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes
         clustering_service = ClusteringService(request_body.notes_content, request_body.notes)
@@ -93,7 +114,8 @@ async def cluster_notes(request_body: Notes, user=Depends(AuthService.get_curren
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
 
 @app.post("/summarize")
-async def create_summary(request_body: Notes, user=Depends(AuthService.get_current_user)):
+@limiter.limit("15/day")
+async def create_summary(request: Request, request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Summarize the notes
         openai_service = OpenAIService()
@@ -105,7 +127,8 @@ async def create_summary(request_body: Notes, user=Depends(AuthService.get_curre
         raise HTTPException(status_code=500, detail="Failed to summarize notes")
     
 @app.post("/embed")
-async def embed_note(request_body: Note, user=Depends(AuthService.get_current_user)):
+@limiter.limit("100/day")
+async def embed_note(request: Request, request_body: Note, user=Depends(AuthService.get_current_user)):
     try:
         openai_service = OpenAIService()
         embedding = openai_service.generate_embeddings(request_body.note_content)
@@ -116,7 +139,8 @@ async def embed_note(request_body: Note, user=Depends(AuthService.get_current_us
         raise HTTPException(status_code=500, detail="Failed to embed note")
     
 @app.post("/semantic_search")
-async def semantic_search(request_body: Note, user = Depends(AuthService.get_current_user)):
+@limiter.limit("50/day")
+async def semantic_search(request: Request, request_body: Note, user = Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     # Get embedding for the query
@@ -143,7 +167,8 @@ async def semantic_search(request_body: Note, user = Depends(AuthService.get_cur
     return results.data
 
 @app.get("/gettasks")
-async def get_tasks(user=Depends(AuthService.get_current_user)):
+@limiter.limit("10/minute")
+async def get_tasks(request: Request, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     try:
@@ -156,7 +181,8 @@ async def get_tasks(user=Depends(AuthService.get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get tasks")
     
 @app.get("/getevents")
-async def get_events(user=Depends(AuthService.get_current_user)):
+@limiter.limit("10/minute")
+async def get_events(request: Request, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     try:
@@ -169,7 +195,8 @@ async def get_events(user=Depends(AuthService.get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get calendar events")
 
 @app.get("/auth/google/url")
-async def get_google_auth_url(user=Depends(AuthService.get_current_user)):
+@limiter.limit("5/day")
+async def get_google_auth_url(request: Request, user=Depends(AuthService.get_current_user)):
     try:
         # Get the Google auth URL
         auth_service = AuthService()
@@ -181,7 +208,8 @@ async def get_google_auth_url(user=Depends(AuthService.get_current_user)):
         raise HTTPException(status_code=500, detail="Failed to get Google auth URL")
     
 @app.get("/auth/google/callback")
-async def google_callback(code: str, user=Depends(AuthService.get_current_user)):
+@limiter.limit("5/day")
+async def google_callback(request: Request, code: str, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]   
 
     try:

@@ -1,3 +1,4 @@
+from fastapi import Request
 from imports import *
 import supabase
 
@@ -7,6 +8,9 @@ SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY")  
 
 supabase_client = supabase.create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+def get_user_key(request: Request):
+    return request.state.user.get("sub", request.client.host)
 
 def preprocess_text(note_content):
     """

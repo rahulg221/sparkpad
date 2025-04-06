@@ -64,6 +64,7 @@ class OpenAIService:
             2. Keep the tone concise but thoughtful. 
             3. Do not make assumptions about the user's intentions or actions unless the user has explicitly stated something.
             4. Only use alphabetical characters and spaces. 
+            5. Avoid using more than five bulletpoints. Condense if necessary.
 
             Here are the notes to summarize:
 
