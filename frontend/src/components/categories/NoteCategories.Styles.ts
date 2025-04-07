@@ -2,11 +2,14 @@ import styled from "styled-components";
 
 export const CategoriesContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: ${({ theme }) => theme.spacing.sm};
+  grid-template-columns: repeat(6, 1fr);
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.lg};
-
+  align-items: center;
+  justify-content: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+  width: 100%;
+  
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr); 
   }
