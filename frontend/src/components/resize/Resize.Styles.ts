@@ -1,7 +1,7 @@
 import { styled } from "styled-components";
 
 export const SidebarContainer = styled.div`
-  height: 100dvh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -26,7 +26,7 @@ export const SidebarContainer = styled.div`
   }
 
   @media (max-width: 768px) {
-    height: 100%;
+    height: 100dvh;
     -webkit-overflow-scrolling: touch;
   }
 `;
