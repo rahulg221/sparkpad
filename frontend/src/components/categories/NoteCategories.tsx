@@ -46,7 +46,9 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
             {category === "Unsorted" ? (
               <CategoryName>Miscellaneous</CategoryName>
             ) : (
-              <CategoryName>{category}</CategoryName>
+              <CategoryName>
+                {category.split(" ").slice(0, 2).join(" ")}
+              </CategoryName>
             )}
           </div>
         ))}
