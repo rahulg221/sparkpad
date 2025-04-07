@@ -19,7 +19,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
   const { setCurrentNotes } = useActions();
-  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
   const [openNote, setOpenNote] = useState<Note | null>(null);
 
   useEffect(() => {
@@ -56,7 +56,7 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category}</h1>}  
       <ElevatedContainer>
-        <NotesContainer viewMode={viewMode}>
+        <NotesContainer $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} onClick={() => setOpenNote(note)}>
               <NoteContent>

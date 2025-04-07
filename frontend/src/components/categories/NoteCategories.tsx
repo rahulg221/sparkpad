@@ -40,16 +40,16 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
   return (
     <ElevatedContainer>
       <CategoriesContainer>
-          {categories.map((category) => (
-            <div>
-              <CategoryBox
-                  key={category}
-                  onClick={() => handleCategoryClick(category)}
-              >
-              </CategoryBox>
-              { category == "Unsorted" ? <CategoryName>Miscellaneous</CategoryName> : <CategoryName>{category}</CategoryName>}
-            </div>
-          ))}
+        {categories.map((category) => (
+          <div key={category}>
+            <CategoryBox onClick={() => handleCategoryClick(category)} />
+            {category === "Unsorted" ? (
+              <CategoryName>Miscellaneous</CategoryName>
+            ) : (
+              <CategoryName>{category}</CategoryName>
+            )}
+          </div>
+        ))}
       </CategoriesContainer>
     </ElevatedContainer>
   );

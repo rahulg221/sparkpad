@@ -1,10 +1,19 @@
 import styled from 'styled-components';
 
 export const Divider = styled.div`
+  flex: 1; /* This is the key to spacing */
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 5vh;
-  width: 1px;
-  background-color: ${({ theme }) => theme.colors.border};
-  margin: 0 ${({ theme }) => theme.spacing.sm};
+  margin: 0 8px;
+
+  &::before {
+    content: '';
+    width: 1px;
+    height: 100%;
+    background-color: ${({ theme }) => theme.colors.border};
+  }
 `;
 
 export const DashboardWrapper = styled.div`

@@ -168,7 +168,7 @@ export const Dashboard = () => {
             {searchResults.length > 0 ? (
                 <>
                 <CategoryTitle>Search Results</CategoryTitle>
-                <NotesContainer viewMode='list'>
+                <NotesContainer $layoutMode='list'>
                     {searchResults.map((note) => (
                         <NoteCard key={note.id}>
                             <NoteContent>

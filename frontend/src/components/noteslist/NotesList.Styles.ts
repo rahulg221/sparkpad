@@ -2,7 +2,7 @@ import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
 
 interface NotesContainerProps {
-  viewMode: 'grid' | 'list';
+  $layoutMode: 'grid' | 'list';
 }
 
 export const ElevatedContainer = styled.div`
@@ -28,10 +28,10 @@ export const TrashIcon = styled(MdDeleteOutline)`
 `;
 
 export const NotesContainer = styled.div<NotesContainerProps>`
-  display: ${({ viewMode }) => (viewMode === 'list' ? 'flex' : 'grid')};
-  flex-direction: ${({ viewMode }) => (viewMode === 'list' ? 'column' : 'initial')};
-  grid-template-columns: ${({ viewMode }) =>
-    viewMode === 'grid' ? 'repeat(3, 1fr)' : 'none'};
+  display: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'flex' : 'grid')};
+  flex-direction: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'column' : 'initial')};
+  grid-template-columns: ${({ $layoutMode }) =>
+    $layoutMode === 'grid' ? 'repeat(3, 1fr)' : 'none'};
   gap: ${({ theme }) => theme.spacing.md};
 
   @media (max-width: 768px) {
@@ -52,6 +52,10 @@ export const NoteCard = styled.div`
 
   &:hover {
     height: auto; // Let it grow naturally
+  }
+
+  @media (max-width: 768px) {
+    min-height: 15vh;
   }
 `;
 
@@ -77,6 +81,10 @@ export const NoteContent = styled.div`
     overflow: visible;
     text-overflow: clip;
     -webkit-line-clamp: none;
+  }
+
+  @media (max-width: 768px) {
+    line-clamp: 1;
   }
 `;
 

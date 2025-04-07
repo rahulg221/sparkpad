@@ -44,16 +44,16 @@ export const NotesRow = () => {
             <NotesContainer>
                 {notes.map(note => (
                     <NoteCard key={note.id}>
-                    <NoteContent>{note.content}</NoteContent>
-                    <NoteInfo>
-                        {new Date(note.created_at!).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        hour: '2-digit',
-                        minute: '2-digit',
-                        })}
-                        <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                    </NoteInfo>
+                        <NoteContent>{note.content}</NoteContent>
+                        <NoteInfo>
+                            {new Date(note.created_at!).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            })}
+                            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                        </NoteInfo>
                     </NoteCard>
                 ))}
             </NotesContainer>
