@@ -1,8 +1,9 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
+    bgPure: '#000000',
     bgDark: '#0a0a0a',           // Pure black app background
-    bgElevated: ' rgba(255, 193, 7, 0.1)',
+    bgElevated: ' #121212',
     bgLight: '#1a1a1a',          // Dark gray for inputs, blocks
 
     // Text colors (inverted from light mode)
@@ -20,12 +21,12 @@ export const darkTheme = {
     accentHover: 'rgba(255, 193, 7, 0.5)',                // Slightly lighter red hover
 
     // Inverted dot color (was black on white)
-    dotColor: 'rgba(255, 255, 255, 0.2)',
+    dotColor: 'rgba(255, 255, 255, 0.1)',
 
     // Semantic folder palette (flipped to work on dark)
-    colorOne: '#FFD966',         // Stays bright for highlights
-    colorTwo: '#2b2b2b',           // Dark grey folder tab
-    colorThree: '#3a3a3a',         // Slightly lighter dark grey for folder body
+    colorOne: 'rgb(255, 193, 7)',         // Stays bright for highlights
+    colorTwo: 'rgb(14, 14, 14)',         // Notepad background
+    colorThree: 'rgba(255, 255, 255, 0.2)',         // Dots and lines on notepad
     colorFour: '#2a2a2a',        // Neutral dark base
 
     // Utility / Semantic
@@ -55,18 +56,19 @@ export const darkTheme = {
   },
   fontSize: {
     xs: '0.75rem',     // 12px
-    sm: '0.875rem',    // 14px
-    base: '0.9375rem', // 15px
-    md: '0.9375rem',        // 15px
-    lg: '1rem',    // 16px
-    xl: '1.25rem',     // 20px
-    xxl: '1.35rem',     
+    sm: '0.8rem',    // 14px
+    base: '0.85rem', // 15px
+    md: '0.85rem',        // 15px
+    lg: '0.9rem',    // 16px
+    xl: '1.1rem',     // 20px
+    xxl: '1.2rem',     
   },
 };
 
 export const lightTheme = {
   colors: {
   // Backgrounds
+  bgPure: '#ffffff',
   bgDark: '#ffffff',                     // White app background
   bgElevated: 'rgba(255, 193, 7, 0.1)',     // Subtle card background
   bgLight: '#f5f5f5',                    // Light gray for inputs, code blocks
@@ -86,12 +88,12 @@ export const lightTheme = {
   accentHover: 'rgba(252, 200, 45, 0.5)',                // Slightly lighter red hover
 
   // Dot color (reversed for light bg)
-  dotColor: 'rgba(0, 0, 0, 0.25)',
+  dotColor: 'rgba(0, 0, 0, 0.3)',
 
   // Semantic folder palette (light versions of the dark theme)
-  colorOne: '#FFD966',                   // Highlight color
-  colorTwo: '#2b2b2b',           // Dark grey folder tab
-  colorThree: '#3a3a3a',         // Slightly lighter dark grey for folder body
+  colorOne: 'rgb(0, 0, 0)',                   // Highlight color
+  colorTwo: 'rgb(169, 169, 169)',         // Notepad background
+  colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: '#fafafa',
 
   // Utility / Semantic
@@ -121,12 +123,12 @@ export const lightTheme = {
   },
   fontSize: {
     xs: '0.75rem',     // 12px
-    sm: '0.875rem',    // 14px
-    base: '0.9375rem', // 15px
-    md: '1rem',        // 16px
-    lg: '1rem',    // 16px
-    xl: '1.25rem',     // 20px
-    xxl: '1.35rem',     // 48px
+    sm: '0.8rem',    // 14px
+    base: '0.85rem', // 15px
+    md: '0.85rem',        // 15px
+    lg: '0.9rem',    // 16px
+    xl: '1.1rem',     // 20px
+    xxl: '1.2rem',  
   },
 };
 

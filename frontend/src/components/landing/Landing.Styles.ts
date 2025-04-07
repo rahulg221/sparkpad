@@ -11,20 +11,9 @@ export const LandingContainer = styled.div`
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} transparent;
-  
-  &::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-image: radial-gradient(${({ theme }) => theme.colors.dotColor} 1px, transparent 1px);
-    background-size: 20px 20px;
-    pointer-events: none;
-    z-index: 0;
-  }
-  
+  background-image: radial-gradient(${({ theme }) => theme.colors.dotColor} 1px, transparent 1px);
+  background-size: 20px 20px;
+
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -44,18 +33,29 @@ export const ContentContainer = styled.div`
   padding: ${({ theme }) => theme.spacing.xxl};
   justify-content: center;
   align-items: center;
-  background-color: ${({ theme }) => theme.colors.bgElevated};
   color: ${({ theme }) => theme.colors.textPrimary};
+  background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid ${({ theme }) => theme.colors.border};
-  width: 150vh;
+  width: 100vh;
+
+  h1 {
+    font-size: 2rem; // Fix this later to use theme font size
+    color: ${({ theme }) => theme.colors.textPrimary};
+    margin: 0;
+    padding: 0;
+  }
 
   h2 {
     font-size: ${({ theme }) => theme.fontSize.xxl};
     color: ${({ theme }) => theme.colors.textPrimary};
     margin: 0;
     padding: 0;
+  }
+
+  p {
+    color: ${({ theme }) => theme.colors.textLight};
   }
 `;
 

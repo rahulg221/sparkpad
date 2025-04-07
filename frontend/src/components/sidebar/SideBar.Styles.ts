@@ -3,8 +3,8 @@ import styled from 'styled-components';
 export const ScrollableContent = styled.div`
   flex: 1;
   overflow-y: auto;
-  margin-left: ${({ theme }) => theme.spacing.sm};
-  margin-right: ${({ theme }) => theme.spacing.sm};
+  margin-left: ${({ theme }) => theme.spacing.xs};
+  margin-right: ${({ theme }) => theme.spacing.xs};
 
   &::-webkit-scrollbar {
     width: 4px;
@@ -34,19 +34,22 @@ export const BulletList = styled.ul`
 
 export const BulletItem = styled.li`
   display: flex;
-  margin-bottom: 0.5rem;
+  margin-bottom: ${({ theme }) => theme.spacing.sm};
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.sm};
 `;
 
 export const BulletIcon = styled.span`
-  margin-right: 0.5rem;
+  margin-right: ${({ theme }) => theme.spacing.sm};
   color: ${({ theme }) => theme.colors.accent};
-  transform: translateY(4px);
+  transform: translateY(2px);
 `;
 
-export const Header = styled.div`
+export const MainHeader = styled.div`
   padding-bottom: ${({ theme }) => theme.spacing.md};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
 
   h2 {
     color: ${({ theme }) => theme.colors.textPrimary};
@@ -56,6 +59,12 @@ export const Header = styled.div`
     color: ${({ theme }) => theme.colors.textLight};
     font-size: ${({ theme }) => theme.fontSize.sm};
   }
+`;
+
+export const SubHeader = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 `;
 
 export const EventsContainer = styled.div`
@@ -117,7 +126,7 @@ export const FloatingButton = styled.button`
 `;
 
 export const SummaryContainer = styled.div`
-  padding-top: ${({ theme }) => theme.spacing.md};
+  padding-top: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   border-top: 1px solid ${({ theme }) => theme.colors.border};
@@ -126,7 +135,6 @@ export const SummaryContainer = styled.div`
   height: auto;
   max-height: none;
   
-
   &::-webkit-scrollbar {
     width: 8px;
   }

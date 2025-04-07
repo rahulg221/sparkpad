@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NotesContainer, NoteCard, NoteContent, CategoryTitle, NoteInfo, TrashIcon} from './NotesList.Styles';
+import { NotesContainer, NoteCard, NoteContent, CategoryTitle, NoteInfo, TrashIcon, ElevatedContainer} from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { MdList, MdGridOn } from 'react-icons/md';
 import { SecondaryButton } from '../../styles/shared/Button.styles';
@@ -54,42 +54,29 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   return (
     <>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <CategoryTitle>
-          {category}
-        </CategoryTitle>
-        <SecondaryButton onClick={() => setViewMode(viewMode === 'grid' ? 'list' : 'grid')}>
-          {viewMode === 'grid' ? <MdList size={20}/> : <MdGridOn size={20}/>}
-        </SecondaryButton>
-      </div>
-      <NotesContainer viewMode={viewMode}>
-        {notes.map((note) => (
-          <NoteCard key={note.id} onClick={() => setOpenNote(note)}>
-            <NoteContent>
-              {note.content}
-            </NoteContent>
-            <NoteInfo>
-                {note.category}
-                <br />
-                {new Date(note.created_at!).toLocaleDateString('en-US', {
-                  month: 'short',
-                  day: 'numeric',
-                  hour: '2-digit',
-                  minute: '2-digit',
-                })}
-                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-            </NoteInfo>
-          </NoteCard>
-        ))}
-    </NotesContainer>
-    {openNote && (
-      <Modal 
-          isOpen={!!openNote}   
-          title={'Expanded Note'}
-          children={openNote?.content}
-          onClose={() => setOpenNote(null)}
-      />
-    )}
+      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category}</h1>}  
+      <ElevatedContainer>
+        <NotesContainer viewMode={viewMode}>
+          {notes.map((note) => (
+            <NoteCard key={note.id} onClick={() => setOpenNote(note)}>
+              <NoteContent>
+                {note.content}
+              </NoteContent>
+              <NoteInfo>
+                  {note.category}
+                  <br />
+                  {new Date(note.created_at!).toLocaleDateString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit',
+                  })}
+                  <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+              </NoteInfo>
+            </NoteCard>
+          ))}
+        </NotesContainer>
+      </ElevatedContainer>
     </>
   );
 }; 

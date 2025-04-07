@@ -10,7 +10,8 @@ import {
   Divider,
   FloatingButton,
   ScrollableContent,
-  Header,
+  MainHeader,
+  SubHeader,
 } from './SideBar.Styles';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
@@ -20,8 +21,9 @@ import { useActions } from '../../context/ActionsContext';
 import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
 import { ResizableSidebar } from '../resize/Resize';
 import { CountdownTimer } from '../sidebar/CountdownTimer';
-import { FaLightbulb, FaRegCalendarCheck, FaThumbtack } from 'react-icons/fa';
-import { MdClose, MdMenu } from 'react-icons/md';
+import { FaDownload, FaLightbulb, FaRegCalendarCheck, FaStar, FaThumbtack } from 'react-icons/fa';
+import { MdClose, MdFlashOn, MdMenu, MdStars } from 'react-icons/md';
+import { FaBoltLightning } from 'react-icons/fa6';
 
 export const SideBar = () => {
   const [text, setText] = useState('');
@@ -33,6 +35,7 @@ export const SideBar = () => {
     setNotificationMessage,
     setShowNotification,
     getLastSnapshot,
+    showSnapshot,
     updateTasks,
     updateEvents,
     isLoading,
@@ -97,11 +100,15 @@ export const SideBar = () => {
       </FloatingButton>
       <ResizableSidebar isOpen={sidebarOpen} setIsOpen={setSidebarOpen}>
         <ScrollableContent>
-          <Header>
-            <h1>Spark Journal</h1>
-            <p>Capture the spark before it fades.</p>
-          </Header>
-          <h2>My Tasks</h2>
+          <MainHeader>
+            <BulletIcon> 
+              <FaBoltLightning size={16} />
+            </BulletIcon>
+            <h1>Sparkpad</h1>
+          </MainHeader>
+          <SubHeader>
+            <h2>Tasks</h2>
+          </SubHeader>
           <EventsContainer>
             <BulletList>
               {tasks.map((string, index) => (
@@ -114,7 +121,9 @@ export const SideBar = () => {
               ))}
             </BulletList>
           </EventsContainer>
-          <h2>My Events</h2>
+          <SubHeader>
+            <h2>Events</h2>
+          </SubHeader>
           <EventsContainer>
             <BulletList>
               {calendarEvents.map((event, index) => (
@@ -127,7 +136,9 @@ export const SideBar = () => {
               ))}
             </BulletList>
           </EventsContainer>
-          <h2>My Snapshot</h2>
+          <SubHeader>
+            <h2>Snapshot</h2>
+          </SubHeader>
           <SummaryContainer>
             <BulletList>
               {bulletPoints.map((bulletPoint, index) => (
@@ -146,12 +157,12 @@ export const SideBar = () => {
             as="textarea"
             value={text}
             onChange={(e) => setText(e.target.value)}
-            placeholder="Write here..."
+            placeholder="Capture the spark before it fades..."
             disabled={isLoading}
             rows={1}
           />
           <PrimaryButton type="submit" disabled={isLoading || noteLoading}>
-            {noteLoading ? 'Creating...' : 'Create Note'}
+            {noteLoading ? 'Creating...' : 'New Spark'}
           </PrimaryButton>
         </TextBarForm>
       </ResizableSidebar>

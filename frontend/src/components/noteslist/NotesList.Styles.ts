@@ -5,6 +5,16 @@ interface NotesContainerProps {
   viewMode: 'grid' | 'list';
 }
 
+export const ElevatedContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.bgDark};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  padding: ${({ theme }) => theme.spacing.lg};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  box-sizing: border-box;
+`;
+
 export const TrashIcon = styled(MdDeleteOutline)`
   width: 20px;
   height: 20px;
@@ -18,8 +28,6 @@ export const TrashIcon = styled(MdDeleteOutline)`
 `;
 
 export const NotesContainer = styled.div<NotesContainerProps>`
-  padding-bottom: calc(${({ theme }) => theme.spacing.lg} + 160px);
-  margin: 0 auto;
   display: ${({ viewMode }) => (viewMode === 'list' ? 'flex' : 'grid')};
   flex-direction: ${({ viewMode }) => (viewMode === 'list' ? 'column' : 'initial')};
   grid-template-columns: ${({ viewMode }) =>
@@ -32,15 +40,15 @@ export const NotesContainer = styled.div<NotesContainerProps>`
 `;
 
 export const NoteCard = styled.div`
-  background-color: ${({ theme }) => theme.colors.bgElevated};
+  background-color: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.colorOne};
   padding: ${({ theme }) => theme.spacing.lg};
   transition: all 0.2s ease;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  height: 25vh;
+  min-height: 25vh;
 
   &:hover {
     height: auto; // Let it grow naturally

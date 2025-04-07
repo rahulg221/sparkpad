@@ -84,6 +84,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };
 
     const updateTasks = async () => {
+        setIsLoading(true);
         try {
             const tasks = await CalendarService.getTasks(); 
             localStorage.setItem('last_tasks', JSON.stringify(tasks));
@@ -91,9 +92,11 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Failed to update tasks:", err);
         }
+        setIsLoading(false);
     };
         
     const updateEvents = async () => {
+        setIsLoading(true);
         try {
             const events = await CalendarService.getCalendarEvents(); 
             localStorage.setItem('last_events', JSON.stringify(events));
@@ -101,6 +104,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         } catch (err) {
             console.error("Failed to update events:", err);
         }
+        setIsLoading(false);
     };      
 
     const getLastSnapshot = async () => {

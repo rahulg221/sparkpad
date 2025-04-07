@@ -1,11 +1,14 @@
 import { styled } from "styled-components";
 
 export const SidebarContainer = styled.div`
-  height: 100vh;
+  height: 100dvh;
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.sm};
+  padding-top: ${({ theme }) => theme.spacing.sm};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-right: 1px solid ${({ theme }) => theme.colors.border};
 

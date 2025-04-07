@@ -15,7 +15,7 @@ export const AuthPageContainer = styled.div`
 export const FormContainer = styled.div`
   margin: ${({ theme }) => theme.spacing.xxl};
   padding: ${({ theme }) => theme.spacing.xxl};
-  background-color: ${({ theme }) => theme.colors.bgElevated};
+  background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   border: 1px solid ${({ theme }) => theme.colors.border};

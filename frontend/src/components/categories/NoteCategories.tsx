@@ -3,6 +3,7 @@ import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
 import { CategoriesContainer, CategoryBox, CategoryName } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
+import { ElevatedContainer } from '../noteslist/NotesList.Styles';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -37,18 +38,19 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
   };
 
   return (
-    <><CategoriesContainer>
+    <ElevatedContainer>
+      <CategoriesContainer>
           {categories.map((category) => (
             <div>
               <CategoryBox
                   key={category}
                   onClick={() => handleCategoryClick(category)}
               >
-                  
               </CategoryBox>
-              <CategoryName>{category}</CategoryName>
+              { category == "Unsorted" ? <CategoryName>Miscellaneous</CategoryName> : <CategoryName>{category}</CategoryName>}
             </div>
           ))}
-      </CategoriesContainer></>
+      </CategoriesContainer>
+    </ElevatedContainer>
   );
 };

@@ -4,7 +4,28 @@ import CalendarMethods from './calendarService';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-export class NoteService {
+export class NoteService {      
+  static async getMostRecentNotes(userId: string, k: number = 5): Promise<Note[]> {
+    try {
+      const { data, error } = await supabase
+        .from('notes')
+        .select('*')
+        .eq('user_id', userId)
+        .order('created_at', { ascending: false })
+        .limit(k);
+
+      if (error) {
+        console.error('Error fetching recent notes:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Failed to get most recent notes:', error);
+      return [];
+    }
+  }
+
   static async addNote(note: Note): Promise<string> {
     const token = await getToken();
     // Initialize notification message and OpenAI client

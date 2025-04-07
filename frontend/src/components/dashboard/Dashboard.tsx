@@ -18,34 +18,44 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb } from 'react-icons/md';
+import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdRecentActors, MdNotes, MdBook, MdMenuBook, MdHistory, MdLibraryBooks } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { AnimatePresence, motion } from "framer-motion";
+import { NotesRow } from '../notesrow/NotesRow';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
-    const { semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, setSearchResults, isLoading, notificationMessage, showNotification, summary, searchResults } = useActions();
+    const { updateTasks, updateEvents, semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, setSearchResults, isLoading, notificationMessage, showNotification, summary, searchResults, calendarEvents, tasks } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [notes, setNotes] = useState<Note[]>([]);
     const [showSettings, setShowSettings] = useState(false);
+    const [showRecentNotes, setShowRecentNotes] = useState(false);
 
     useEffect(() => {
+        /*
         const handleGoogleCallback = async () => {
+            // Add more robust check for calendar and task connections
+            if (calendarEvents.length || tasks.length) {
+                console.log("Already connected to Google");
+                return;
+            }
+
             const params = new URLSearchParams(window.location.search);
             const code = params.get("code");
             if (!code || !window.location.pathname.includes("/auth/google/callback")) return;
 
             try {
                 await CalendarService.sendAuthCodeToBackend(code);
+                
                 console.log("Calendar connected successfully");
             } catch (err) {
                 console.error("Failed to complete Google OAuth callback", err);
             }
         };
 
-        handleGoogleCallback();
+        handleGoogleCallback();*/
     }, []);
 
     const handleLogout = async () => {
@@ -98,9 +108,18 @@ export const Dashboard = () => {
 
     const handleCalendarClick = async () => {
         try {
-            const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
+            /*
+            if (calendarEvents.length > 0) {
+                updateEvents();
+            }
+            if (tasks.length > 0) {
+                updateTasks();
+            }*/
 
-            window.location.href = googleAuthUrl; 
+            if (calendarEvents.length === 0 && tasks.length === 0) {
+                const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
+                window.location.href = googleAuthUrl; 
+            }
         } catch (err) {
             console.error("Failed to get Google auth URL", err);
         }
@@ -119,11 +138,19 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <SecondaryButton onClick={handleBackClick}>
-                    <MdHome size={20}/>
-                    <span className='text-label'>Home</span>
+            <SecondaryButton onClick={handleBackClick}>
+                    <MdLibraryBooks size={20}/>
+                    <span className='text-label'>Sparkpads</span>
                 </SecondaryButton>
-                <SearchBar onSearch={handleSearch} />
+                <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
+                    <MdHistory size={20}/>
+                    <span className='text-label'>Recents</span>
+                </SecondaryButton>
+                <SecondaryButton onClick={handleSettingsClick}>
+                    <MdSettings size={20}/>
+                    <span className='text-label'>Settings</span>
+                </SecondaryButton>
+                <Divider />
                 <SecondaryButton onClick={autoOrganizeNotes}>
                     <MdPsychology size={20}/>
                     <span className='text-label'>Organize</span>
@@ -136,10 +163,7 @@ export const Dashboard = () => {
                     <MdEventAvailable size={20}/>
                     <span className='text-label'>Connect</span>
                 </SecondaryButton>
-                <SecondaryButton onClick={handleSettingsClick}>
-                    <MdSettings size={20}/>
-                    <span className='text-label'>Settings</span>
-                </SecondaryButton>
+                <SearchBar onSearch={handleSearch} />
             </Header>
             {searchResults.length > 0 ? (
                 <>
@@ -169,30 +193,15 @@ export const Dashboard = () => {
                 <>
                     {isLoading ? <Loader /> : (
                         <>  
-                            <AnimatePresence mode="wait">
-                                {selectedCategory ? (
-                                    <motion.div
-                                        key="notes-list"
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.1 }}
-                                    >
-                                    <NotesList category={selectedCategory} />
-                                    </motion.div>
-                                ) : (
-                                    <motion.div
-                                        key="note-categories"
-                                        initial={{ opacity: 0, y: 10 }}
-                                        animate={{ opacity: 1, y: 0 }}
-                                        exit={{ opacity: 0, y: -10 }}
-                                        transition={{ duration: 0.1 }}
-                                    >
+                            {showRecentNotes ? <NotesRow/> : null}
+                            {selectedCategory ? (
+                                <NotesList category={selectedCategory} />
+                            ) : (
+                                <>
+                                    <h1>Sparkpads</h1>
                                     <NoteCategories handleCategoryClick={handleCategoryClick} />
-                                    </motion.div>
-                                )}
-                                </AnimatePresence>
-
+                                </>
+                            )}
                         </>
                     )}
                 </>
