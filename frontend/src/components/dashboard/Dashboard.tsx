@@ -11,18 +11,19 @@ import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
 import { SearchBar } from '../searchbar/SearchBar';
-import { NoteCard, NoteContent, NotesContainer, NoteInfo, TrashIcon, CategoryTitle } from '../noteslist/NotesList.Styles';
+import { NoteCard, NoteContent, NotesContainer, NoteInfo, TrashIcon } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdRecentActors, MdNotes, MdBook, MdMenuBook, MdHistory, MdLibraryBooks } from 'react-icons/md';
+import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdRecentActors, MdNotes, MdBook, MdMenuBook, MdHistory, MdLibraryBooks, MdGridView } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { AnimatePresence, motion } from "framer-motion";
 import { NotesRow } from '../notesrow/NotesRow';
+import { IoMdFlame } from 'react-icons/io';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -138,13 +139,14 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-            <SecondaryButton onClick={handleBackClick}>
-                    <MdLibraryBooks size={20}/>
+                <SearchBar onSearch={handleSearch} />
+                <SecondaryButton onClick={handleBackClick}>
+                    <MdGridView size={20}/>
                     <span className='text-label'>Sparkpads</span>
                 </SecondaryButton>
                 <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
-                    <MdHistory size={20}/>
-                    <span className='text-label'>Recents</span>
+                    <IoMdFlame size={20}/>
+                    <span className='text-label'>New</span>
                 </SecondaryButton>
                 <SecondaryButton onClick={handleSettingsClick}>
                     <MdSettings size={20}/>
@@ -163,11 +165,10 @@ export const Dashboard = () => {
                     <MdEventAvailable size={20}/>
                     <span className='text-label'>Connect</span>
                 </SecondaryButton>
-                <SearchBar onSearch={handleSearch} />
             </Header>
             {searchResults.length > 0 ? (
                 <>
-                <CategoryTitle>Search Results</CategoryTitle>
+                <h1>Search Results</h1>
                 <NotesContainer $layoutMode='list'>
                     {searchResults.map((note) => (
                         <NoteCard key={note.id}>

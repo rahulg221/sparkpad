@@ -87,18 +87,3 @@ export const NoteContent = styled.div`
     line-clamp: 1;
   }
 `;
-
-export const BackButton = styled.button`
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.textPrimary};
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-`;
-
-export const CategoryTitle = styled.h1`
-  margin-bottom: ${({ theme }) => theme.spacing.lg};
-  color: ${({ theme }) => theme.colors.textPrimary};
-`;

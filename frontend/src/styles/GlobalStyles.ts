@@ -1,7 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
-import { lightTheme, darkTheme } from './theme';
 
-export const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme | typeof darkTheme }>`
+export const GlobalStyles = createGlobalStyle`
   html, body, #root {
     min-height: 100vh;
     background-color: ${({ theme }) => theme.colors.bgDark};
@@ -11,7 +10,7 @@ export const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme | typeo
 
   body {
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-family: 'Nunito', sans-serif;
+    font-family: 'Poppins', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -22,18 +21,37 @@ export const GlobalStyles = createGlobalStyle<{ theme: typeof lightTheme | typeo
 
   h1, h2, h3, h4, h5, h6 {
     color: ${({ theme }) => theme.colors.textPrimary};
+    margin: 0;
+    padding: 0;
   }
 
   h1 {
     font-size: ${({ theme }) => theme.fontSize.xl};
+    color: ${({ theme }) => theme.colors.textPrimary};
+    font-weight: 500;
   }
 
   h2 {
-    font-size: ${({ theme }) => theme.fontSize.lg};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.textLight};
+    font-weight: 400;
   }
 
   p {
+    font-size: ${({ theme }) => theme.fontSize.xs};
     color: ${({ theme }) => theme.colors.textPrimary};
-    font-size: ${({ theme }) => theme.fontSize.sm};
+    padding: 0;
+    margin: 2px;
+  }
+  
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    margin: 0;
+    padding: 0;
   }
 `;

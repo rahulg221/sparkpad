@@ -12,6 +12,11 @@ supabase_client = supabase.create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
 def get_user_key(request: Request):
     return request.state.user.get("sub", request.client.host)
 
+def parse_embedding(note: dict) -> dict:
+    if isinstance(note.get("embedding"), str):
+        note["embedding"] = json.loads(note["embedding"])
+    return note
+
 def preprocess_text(note_content):
     """
     Preprocesses a given text by performing the following steps:

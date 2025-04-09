@@ -46,7 +46,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         try {
             const notes = await NoteService.getNotes(user?.id || '');
             if (notes.length < 16) {
-                setNotificationMessage('You need at least 15 notes to auto-organize');
+                setNotificationMessage('You need at least 16 notes to auto-organize');
                 setShowNotification(true);
                 return;
             }
@@ -88,6 +88,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         try {
             const tasks = await CalendarService.getTasks(); 
             localStorage.setItem('last_tasks', JSON.stringify(tasks));
+            console.log(tasks);
             setTasks(tasks);
         } catch (err) {
             console.error("Failed to update tasks:", err);
@@ -100,6 +101,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         try {
             const events = await CalendarService.getCalendarEvents(); 
             localStorage.setItem('last_events', JSON.stringify(events));
+            console.log(events);
             setCalendarEvents(events); 
         } catch (err) {
             console.error("Failed to update events:", err);
@@ -124,13 +126,15 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             if (localStorage.getItem('last_events')) {
                 last_events = JSON.parse(localStorage.getItem('last_events') || '[]');
             } else {
-                last_events = [];
+                const dateTime = new Date().toLocaleString();
+                last_events = [dateTime + '#Sync your Google Account then create events by describing them in the capture section.'];
             }   
 
+            // Fix out flat part later 
             if (localStorage.getItem('last_tasks')) {
                 last_tasks = JSON.parse(localStorage.getItem('last_tasks') || '[]');
             } else {
-                last_tasks = [];
+                last_tasks = ['Sync your Google Account then create tasks by describing them in the capture section.'];
             }
 
             setSummary(last_summary!);

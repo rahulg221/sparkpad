@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NotesContainer, NoteCard, NoteContent, CategoryTitle, NoteInfo, TrashIcon, ElevatedContainer} from './NotesList.Styles';
+import { NotesContainer, NoteCard, NoteContent, NoteInfo, TrashIcon, ElevatedContainer} from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { MdList, MdGridOn } from 'react-icons/md';
 import { SecondaryButton } from '../../styles/shared/Button.styles';

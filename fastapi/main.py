@@ -6,12 +6,12 @@ from services.auth_service import AuthService
 from services.google_service import GoogleService
 from services.clustering_service import ClusteringService
 from services.openai_service import OpenAIService
-from pydantic import BaseModel
 from supabase import create_client
 import os
 from dotenv import load_dotenv
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
+from models import Notes, Note, Event, Task
 
 load_dotenv()
 
@@ -48,20 +48,6 @@ async def attach_user_to_request(request: Request, call_next):
         print(f"Falling back to IP: {request.client.host} — Error: {e}")
 
     return await call_next(request)
-
-# Cluster request body that takes in a list of strings
-class Notes(BaseModel):
-    notes_content: list[str]
-    notes: list[dict]
-
-class Note(BaseModel):
-    note_content: str
-
-class Event(BaseModel):
-    note_content: str
-
-class Task(BaseModel):
-    note_content: str
 
 @app.get("/")
 def main(user = Depends(AuthService.get_current_user)):
@@ -105,12 +91,11 @@ async def create_new_task(request: Request, request_body: Task, user=Depends(Aut
 
 @app.post("/label")
 @limiter.limit("10/day")
-async def cluster_notes(request: Request, request_body: Notes, user=Depends(AuthService.get_current_user)):
+async def cluster_notes(request: Request, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes
-        clustering_service = ClusteringService(request_body.notes_content, request_body.notes)
+        clustering_service = ClusteringService(user)
         clusterData = clustering_service.group_and_label_notes()
-        clustering_service.update_database(clusterData["clusters"])
 
         return {"success": "Notes successfully clustered and labeled"}
     except Exception as e:
@@ -135,7 +120,7 @@ async def create_summary(request: Request, request_body: Notes, user=Depends(Aut
 async def embed_note(request: Request, request_body: Note, user=Depends(AuthService.get_current_user)):
     try:
         openai_service = OpenAIService()
-        embedding = openai_service.generate_embeddings(request_body.note_content)
+        embedding = openai_service.generate_embeddings(request_body.content)
 
         return {"embedding": embedding}
     except Exception as e:
@@ -150,7 +135,7 @@ async def semantic_search(request: Request, request_body: Note, user = Depends(A
     # Get embedding for the query
     openai_service = OpenAIService()
     print("request_body", request_body)
-    query_embedding = openai_service.generate_embeddings(request_body.note_content)
+    query_embedding = openai_service.generate_embeddings(request_body.content)
 
     # Query the users table to get the internal user ID
     response = supabase.table("users").select("id").eq("auth_id", auth_id).single().execute()
@@ -158,12 +143,14 @@ async def semantic_search(request: Request, request_body: Note, user = Depends(A
     if response.data is None:
         raise Exception("User not found in database.")
     
+    user = response.data
+
     # Call Supabase RPC function 
     results = supabase.rpc("match_notes", {
         "query_embedding": query_embedding,
         "match_threshold": 0.2,
         "match_count": 10,
-        "input_user_id": response.data["id"]
+        "input_user_id": user["id"]
     }).execute()
 
     print("results", results)

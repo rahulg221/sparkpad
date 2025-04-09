@@ -63,7 +63,7 @@ class GoogleService:
 
         for task in tasks:
             title = task.get("title", "No Title")
-            tasks_list.append({title})
+            tasks_list.append(title)
 
         return tasks_list
 
@@ -75,13 +75,13 @@ class GoogleService:
         # Set timezone (adjust to your user's time zone if needed)
         eastern = pytz.timezone("America/New_York")
         now = datetime.now(eastern)
-        next_week = now + timedelta(days=7)
+        limit = now + timedelta(days=3)
 
         # Fetch events from now to 7 days from now
         events_result = self.calendar_service.events().list(
             calendarId=self.calendar_id,
             timeMin=now.isoformat(),
-            timeMax=next_week.isoformat(),
+            timeMax=limit.isoformat(),
             singleEvents=True,
             orderBy="startTime"
         ).execute()

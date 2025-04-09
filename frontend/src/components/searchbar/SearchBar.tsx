@@ -16,7 +16,6 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
   const handleSubmit = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       onSearch(searchQuery);
-      setSearchQuery('');
     }
   };
 

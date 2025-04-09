@@ -10,7 +10,7 @@ function App() {
         <ThemeProvider>
             <AuthProvider>
                 <ActionsProvider>
-                    <GlobalStyles theme={lightTheme} />
+                    <GlobalStyles/>
                     <AppRoutes />
                 </ActionsProvider>
             </AuthProvider>

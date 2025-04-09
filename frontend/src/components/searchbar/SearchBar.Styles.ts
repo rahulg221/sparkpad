@@ -2,14 +2,14 @@ import styled from 'styled-components';
 
 export const SearchInput = styled.input`
   background-color: ${({ theme }) => theme.colors.bgLight};
-  border: 1.25px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   color: ${({ theme }) => theme.colors.textPrimary};
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.xs};
   font-family: inherit;
 
   &:focus {
-    outline: none;
+    outline: 1px solid ${({ theme }) => theme.colors.primary};
     border-color: ${({ theme }) => theme.colors.primary};
   }
 

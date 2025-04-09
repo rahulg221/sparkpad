@@ -3,12 +3,13 @@ export const darkTheme = {
     // Backgrounds (inverted)
     bgPure: '#000000',
     bgDark: '#0a0a0a',           // Pure black app background
-    bgElevated: ' #121212',
+    bgElevated: 'rgba(255, 255, 255, 0.03)',
     bgLight: '#1a1a1a',          // Dark gray for inputs, blocks
+    
 
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
-    textLight: '#d1d1d1',        // Soft gray for secondary text
+    textLight: 'rgba(255, 255, 255, 0.75)',
     textSecondary: 'rgb(0, 0, 0)',
 
     // Primary color
@@ -55,13 +56,14 @@ export const darkTheme = {
       sans-serif`,
   },
   fontSize: {
+    xxs: '0.65rem',     // 12px
     xs: '0.75rem',     // 12px
     sm: '0.8rem',    // 14px
     base: '0.85rem', // 15px
-    md: '0.85rem',        // 15px
-    lg: '0.9rem',    // 16px
-    xl: '1.1rem',     // 20px
-    xxl: '1.2rem',     
+    md: '0.9rem',        // 15px
+    lg: '0.95rem',    // 16px
+    xl: '1rem',     // 20px
+    xxl: '1.1rem',  
   },
 };
 
@@ -122,13 +124,14 @@ export const lightTheme = {
       sans-serif`,
   },
   fontSize: {
+    xxs: '0.65rem',     // 12px
     xs: '0.75rem',     // 12px
     sm: '0.8rem',    // 14px
     base: '0.85rem', // 15px
-    md: '0.85rem',        // 15px
-    lg: '0.9rem',    // 16px
-    xl: '1.1rem',     // 20px
-    xxl: '1.2rem',  
+    md: '0.9rem',        // 15px
+    lg: '0.95rem',    // 16px
+    xl: '1rem',     // 20px
+    xxl: '1.1rem',  
   },
 };
 

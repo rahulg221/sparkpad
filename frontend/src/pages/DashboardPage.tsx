@@ -1,6 +1,8 @@
 import { SideBar } from '../components/sidebar/SideBar';
 import { Dashboard } from '../components/dashboard/Dashboard';
 import styled from 'styled-components';
+import { useState } from 'react';
+import { FloatingButton } from '../styles/shared/Button.styles';
 
 const PageLayout = styled.div`
   display: flex;
@@ -17,12 +19,19 @@ const MainContent = styled.div`
 `;
 
 export const DashboardPage = () => {
-  return (
-    <PageLayout>
-      <SideBar/>
-      <MainContent>
-        <Dashboard />
-      </MainContent>
-    </PageLayout>
+  const [isOpen, setIsOpen] = useState(true);
+
+  return (  
+    <>
+      <FloatingButton onClick={() => setIsOpen(prev => !prev)}>
+          {isOpen ? '-' : '+'}
+      </FloatingButton>
+      <PageLayout>
+        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <MainContent>
+          <Dashboard />
+        </MainContent>
+      </PageLayout>
+    </>
   );
 };

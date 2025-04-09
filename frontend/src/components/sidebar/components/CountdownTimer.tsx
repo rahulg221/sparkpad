@@ -1,9 +1,18 @@
 import { useState, useEffect } from 'react';
+import { Item } from '../_styles';
+import { ItemCard } from '../../../styles/shared/Notes.styles';
 
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const [timeLeft, setTimeLeft] = useState('');
 
   const [start_time, summary] = eventString.split('#');
+
+  const targetDate = new Date(start_time).toLocaleString('en-US', {
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  });
 
   useEffect(() => {
     const updateCountdown = () => {
@@ -18,16 +27,16 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
       const seconds = Math.floor((difference / 1000) % 60);
 
       if (difference <= 0) {
-        setTimeLeft(`In progress`);
+        setTimeLeft(`00:00`);
         return;
       }
 
       if (days > 0) {
-        setTimeLeft(`${days}d ${hours}h ${minutes}m`);
+        setTimeLeft(`${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`);
       } else if (hours > 0) {
-        setTimeLeft(`${hours}h ${minutes}m`);
+        setTimeLeft(`${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`);
       } else {
-        setTimeLeft(`${minutes}m`);
+        setTimeLeft(`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`);
       }
     };
 
@@ -38,8 +47,11 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   }, [start_time]);
 
   return (
-    <span>
-      {timeLeft} - {summary}
-    </span>
+    <ItemCard>
+      <Item>
+        <span className='content'>{summary}</span>
+        <span className='timer'>{targetDate} → {timeLeft}</span>
+      </Item>
+    </ItemCard>
   );
 };

@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 export const CategoriesContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(6, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.lg};
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.sm};
   width: 100%;
-  
+
   @media (max-width: 768px) {
     grid-template-columns: repeat(2, 1fr); 
   }
@@ -35,8 +35,8 @@ export const CategoryBox = styled.div`
   background-image: repeating-linear-gradient(
     to bottom,
     ${({ theme }) => theme.colors.colorTwo},
-    ${({ theme }) => theme.colors.colorTwo} 24px,
-    rgba(255, 255, 255, 0.03) 25px
+    ${({ theme }) => theme.colors.colorTwo} 18px,
+    rgba(255, 255, 255, 0.03) 19px
   );
 
   /* Spiral binding (top row of rings) */
@@ -50,8 +50,8 @@ export const CategoryBox = styled.div`
     width: 80%;
     background-image: repeating-radial-gradient(
       circle,
-      ${({ theme }) => theme.colors.border} 0px,
-      ${({ theme }) => theme.colors.border} 2px,
+      ${({ theme }) => theme.colors.textLight} 0px,
+      ${({ theme }) => theme.colors.textLight} 2px,
       transparent 2px,
       transparent 16px
     );
@@ -111,8 +111,8 @@ export const CategoryBox = styled.div`
 export const CategoryName = styled.h3`
   color: ${({ theme }) => theme.colors.textPrimary};
   margin-top: ${({ theme }) => theme.spacing.md};
-  font-size: ${({ theme }) => theme.fontSize.md};
-  font-weight: 500;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-weight: 400;
   text-align: center;
 `;
 

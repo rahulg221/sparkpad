@@ -9,7 +9,7 @@ export const PrimaryButton = styled.button`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.xs};
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.primaryHover};
@@ -41,7 +41,88 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   }
 
   &:disabled {
-
     cursor: not-allowed;
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.textLight};
+  }
+`;
+
+
+export const FloatingButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 10000;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  font-size: 24px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.primary};
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.textLight};
+  }
+
+  @media (min-width: 769px) {
+    display: none;
+  }
+`;
+
+export const IconButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.textLight};
+  cursor: pointer;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  &:focus {
+    outline: none;
+  } 
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.textLight};
+  }
+`;
+
+export const TextButton = styled.button`
+  background: none;
+  border: none;
+  color: ${({ theme }) => theme.colors.textLight};
+  cursor: pointer;
+  font-size: ${({ theme }) => theme.fontSize.xs};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:focus-visible {
+    outline: 2px solid ${({ theme }) => theme.colors.textLight};
   }
 `;

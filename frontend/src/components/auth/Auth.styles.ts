@@ -7,9 +7,7 @@ export const AuthPageContainer = styled.div`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: ${({ theme }) => theme.colors.bgDark};
-  background-image: radial-gradient(${({ theme }) => theme.colors.dotColor} 1px, transparent 1px);
-  background-size: 20px 20px;
+  background-color: ${({ theme }) => theme.colors.bgPure};
 `;
 
 export const FormContainer = styled.div`

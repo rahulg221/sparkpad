@@ -1,4 +1,5 @@
-from services.utils import preprocess_text, supabase_client
+from models import Note
+from services.utils import parse_embedding, preprocess_text, supabase_client
 from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import StandardScaler
 from collections import defaultdict
@@ -21,27 +22,20 @@ class ClusteringService:
     Service for clustering and categorizing notes.
     """
 
-    def __init__(self, notes_content: list[dict], notes: list[dict]):
+    def __init__(self, user: dict):
         # OpenAI client for category generation
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
-        self.notes_content = notes_content
-        self.notes = notes
-        self._model = None  # Lazy-load the odel
+        self.user = user
 
-    @property
-    def model(self):
-        if self._model is None:
-            from sentence_transformers import SentenceTransformer
-            self._model = SentenceTransformer('all-MiniLM-L6-v2')
-        return self._model
-
-    def update_database(self, clusterData: list[dict]):
+    def update_database(self, clusterData: list[dict], notes: list[Note]):
         """
         Updates the database with the new clusters and categories.
         """
 
-        for i, note in enumerate(clusterData):
-            note_id = self.notes[i]["id"]
+        id_lookup = {note.content: note.id for note in notes}
+        
+        for note in clusterData:
+            note_id = id_lookup.get(note["Note"])
             category = note["Category"]
             cluster = note["Cluster"]
 
@@ -49,6 +43,9 @@ class ClusteringService:
                 "category": category,
                 "cluster": cluster
             }).eq("id", note_id).execute()
+
+            if response.data is None:
+                raise Exception("Note not found in database.")
             
         return {"success": "Database updated successfully"}
 
@@ -56,15 +53,30 @@ class ClusteringService:
         """
         Groups notes into clusters and labels each cluster with a category.
         """
-        if not self.notes_content:
-            return {"error": "No notes provided"}
-        
-        # Preprocess the notes
-        original_notes = self.notes_content
-        preprocessed_notes_content = [preprocess_text(content) for content in self.notes_content]
 
-        # Encode the notes
-        embeddings = self.model.encode(preprocessed_notes_content)
+         # Query the users table to get the internal user ID
+        response = supabase_client.table("users").select("id").eq("auth_id", self.user["sub"]).single().execute()
+
+        if response.data is None:
+            raise Exception("User not found in database.")
+
+        user = response.data
+
+        response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).execute()
+
+        if response.data is None:
+            raise Exception("Notes not found in database.")
+
+        notes_data = response.data
+
+        notes = [Note(**parse_embedding(n)) for n in notes_data if n.get("embedding")]
+
+        # Get embeddings for the notes
+        embeddings = [note.embedding for note in notes]
+
+        notes_content = [note.content for note in notes]
+
+        preprocessed_notes_content = [preprocess_text(note.content) for note in notes]
 
         # Cluster the notes using HDBSCAN           
         labels = self.hdbscan_clustering(embeddings)
@@ -85,13 +97,15 @@ class ClusteringService:
         generated_categories = {int(k): v for k, v in generated_categories.items()}
 
         # Compile results in a dataframe
-        df = pd.DataFrame({"Note": original_notes, "Cluster": labels})
+        df = pd.DataFrame({"Note": notes_content, "Cluster": labels})
 
         # Map the cluster numbers to their respective generated categories
         df["Category"] = df["Cluster"].map(generated_categories)
 
         # Convert DataFrame to JSON format
         json_result = df.to_dict(orient="records")
+
+        self.update_database(json_result, notes)
 
         return {"clusters": json_result}
 
@@ -107,7 +121,7 @@ class ClusteringService:
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples
-        min_cluster_size, min_samples = self.adaptive_hdbscan_params(embeddings.shape[0])
+        min_cluster_size, min_samples = self.adaptive_hdbscan_params(len(embeddings))
 
         # Run HDBSCAN
         clusterer = hdbscan.HDBSCAN(
