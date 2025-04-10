@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NoteCard, NoteContent, NoteInfo, NotesContainer } from './NotesRow.Styles';
-import { ElevatedContainer } from '../noteslist/NotesList.Styles';
+import { NoteContent, NoteInfo } from './NotesRow.Styles';
+import { NewNoteCard } from '../../styles/shared/Notes.styles';
 import { useActions } from '../../context/ActionsContext';
 import { TrashIcon } from '../noteslist/NotesList.Styles';
+import { Row, ScrollView } from '../../styles/shared/BaseLayout';
+import { Container } from '../../styles/shared/BaseLayout';
 
 export const NotesRow = () => {
   const [notes, setNotes] = useState<Note[]>([]);
@@ -40,24 +42,26 @@ export const NotesRow = () => {
   return (
     <>            
         <h1>New Sparks</h1>
-        <ElevatedContainer>
-            <NotesContainer>
-                {notes.map(note => (
-                    <NoteCard key={note.id}>
-                        <NoteContent>{note.content}</NoteContent>
-                        <NoteInfo>
-                            {new Date(note.created_at!).toLocaleDateString('en-US', {
-                            month: 'short',
-                            day: 'numeric',
-                            hour: '2-digit',
-                            minute: '2-digit',
-                            })}
-                            <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                        </NoteInfo>
-                    </NoteCard>
-                ))}
-            </NotesContainer>
-        </ElevatedContainer>
+        <ScrollView direction='horizontal'>
+            <Container width="100%">
+                <Row main="start" cross="start" gap="sm">
+                    {notes.map(note => (
+                        <NewNoteCard key={note.id}>
+                            <NoteContent>{note.content}</NoteContent>
+                            <NoteInfo>
+                                {new Date(note.created_at!).toLocaleDateString('en-US', {
+                                month: 'short',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit',
+                                })}
+                                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                            </NoteInfo>
+                        </NewNoteCard>
+                    ))}
+                </Row>
+            </Container>
+        </ScrollView>
     </>
   );
 };

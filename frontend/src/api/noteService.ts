@@ -47,7 +47,7 @@ export class NoteService {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ note_content: note.content }),
+          body: JSON.stringify({id: note.id, content: note.content }),
         });
     
         const embedding = await response.json();
@@ -239,7 +239,7 @@ export class NoteService {
 
   static async semanticSearch(searchQuery: string): Promise<Note[]> {
     const token = await getToken();
-    console.log("searchQuery", searchQuery);
+
     try {
       const response = await fetch(`${API_URL}/semantic_search`, {
         method: 'POST',
@@ -247,7 +247,7 @@ export class NoteService {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ note_content: searchQuery }),
+        body: JSON.stringify({ content: searchQuery }),
       }); 
 
       if (response.status === 429) {

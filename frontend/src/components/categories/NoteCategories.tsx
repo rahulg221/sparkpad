@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
-import { CategoriesContainer, CategoryBox, CategoryName } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { ElevatedContainer } from '../noteslist/NotesList.Styles';
+import { ElevatedContainer } from '../../styles/shared/BaseLayout';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -32,24 +32,19 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
     fetchCategories();
   }, [user?.id]);
 
-  const getCategoryCount = async (category: string) => {
-    if (!user?.id) return 0;
-    return await NoteService.getNotesCountByCategory(user.id, category);
-  };
-
   return (
-    <ElevatedContainer>
+    <ElevatedContainer padding='md'>
       <CategoriesContainer>
         {categories.map((category) => (
           <div key={category}>
             <CategoryBox onClick={() => handleCategoryClick(category)} />
-            {category === "Unsorted" ? (
-              <CategoryName>Miscellaneous</CategoryName>
-            ) : (
-              <CategoryName>
-                {category.split(" ").slice(0, 2).join(" ")}
-              </CategoryName>
-            )}
+              {category === "Unsorted" ? (
+                <h2>Miscellaneous</h2>
+              ) : (
+                <h2>
+                  {category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
+                </h2>
+              )}
           </div>
         ))}
       </CategoriesContainer>

@@ -18,10 +18,11 @@ export const Container = styled.div<{
   background-color: transparent;
   padding: ${({ theme, padding }) => padding ? theme.spacing[padding] : '0'};
   margin: ${({ theme, margin }) => margin ? theme.spacing[margin] : '0'};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   height: ${({ height }) => height || 'auto'};
   width: ${({ width }) => width || 'auto'};
 `;
+
 
 export const ElevatedContainer = styled(Container)`
   background-color: ${({ theme }) => theme.colors.bgDark};
@@ -63,18 +64,32 @@ export const Stack = styled.div`
 
 
 export const Grid = styled.div<{
-    columns?: number;
-  }>`
-    display: grid;
-    grid-template-columns: ${({ columns }) => `repeat(${columns || 2}, 1fr)`};
-    gap: ${({ theme }) => theme.spacing.md};
+  columns?: number;
+  $layoutMode?: 'grid' | 'list';
+}>`
+  display: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'flex' : 'grid')};
+  flex-direction: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'column' : 'initial')};
+  ${({ $layoutMode, columns }) =>
+    $layoutMode === 'grid' &&
+    `grid-template-columns: repeat(${columns || 2}, 1fr);`}
+  gap: ${({ theme }) => theme.spacing.md};
+
+  @media (max-width: 768px) {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: none; 
+  }
 `;
   
 export const ScrollView = styled.div<{
     maxHeight?: string;
+    maxWidth?: string;
+    direction?: 'vertical' | 'horizontal';
   }>`
-    overflow-y: auto;
+    overflow-y: ${({ direction }) => direction === 'vertical' ? 'auto' : 'hidden'};
+    overflow-x: ${({ direction }) => direction === 'horizontal' ? 'auto' : 'hidden'};
     max-height: ${({ maxHeight }) => maxHeight || '100%'};
+    max-width: ${({ maxWidth }) => maxWidth || '100%'};
     scrollbar-color: transparent transparent;
     scrollbar-width: thin;
     

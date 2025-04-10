@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Row, List } from "../../../styles/shared/BaseLayout";
+import { ItemCard } from "../../../styles/shared/Notes.styles.ts";
 import { Icon, Item } from "../_styles";
 import { FaBrain, FaCalendar, FaCheckCircle } from "react-icons/fa";
 import { IconButton } from "../../../styles/shared/Button.styles";
@@ -34,9 +35,11 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
                 title === 'Events' ? (
                     <CountdownTimer key={index} eventString={item} />
                 ) : (
-                    <Item key={index} className="inline">
-                    <span className="content">{item}</span>
-                    </Item>
+                    <ItemCard>
+                        <Item key={index} className="inline">
+                            <span className="content">{item}</span>
+                        </Item>
+                    </ItemCard>
                 )
             ))}
         </List>

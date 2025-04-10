@@ -11,7 +11,8 @@ import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
 import { SearchBar } from '../searchbar/SearchBar';
-import { NoteCard, NoteContent, NotesContainer, NoteInfo, TrashIcon } from '../noteslist/NotesList.Styles';
+import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
+import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -24,6 +25,7 @@ import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { AnimatePresence, motion } from "framer-motion";
 import { NotesRow } from '../notesrow/NotesRow';
 import { IoMdFlame } from 'react-icons/io';
+import { Column, Grid, ElevatedContainer, Spacer } from '../../styles/shared/BaseLayout';
 
 export const Dashboard = () => {
     const { user, signOut } = useAuth();
@@ -59,7 +61,7 @@ export const Dashboard = () => {
         handleGoogleCallback();*/
     }, []);
 
-    const handleLogout = async () => {
+    const handleLogout = async () => {{}
         try {
             await signOut();
             navigate('/login', { replace: true });
@@ -169,32 +171,39 @@ export const Dashboard = () => {
             {searchResults.length > 0 ? (
                 <>
                 <h1>Search Results</h1>
-                <NotesContainer $layoutMode='list'>
-                    {searchResults.map((note) => (
-                        <NoteCard key={note.id}>
+                <ElevatedContainer width='100%' padding='lg'>
+                    <Grid columns={1} $layoutMode='list'>
+                        {searchResults.map((note) => (
+                            <NoteCard key={note.id}>
                             <NoteContent>
                                 {note.content}
                             </NoteContent>
-                            <NoteInfo>
-                                {note.category}
-                                <br />
-                                {new Date(note.created_at!).toLocaleDateString('en-US', {
-                                    month: 'short',
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                })}
-                                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                            </NoteInfo>
-                        </NoteCard>
-                    ))}
-              </NotesContainer>
+                                <NoteInfo>
+                                    {note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
+                                    <br/>
+                                    {new Date(note.created_at!).toLocaleDateString('en-US', {
+                                        month: 'short',
+                                        day: 'numeric',
+                                        hour: '2-digit',
+                                        minute: '2-digit',
+                                    })}
+                                    <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                                </NoteInfo>
+                            </NoteCard>
+                        ))}
+                    </Grid>
+                </ElevatedContainer>
               </>
             ) : (
                 <>
                     {isLoading ? <Loader /> : (
                         <>  
-                            {showRecentNotes ? <NotesRow/> : null}
+                            {showRecentNotes ? 
+                                <>
+                                    <NotesRow/>
+                                    <Spacer height='md'/>
+                                </>
+                             : null}
                             {selectedCategory ? (
                                 <NotesList category={selectedCategory} />
                             ) : (

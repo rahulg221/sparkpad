@@ -93,7 +93,7 @@ export const Item = styled.li`
 
   .content {
     font-size: ${({ theme }) => theme.fontSize.xs};
-    color: ${({ theme }) => theme.colors.textPrimary};
+    color: ${({ theme }) => theme.colors.textLight};
     font-weight: 400;
     line-height: 1.4;
     margin: 0;

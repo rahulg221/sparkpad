@@ -2,12 +2,10 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NotesContainer, NoteCard, NoteContent, NoteInfo, TrashIcon, ElevatedContainer} from './NotesList.Styles';
+import { ElevatedContainer, Grid } from '../../styles/shared/BaseLayout';
+import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
+import { TrashIcon } from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { MdList, MdGridOn } from 'react-icons/md';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
-import { Modal } from '../modal/Modal';
-import { ModalContent } from '../modal/Modal.Styles';
 
 interface NotesListProps {
   category: string;
@@ -54,17 +52,15 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   return (
     <>
-      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category}</h1>}  
-      <ElevatedContainer>
-        <NotesContainer $layoutMode={$layoutMode}>
+      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}</h1>}  
+      <ElevatedContainer width='100%' padding='lg'>
+        <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
-            <NoteCard key={note.id} onClick={() => setOpenNote(note)}>
+            <NoteCard key={note.id} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}>
               <NoteContent>
                 {note.content}
               </NoteContent>
               <NoteInfo>
-                  {note.category}
-                  <br />
                   {new Date(note.created_at!).toLocaleDateString('en-US', {
                     month: 'short',
                     day: 'numeric',
@@ -75,7 +71,7 @@ export const NotesList = ({ category }: NotesListProps) => {
               </NoteInfo>
             </NoteCard>
           ))}
-        </NotesContainer>
+        </Grid>
       </ElevatedContainer>
     </>
   );

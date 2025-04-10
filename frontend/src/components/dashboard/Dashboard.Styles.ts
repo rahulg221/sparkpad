@@ -20,7 +20,7 @@ export const DashboardWrapper = styled.div`
   flex: 1;
   min-height: 100vh;
   padding-right: ${({ theme }) => theme.spacing.xl};
-  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.xl};
   width: 100%;
   background-color: ${({ theme }) => theme.colors.bgPure};
   overflow-y: auto;

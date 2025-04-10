@@ -53,14 +53,13 @@ export const SidebarContent = () => {
 
   return (
     <>
-      <ScrollView>
+      <ScrollView direction='vertical'>
         <Column main='start' cross='start' padding='sm'>
           <Spacer height='md'/>
           <Row main='spaceBetween' cross='center'>
             <h1>Sparkpad</h1>
             {/* Add buttons here later */}
           </Row>
-          <Spacer height='md' />
           <ItemList items={tasks} title='Tasks' />
           <HorizontalDivider />
           <ItemList items={calendarEvents} title='Events' /> 

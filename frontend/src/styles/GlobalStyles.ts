@@ -29,10 +29,11 @@ export const GlobalStyles = createGlobalStyle`
     font-size: ${({ theme }) => theme.fontSize.xl};
     color: ${({ theme }) => theme.colors.textPrimary};
     font-weight: 500;
+    margin-bottom: ${({ theme }) => theme.spacing.lg};
   }
 
   h2 {
-    font-size: ${({ theme }) => theme.fontSize.sm};
+    font-size: ${({ theme }) => theme.fontSize.xs};
     color: ${({ theme }) => theme.colors.textLight};
     font-weight: 400;
   }
