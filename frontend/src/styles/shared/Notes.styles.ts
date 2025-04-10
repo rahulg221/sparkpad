@@ -56,7 +56,8 @@ export const ItemCard = styled.div`
   min-height: 5vh;
   overflow-x: auto;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-top: ${({ theme }) => theme.spacing.md};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   color: ${({ theme }) => theme.colors.textLight};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
@@ -70,7 +71,7 @@ export const ItemCard = styled.div`
   }
 
   @media (max-width: 768px) {
-    min-height: 15vh;
+    min-height: 10vh;
   }
 `;
 
