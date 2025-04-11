@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { SearchInput } from './SearchBar.Styles';
+import { SearchInput, SearchIcon } from './SearchBar.Styles';
+import { Stack } from '../../styles/shared/BaseLayout';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;
@@ -21,12 +22,15 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
   };
 
   return (
-    <SearchInput
-      type="text"
-      placeholder="Search for notes..."
-      value={searchQuery}
-      onChange={handleSearch}
-      onKeyDown={handleSubmit}
-    />
+    <Stack width="100%">
+      <SearchIcon />
+      <SearchInput
+        type="text"
+        placeholder="Search by meaning..."
+        value={searchQuery}
+        onChange={handleSearch}
+        onKeyDown={handleSubmit}
+      />
+    </Stack>
   );
 };

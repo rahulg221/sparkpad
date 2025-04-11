@@ -47,22 +47,60 @@ export const ItemCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex-shrink: 0;
+  cursor: pointer;
   box-sizing: border-box;
   height: auto;
   width: 100%;
   min-height: 5vh;
-  overflow-x: auto;
-  background-color: ${({ theme }) => theme.colors.bgLight};
+  background-color: ${({ theme }) => theme.colors.bgElevated};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
   border: 1px solid ${({ theme }) => theme.colors.border};
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.bgLight};    
+  }
 
   @media (max-width: 768px) {
     min-height: 10vh;
   }
 `;
 
+
+export const NotePreview = styled.div`
+  color: ${({ theme }) => theme.colors.textLight};
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  word-break: break-word;
+  overflow-wrap: anywhere;
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+
+  &:hover {
+    -webkit-line-clamp: unset;
+    overflow: visible;
+    text-overflow: clip;
+  }
+
+  .markdown-ul {
+    padding-left: 1.2rem;
+    list-style-type: disc;
+    margin: 0;
+  }
+
+  .markdown-li {
+    margin-bottom: 0.25rem;
+  }
+`;
 
 export const NotesContainer = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   display: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'flex' : 'grid')};

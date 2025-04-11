@@ -10,6 +10,9 @@ import { Column, HorizontalDivider, Row, ScrollView, Spacer } from '../../styles
 import { SearchBar } from '../searchbar/SearchBar';
 import { EmptyButton } from '../../styles/shared/Button.styles';
 import { FaGear } from 'react-icons/fa6';
+import { IoSparklesSharp } from "react-icons/io5";
+import { Icon } from './_styles';
+import { BsLightningFill } from 'react-icons/bs';
 
 export const SidebarContent = () => {
   const {tasks, calendarEvents, bulletPoints, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot, semanticSearch, searchResults, setSearchResults} = useActions();
@@ -57,7 +60,10 @@ export const SidebarContent = () => {
       <ScrollView direction='vertical'>
         <Column main='start' cross='start'>
           <Spacer height='md'/>
-          <Row main='spaceBetween' cross='center'>
+          <Row main='start' cross='center' gap='sm'>
+            <Icon accent={true}>
+              <BsLightningFill size={18} />
+            </Icon>
             <h1>Sparkpad</h1>
             {/* Add buttons here later */}
           </Row>

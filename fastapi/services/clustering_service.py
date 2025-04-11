@@ -1,4 +1,5 @@
 from typing import List
+from services.openai_service import OpenAIService
 from models import Note
 from services.utils import parse_embedding, preprocess_text, supabase_client
 from sentence_transformers import SentenceTransformer
@@ -17,7 +18,7 @@ import os
 
 load_dotenv()
 
-MAX_CHAR_LIMIT = 5000
+MAX_CHAR_LIMIT = 2000
 
 class ClusteringService:
     """
@@ -25,8 +26,6 @@ class ClusteringService:
     """
 
     def __init__(self, user: dict):
-        # OpenAI client for category generation
-        self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.user = user
 
     def update_database(self, clusterData: List[dict], notes: List[Note]):
@@ -92,7 +91,7 @@ class ClusteringService:
         concatenated_clusters = {cluster: " ".join(preprocessed_notes_content)[:MAX_CHAR_LIMIT] for cluster, preprocessed_notes_content in clustered_notes.items()}
 
         # Generate a category name for each cluster
-        generated_categories = {cluster: "Unsorted" if cluster == -1 else self.generate_category(text) 
+        generated_categories = {cluster: "Unsorted" if cluster == -1 else OpenAIService().generate_category(text) 
                                for cluster, text in concatenated_clusters.items()}
 
         # Convert the keys to integers
@@ -119,7 +118,7 @@ class ClusteringService:
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
         # Reduce dimensionality with UMAP
-        umap_reducer = umap.UMAP(n_components=5, metric="cosine", random_state=42)
+        umap_reducer = umap.UMAP(n_components=10, metric="cosine", random_state=42)
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples
@@ -170,23 +169,3 @@ class ClusteringService:
             return 7+factor, 4+factor  
         else:
             return 9+factor, 6+factor  
-
-    def generate_category(self, notes: List[str]):
-        """
-        Generates a category name based on the provided notes.
-        """
-        input_string = "".join(notes)
-        prompt = f"""Create a category name for the following text: {input_string}
-          1. The category name should be a single word or phrase that captures the main idea of the notes.
-          2. Avoid non-alphabetical characters other than spaces. 
-        """
-
-        # Generate response
-        res = self.client.chat.completions.create(
-            model="gpt-4o-mini",  
-            messages=[{"role": "user", "content": prompt}],  
-            max_tokens=10,
-            temperature=0.2,
-        )
-
-        return res.choices[0].message.content.strip()

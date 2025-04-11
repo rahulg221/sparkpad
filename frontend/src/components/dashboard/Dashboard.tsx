@@ -138,39 +138,31 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <Column main='start' cross='start'>
-                    <Row main='start' cross='start' gap='md'>
-                        <SearchBar onSearch={handleSearch} />
-                        <EmptyButton onClick={handleSettingsClick}>
-                            <FaGoogle size={14}/>
-                            <span className='text-label'>Sync</span>
-                        </EmptyButton>
-                        <EmptyButton onClick={handleSettingsClick}>
-                            <FaGear size={14}/>
-                            <span className='text-label'>Settings</span>
-                        </EmptyButton>
-                    </Row>
-                    <Row main='start' cross='start' gap='md'>
-                        { selectedCategory || searchResults.length > 0 ? 
-                            <SecondaryButton onClick={handleBackClick}>
-                                <FaArrowLeft size={14}/>
-                                <span className='text-label'>Back</span>
-                            </SecondaryButton>
-                        : null }
-                        <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
-                            {showRecentNotes ? <FaEyeSlash size={14}/> : <FaEye size={14}/>}
-                            {showRecentNotes ? <span className='text-label'>Hide Recent</span> : <span className='text-label'>Show Recent</span>}
+                <Row main='start' cross='start' gap='md'>
+                    { selectedCategory || searchResults.length > 0 ? 
+                        <SecondaryButton onClick={handleBackClick}>
+                            <FaArrowLeft size={14}/>
+                            <span className='text-label'>Back</span>
                         </SecondaryButton>
-                        <SecondaryButton onClick={autoOrganizeNotes}>
-                            <FaWandSparkles size={14}/>
-                            <span className='text-label'>Auto-Organize</span>
-                        </SecondaryButton>
-                        <SecondaryButton onClick={() => showSnapshot()}>
-                            <FaLightbulb size={14}/>
-                            <span className='text-label'>Snapshot</span>
-                        </SecondaryButton>
-                    </Row>
-                </Column>
+                    : null }
+                    <SearchBar onSearch={handleSearch} />
+                    <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
+                        {showRecentNotes ? <FaEyeSlash size={14}/> : <FaEye size={14}/>}
+                        {showRecentNotes ? <span className='text-label'>Hide Recent</span> : <span className='text-label'>Show Recent</span>}
+                    </SecondaryButton>
+                    <SecondaryButton onClick={autoOrganizeNotes}>
+                        <FaWandSparkles size={14}/>
+                        <span className='text-label'>Organize</span>
+                    </SecondaryButton>
+                    <SecondaryButton onClick={() => showSnapshot()}>
+                        <FaLightbulb size={14}/>
+                        <span className='text-label'>Snapshot</span>
+                    </SecondaryButton>
+                    <SecondaryButton onClick={handleSettingsClick}>
+                        <FaGear size={14}/>
+                        <span className='text-label'>Settings</span>
+                    </SecondaryButton>
+                </Row>
             </Header>
             {searchResults.length > 0 ? (
                 <>
@@ -212,7 +204,7 @@ export const Dashboard = () => {
                                 <NotesList category={selectedCategory} />
                             ) : (
                                 <>
-                                    <h1>Sparkpads</h1>
+                                    <h1>My Notepads</h1>
                                     <NoteCategories handleCategoryClick={handleCategoryClick} />
                                 </>
                             )}

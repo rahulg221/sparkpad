@@ -1,3 +1,4 @@
+from typing import List
 from dotenv import load_dotenv
 import openai
 from services.utils import preprocess_text
@@ -13,6 +14,27 @@ class OpenAIService:
 
     def __init__(self):
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    def generate_category(self, notes: List[str]):
+        """
+        Generates a category name based on the provided notes.
+        """
+        input_string = "".join(notes)
+        prompt = f"""Create a category name for the following text: {input_string}
+          1. The category name should be one to three words that capture the main idea of the notes.
+          2. Avoid too generic category names, if the majority of the notes are about a specific topic, the category name should reflect that.
+          3. Avoid non-alphabetical characters other than spaces. 
+        """
+
+        # Generate response
+        res = self.client.chat.completions.create(
+            model="gpt-4o-mini",  
+            messages=[{"role": "user", "content": prompt}],  
+            max_tokens=10,
+            temperature=0.2,
+        )
+
+        return res.choices[0].message.content.strip()
 
     def generate_embeddings(self, note_content: str) -> list[float]:
         """
@@ -54,39 +76,26 @@ class OpenAIService:
         text = preprocess_text(text)
 
         prompt = f"""
-            You are a smart assistant that analyzes unstructured notes and extracts the most important insights.
+            Instructions
+            You are a specialized assistant designed to help people with ADHD resurface 
+            important thoughts, patterns, and insights from their notes. Your task is to 
+            analyze the notes I provide and create a condensed, easily digestible summary 
+            that helps me rediscover valuable ideas I may have forgotten.
 
-            Your task is to:
+            Focus on recurring themes or concepts, and action items.
 
-            Identify and list key insights from the notes, in order of importance (most important first)
-
-            Use clear, simple, and concise language
-
-            Merge or condense similar points
-
-            Output guidelines:
-
-            Do not include an introduction, summary, announcements, or headings
-
-            Do not use any special formatting (e.g. bullets, numbers, punctuation)
-
-            Do not include any filler language — just the insights
-
-            Use only alphabetical characters (no emojis or symbols)
-
-            Example output (Do not use these exact words, just use this format):
-                Many ideas about new categorization features.
-                Heavily considering switching to chicken breast over thighs.
-                Feeling frustrated this week with sports.
-
-            Here's the content to extract insights from:
+            Create concise points of 1-2 sentences each using markdown.
+            
+            Separate each point with a new line.
+            
+            Make the summary concise and easily digestible at a glance. 
             ---  
             {text }
             ---
             """
 
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             max_tokens=1000,
         )

@@ -2,18 +2,17 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { NoteContent, NoteInfo } from './NotesRow.Styles';
+import { NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
 import { NewNoteCard } from '../../styles/shared/Notes.styles';
-import { useActions } from '../../context/ActionsContext';
 import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Row, ScrollView } from '../../styles/shared/BaseLayout';
 import { Container } from '../../styles/shared/BaseLayout';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export const NotesRow = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const { user } = useAuth();
-  const { setCurrentNotes } = useActions();
-  const [showRecentNotes, setShowRecentNotes] = useState(false);
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
@@ -22,7 +21,6 @@ export const NotesRow = () => {
       try {
         const recentNotes = await NoteService.getMostRecentNotes(user.id, 10);
         setNotes(recentNotes);
-        setCurrentNotes(recentNotes);
       } catch (err) {
         console.error('Error fetching recent notes:', err);
       }
@@ -48,7 +46,17 @@ export const NotesRow = () => {
                     <Row main="start" cross="start" gap="md">
                     {notes.map(note => (
                         <NewNoteCard key={note.id}>
-                            <NoteContent>{note.content}</NoteContent>
+                            <NotePreview>
+                              <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                components={{
+                                  ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                                  li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                                }}
+                              >
+                                {note.content}
+                              </ReactMarkdown>
+                            </NotePreview>
                             <NoteInfo>
                                 {new Date(note.created_at!).toLocaleDateString('en-US', {
                                 month: 'short',

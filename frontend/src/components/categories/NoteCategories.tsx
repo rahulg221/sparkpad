@@ -42,7 +42,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                 <h2>Miscellaneous</h2>
               ) : (
                 <h2>
-                  {category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
+                  {category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}
                 </h2>
               )}
           </div>

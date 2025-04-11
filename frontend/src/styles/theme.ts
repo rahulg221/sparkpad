@@ -73,29 +73,30 @@ export const lightTheme = {
   // Backgrounds
   bgPure: '#ffffff',
   bgDark: '#ffffff',                     // White app background
-  bgElevated: 'rgba(255, 193, 7, 0.1)',     // Subtle card background
-  bgLight: '#f5f5f5',                    // Light gray for inputs, code blocks
+  bgElevated: 'rgba(0, 0, 0, 0.9)',     // Subtle card background
+  bgLight: 'rgba(255, 255, 255, 0.2)',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text
   textLight: '#444444',                  // Dark gray for secondary text
-  textSecondary: 'rgb(255, 255, 255)',              // Replaces dark theme white secondary
+  textSecondary: 'rgb(0, 0, 0)',              // Replaces dark theme white secondary
 
-  // Primary (dark UI elements on light background)
-  primary: ' rgb(0, 0, 0)',            // For buttons/icons on dark background
-  primaryHover: 'rgb(252, 200, 45)',
-  primaryLight: 'rgba(255, 255, 255, 0.1)',
+  // Primary color
+  primary: 'rgb(255, 214, 10)',            // Vibrant yellow (bright and energetic)
+  primaryHover: 'rgb(255, 230, 70)',       // Slightly lighter yellow for hover effect
+  primaryLight: 'rgba(255, 214, 10, 0.1)', // Transparent yellow for borders/glows
 
-  // Accent (red/orange highlights)
-  accent: 'rgb(252, 200, 45)',                     // Bright red for emphasis
-  accentHover: 'rgba(252, 200, 45, 0.5)',                // Slightly lighter red hover
+  // Accent (Highlight / Spark)
+  accent: 'rgb(255, 221, 0)',              // Bold yellow-gold for standout elements
+  accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
+  accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 
   // Dot color (reversed for light bg)
   dotColor: 'rgba(0, 0, 0, 0.3)',
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: 'rgb(0, 0, 0)',                   // Highlight color
-  colorTwo: 'rgb(169, 169, 169)',         // Notepad background
+  colorTwo: 'rgb(255, 255, 255)',         // Notepad background
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: '#fafafa',
 

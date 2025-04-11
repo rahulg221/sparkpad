@@ -19,6 +19,7 @@ export const Divider = styled.div`
 export const DashboardWrapper = styled.div`
   flex: 1;
   min-height: 100vh;
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   padding-right: ${({ theme }) => theme.spacing.xl};
   padding-left: ${({ theme }) => theme.spacing.xl};
   width: 100%;
@@ -55,6 +56,7 @@ export const Header = styled.div`
     display: inline-block;
     font-size: ${({ theme }) => theme.fontSize.xs};
     font-weight: 400;
+    white-space: nowrap;
     @media (max-width: 768px) {
       display: none;
     }

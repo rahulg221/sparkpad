@@ -1,18 +1,20 @@
 import { useState } from "react";
-import { Row, List } from "../../../styles/shared/BaseLayout";
+import { Row, List, ElevatedContainer } from "../../../styles/shared/BaseLayout";
 import { ItemCard } from "../../../styles/shared/Notes.styles.ts";
-import { Icon, Item, ListContainer, Circle } from "../_styles";
+import { Icon, Item, ListContainer, Circle, SnapshotContainer } from "../_styles";
 import { FaBrain, FaCalendar, FaCheckCircle, FaLightbulb, FaThumbtack } from "react-icons/fa";
-import { IconButton } from "../../../styles/shared/Button.styles";
+import { EmptyButton, IconButton, SecondaryButton } from "../../../styles/shared/Button.styles";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { CountdownTimer } from "./CountdownTimer";
 import { useActions } from "../../../context/ActionsContext";
 import { LoadingSpinner } from "../../../styles/shared/BaseLayout";
-
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 export const ItemList = ({ items, title }: { items: string[], title: string }) => {
     const [showAll, setShowAll] = useState(false);
-    const { updateTasks, updateEvents } = useActions();
+    const { updateTasks, updateEvents, summary } = useActions();
     const [isLoading, setIsLoading] = useState(false);
+    const [numberOfItems, setNumberOfItems] = useState(3);
     const CACHE_DURATION_MS = 1000 * 60 * 15; // 15 minutes
 
     const isCacheStale = (key: string): boolean => {
@@ -23,6 +25,7 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
 
     const toggleShow = () => {
         if (!showAll) {
+            setNumberOfItems(3);
             setIsLoading(true);
     
             if (title === 'Tasks' && isCacheStale('tasks')) {
@@ -60,22 +63,40 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
         </Row>
         {isLoading ? <LoadingSpinner /> :
             showAll && (
+                title === 'Snapshot' ? (
+                    <SnapshotContainer>
+                        {items.map((item, index) => (
+                            <Item key={index} className="inline">
+                                <ReactMarkdown>{item}</ReactMarkdown>
+                                <br />
+                            </Item>
+                        ))}
+                    </SnapshotContainer>
+                ) : (
                 <ListContainer>
-                    <List>
-                        {items.slice(0, 3).map((item, index) => (
+                    <List onClick={() => setNumberOfItems(prev => prev + 3)}>
+                        {items.slice(0, numberOfItems).map((item, index) => (
                             title === 'Events' ? (
                                 <CountdownTimer key={index} eventString={item} />
                             ) : (
                                 <ItemCard key={index}>
                                     <Item className="inline">
                                         <span className="content">{item}</span>
+                                        <Icon>
+                                            {title === 'Tasks' ? <FaThumbtack size={12} /> : <FaLightbulb size={12} />}
+                                        </Icon>
                                     </Item>
                                 </ItemCard>
                             )
                         ))}
                     </List>
+                        {/*
+                    {items.length > numberOfItems && (
+                        <EmptyButton onClick={() => setNumberOfItems(prev => prev + 3)}>+</EmptyButton>
+                    )}*/}
                 </ListContainer>
-                )}
-            </>             
+                )
+            )}
+        </>             
     );
 };

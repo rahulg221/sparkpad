@@ -2,16 +2,14 @@ import { useState, useEffect } from 'react';
 import { Item, Icon, Circle } from '../_styles';
 import { ItemCard } from '../../../styles/shared/Notes.styles';
 import { Row } from '../../../styles/shared/BaseLayout';
-import { FaCalendar } from 'react-icons/fa';
+import { FaCalendar, FaClock } from 'react-icons/fa';
 
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const [timeLeft, setTimeLeft] = useState('');
-
+  const [dayLabel, setDayLabel] = useState('');           
   const [start_time, summary] = eventString.split('#');
 
-  const targetDate = new Date(start_time).toLocaleString('en-US', {
-    month: 'short',
-    day: 'numeric',
+  const targetTime = new Date(start_time).toLocaleString('en-US', {
     hour: 'numeric',
     minute: 'numeric',
   });
@@ -33,12 +31,26 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
         return;
       }
 
-      if (days > 0) {
-        setTimeLeft(`${days.toString().padStart(2, '0')}d ${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`);
-      } else if (hours > 0) {
-        setTimeLeft(`${hours.toString().padStart(2, '0')}h ${minutes.toString().padStart(2, '0')}m`);
+      // Check if the event is today or tomorrow
+      const isToday = now.toDateString() === target.toDateString();
+      const isTomorrow = new Date(now.getTime() + 86400000).toDateString() === target.toDateString();
+
+      if (isToday) {
+        setDayLabel('');
+      } else if (isTomorrow) {
+        setDayLabel('Tmr');
       } else {
-        setTimeLeft(`${minutes.toString().padStart(2, '0')}m ${seconds.toString().padStart(2, '0')}s`);
+        setDayLabel(new Date(start_time).toLocaleString('en-US', {
+          weekday: 'short',
+        }));
+      }
+
+      if (days > 0) {
+        setTimeLeft(`${days.toString()}d ${hours.toString()}h ${minutes.toString()}m`);
+      } else if (hours > 0) {
+        setTimeLeft(`${hours.toString()}h ${minutes.toString()}m`);
+      } else {
+        setTimeLeft(`${minutes.toString()}m ${seconds.toString()}s`);
       }
     };
 
@@ -51,9 +63,12 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   return (
     <ItemCard>
       <Row main='spaceBetween' cross='center'>
-        <Item>
+        <Item className='inline'>
           <span className='content'>{summary}</span>
-          <span className='timer'>{targetDate} → {timeLeft}</span>
+          <span className='timer'>{dayLabel} {targetTime}</span>
+          <Icon>
+            <FaClock size={12}/>
+          </Icon>
         </Item>
       </Row>
     </ItemCard>

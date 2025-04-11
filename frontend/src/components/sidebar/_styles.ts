@@ -18,6 +18,15 @@ export const SidebarContainer = styled.div`
   }
 `;
 
+export const SnapshotContainer = styled(Container)`
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  width: 100%;
+  background-color: ${({ theme }) => theme.colors.bgElevated};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+`;
+
 export const Circle = styled.div`
   width: 30px;
   height: 30px;
@@ -102,6 +111,9 @@ export const Item = styled.li`
     flex-direction: row;
     align-items: center;
     gap: 0.5rem;
+
+    width: 100%;             
+    overflow: hidden;        
   }
 
   .content {
@@ -111,13 +123,20 @@ export const Item = styled.li`
     line-height: 1.4;
     margin: 0;
     padding: 0;
+
     flex: 1;
+    min-width: 0;              
+    max-width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
+
 
   .timer {
     color: ${({ theme }) => theme.colors.textLight};
     font-size: ${({ theme }) => theme.fontSize.xxs};
-    margin-right: 8px;
+    margin-right: 4px;
   }
 `;
 

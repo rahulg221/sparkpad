@@ -3,11 +3,13 @@ import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
+import { NoteCard, NoteContent, NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
 import { TrashIcon } from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { IconButton, SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface NotesListProps {
   category: string;
@@ -22,7 +24,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
   const [openNote, setOpenNote] = useState<Note | null>(null);
   const [page, setPage] = useState(1);
-  const limit = 10;
+  const limit = 9;
 
   useEffect(() => {
     const fetchNotes = async () => {
@@ -61,14 +63,22 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   return (
     <>
-      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}</h1>}
+      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
       <ElevatedContainer width='100%' padding='lg'>
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}>
-              <NoteContent>
-                {note.content}
-              </NoteContent>
+              <NotePreview>
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                  }}
+                >
+                  {note.content}
+                </ReactMarkdown>
+              </NotePreview>
               <NoteInfo>
                   {new Date(note.created_at!).toLocaleDateString('en-US', {
                     month: 'short',
@@ -83,7 +93,7 @@ export const NotesList = ({ category }: NotesListProps) => {
         </Grid>
       </ElevatedContainer>
       <Spacer height='md' />
-      <Row main='end' cross='center' gap='md'>
+      <Row main='center' cross='center' gap='md'>
         <SecondaryButton onClick={() => page > 1 ? setPage(page - 1) : null}>
           <Row main='center' cross='center' gap='sm'> 
             <MdArrowBack size={16} />

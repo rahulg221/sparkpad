@@ -1,9 +1,8 @@
 import styled from "styled-components";
-import { ElevatedContainer } from "../../styles/shared/BaseLayout";
 
 export const CategoriesContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.lg};
   align-items: center;
@@ -21,7 +20,6 @@ export const CategoriesContainer = styled.div`
     grid-template-columns: repeat(2, 1fr); 
   }
 `;
-
 export const CategoryBox = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.colorThree};
@@ -42,28 +40,19 @@ export const CategoryBox = styled.div`
   background-image: repeating-linear-gradient(
     to bottom,
     ${({ theme }) => theme.colors.colorTwo},
-    ${({ theme }) => theme.colors.colorTwo} 18px,
-    rgba(255, 255, 255, 0.03) 19px
+    ${({ theme }) => theme.colors.colorTwo} 14px,
+    rgba(255, 255, 255, 0.03) 15px
   );
 
-  /* Spiral binding (top row of rings) */
+  /* Thin light grey box at the top instead of dots */
   &::before {
     content: '';
     position: absolute;
-    top: 4px;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 10px;
-    width: 80%;
-    background-image: repeating-radial-gradient(
-      circle,
-      ${({ theme }) => theme.colors.textLight} 0px,
-      ${({ theme }) => theme.colors.textLight} 2px,
-      transparent 2px,
-      transparent 16px
-    );
-    background-size: 16px 10px;
-    background-repeat: repeat-x;
+    top: 0;
+    left: 0;
+    height: 14px;
+    width: 100%;
+    background-color: ${({ theme }) => theme.colors.bgElevated};
     z-index: 2;
   }
 

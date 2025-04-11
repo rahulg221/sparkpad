@@ -59,8 +59,11 @@ export const Column = styled.div<{
   gap: ${({ gap, theme }) => gap ? theme.spacing[gap] : '0'};
 `;
 
-export const Stack = styled.div`
+export const Stack = styled.div<{
+  width?: string;
+}>`
   position: relative;
+  width: ${({ width }) => width || 'auto'};
 `;
 
 
