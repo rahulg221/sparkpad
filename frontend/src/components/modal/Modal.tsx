@@ -10,6 +10,7 @@ import {
   ModalContent,
   ModalFooter
 } from './Modal.Styles';
+import { SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface ModalProps {
   isOpen: boolean;
@@ -64,14 +65,14 @@ export const Modal: React.FC<ModalProps> = ({
     <ModalOverlay>
       <ModalContainer ref={modalRef}>
         <ModalHeader>
-          <ModalTitle>{title}</ModalTitle>
+          <h1>{title}</h1>
         </ModalHeader>
         <ModalContent>
           {children}
         </ModalContent>
-        <CloseButton onClick={onClose}>
+        <SecondaryButton onClick={onClose}>
             <ModalContent>Close</ModalContent>
-        </CloseButton>
+        </SecondaryButton>
         {footer && <ModalFooter>{footer}</ModalFooter>}
       </ModalContainer>
     </ModalOverlay>,

@@ -6,7 +6,9 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  padding: ${({ theme }) => theme.spacing.sm};
+  padding-top: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-right: 1px solid ${({ theme }) => theme.colors.border};
 
@@ -14,6 +16,17 @@ export const SidebarContainer = styled.div`
     height: 100dvh;
     -webkit-overflow-scrolling: touch;
   }
+`;
+
+export const Circle = styled.div`
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.colors.accentLight};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: ${({ theme }) => theme.spacing.sm};
 `;
 
 export const Divider = styled.div`
@@ -25,7 +38,7 @@ export const Divider = styled.div`
 
 export const Icon = styled.span<{accent?: boolean }>`
   color: ${({ theme, accent }) => accent ? theme.colors.accent : theme.colors.textLight};
-  margin-right: ${({ theme }) => theme.spacing.sm};
+  margin-right: ${({ theme, accent }) => accent ? 0 : theme.spacing.sm};
 `;
 
 export const TextBarForm = styled.form`
@@ -45,7 +58,7 @@ export const TextInput = styled.textarea`
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.xxs};
   resize: none;
   line-height: 1.5;
   font-family: inherit;
@@ -92,7 +105,7 @@ export const Item = styled.li`
   }
 
   .content {
-    font-size: ${({ theme }) => theme.fontSize.xs};
+    font-size: ${({ theme }) => theme.fontSize.xxs};
     color: ${({ theme }) => theme.colors.textLight};
     font-weight: 400;
     line-height: 1.4;
@@ -106,4 +119,10 @@ export const Item = styled.li`
     font-size: ${({ theme }) => theme.fontSize.xxs};
     margin-right: 8px;
   }
+`;
+
+export const ListContainer = styled(Container)`
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  width: 100%;
 `;

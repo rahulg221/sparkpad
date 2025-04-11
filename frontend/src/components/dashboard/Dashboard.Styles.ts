@@ -51,17 +51,10 @@ export const Header = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 
-  h1 {
-    font-size: ${({ theme }) => theme.fontSize.lg};
-  }
-  
-  p {
-    font-size: ${({ theme }) => theme.fontSize.md};
-  }
-
   .text-label {
     display: inline-block;
-
+    font-size: ${({ theme }) => theme.fontSize.xs};
+    font-weight: 400;
     @media (max-width: 768px) {
       display: none;
     }

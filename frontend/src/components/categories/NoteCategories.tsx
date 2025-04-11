@@ -22,7 +22,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
         const categories = await NoteService.getDistinctCategories(user.id);
         setCategories(categories);
 
-        const notes = await NoteService.getDailyNotes(user.id);
+        const notes = await NoteService.getNotes(user.id, 50);
         setCurrentNotes(notes);
       } catch (err) {
         console.error('Error fetching notes:', err);

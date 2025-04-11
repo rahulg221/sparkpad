@@ -13,6 +13,7 @@ export const NotesRow = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const { user } = useAuth();
   const { setCurrentNotes } = useActions();
+  const [showRecentNotes, setShowRecentNotes] = useState(false);
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
@@ -41,10 +42,10 @@ export const NotesRow = () => {
 
   return (
     <>            
-        <h1>New Sparks</h1>
+        <h1>Recent Sparks</h1>
         <ScrollView direction='horizontal'>
-            <Container width="100%">
-                <Row main="start" cross="start" gap="sm">
+                <Container width="100%">
+                    <Row main="start" cross="start" gap="md">
                     {notes.map(note => (
                         <NewNoteCard key={note.id}>
                             <NoteContent>{note.content}</NoteContent>

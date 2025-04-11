@@ -148,7 +148,7 @@ export class CalendarService {
       }
 
       const data = await response.json();
-
+  
       return data.tasks;
     } catch (error) {
       console.error('Failed to get tasks:', error);

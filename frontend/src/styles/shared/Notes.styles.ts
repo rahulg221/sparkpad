@@ -12,15 +12,10 @@ export const NoteCard = styled.div`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: transparent;
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
 
   &:hover {
     height: auto; 
     border-bottom: 1px solid ${({ theme }) => theme.colors.primary};
-  }
-
-  &:last-child {
-    border-bottom: none;
   }
 
   @media (max-width: 768px) {
@@ -52,23 +47,16 @@ export const ItemCard = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  box-sizing: border-box;
   height: auto;
+  width: 100%;
   min-height: 5vh;
   overflow-x: auto;
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   margin-bottom: ${({ theme }) => theme.spacing.sm};
-  padding-top: ${({ theme }) => theme.spacing.md};
-  padding-bottom: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.bgDark};
-  color: ${({ theme }) => theme.colors.textLight};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  &:hover {
-    border-bottom: 1px solid ${({ theme }) => theme.colors.primary};
-  }
-
-  &:last-child {
-    border-bottom: none;
-  }
+  border: 1px solid ${({ theme }) => theme.colors.border};
 
   @media (max-width: 768px) {
     min-height: 10vh;

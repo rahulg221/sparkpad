@@ -52,6 +52,7 @@ export const Column = styled.div<{
 }>` 
   display: flex;
   flex-direction: column;
+  width: 100%;
   justify-content: ${({ main }) => alignmentMap[main] || 'flex-start'};
   align-items: ${({ cross }) => alignmentMap[cross] || 'stretch'};
   padding: ${({ padding, theme }) => padding ? theme.spacing[padding] : '0'};
@@ -90,17 +91,10 @@ export const ScrollView = styled.div<{
     overflow-x: ${({ direction }) => direction === 'horizontal' ? 'auto' : 'hidden'};
     max-height: ${({ maxHeight }) => maxHeight || '100%'};
     max-width: ${({ maxWidth }) => maxWidth || '100%'};
-    scrollbar-color: transparent transparent;
-    scrollbar-width: thin;
+    scrollbar-width: none;
     
-    &:hover,
-    &:focus {
-      scrollbar-color: ${({ theme }) => theme.colors.border} transparent;
-    }
-  
-    &::-webkit-scrollbar-thumb {
-      background: ${({ theme }) => theme.colors.border};
-      border-radius: 2px;
+    &::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Edge */
     }
 `;
 
@@ -136,5 +130,12 @@ export const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+`;
+
+export const LoadingSpinner = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
 `;
 

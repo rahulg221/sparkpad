@@ -4,7 +4,7 @@ export const darkTheme = {
     bgPure: '#000000',
     bgDark: '#0a0a0a',           // Pure black app background
     bgElevated: 'rgba(255, 255, 255, 0.03)',
-    bgLight: '#1a1a1a',          // Dark gray for inputs, blocks
+    bgLight: 'rgba(255, 255, 255, 0.05)',          // Dark gray for inputs, blocks
     
 
     // Text colors (inverted from light mode)
@@ -13,13 +13,14 @@ export const darkTheme = {
     textSecondary: 'rgb(0, 0, 0)',
 
     // Primary color
-    primary: ' rgb(255, 193, 7)',            // For buttons/icons on dark background
-    primaryHover: 'rgb(252, 200, 45)',
-    primaryLight: 'rgba(255, 255, 255, 0.1)',
+    primary: 'rgb(255, 214, 10)',            // Vibrant yellow (bright and energetic)
+    primaryHover: 'rgb(255, 230, 70)',       // Slightly lighter yellow for hover effect
+    primaryLight: 'rgba(255, 214, 10, 0.1)', // Transparent yellow for borders/glows
 
-    // Accent (Red/Orange highlights)
-    accent: 'rgb(255, 193, 7)',                     // Bright red for emphasis
-    accentHover: 'rgba(255, 193, 7, 0.5)',                // Slightly lighter red hover
+    // Accent (Highlight / Spark)
+    accent: 'rgb(255, 221, 0)',              // Bold yellow-gold for standout elements
+    accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
+    accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
@@ -56,7 +57,7 @@ export const darkTheme = {
       sans-serif`,
   },
   fontSize: {
-    xxs: '0.65rem',     // 12px
+    xxs: '0.7rem',     // 12px
     xs: '0.75rem',     // 12px
     sm: '0.8rem',    // 14px
     base: '0.85rem', // 15px
@@ -124,7 +125,7 @@ export const lightTheme = {
       sans-serif`,
   },
   fontSize: {
-    xxs: '0.65rem',     // 12px
+    xxs: '0.7rem',     // 12px
     xs: '0.75rem',     // 12px
     sm: '0.8rem',    // 14px
     base: '0.85rem', // 15px

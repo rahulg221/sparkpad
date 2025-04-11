@@ -3,10 +3,9 @@ import { useAuth } from '../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
-    Divider,
     Header,
 } from './Dashboard.Styles';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton, EmptyButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
@@ -19,17 +18,17 @@ import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { MdPsychology, MdEventAvailable, MdSettings, MdHome, MdLogout, MdLightbulb, MdRecentActors, MdNotes, MdBook, MdMenuBook, MdHistory, MdLibraryBooks, MdGridView } from 'react-icons/md';
+import { MdEventAvailable, MdLogout } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
-import { AnimatePresence, motion } from "framer-motion";
 import { NotesRow } from '../notesrow/NotesRow';
-import { IoMdFlame } from 'react-icons/io';
-import { Column, Grid, ElevatedContainer, Spacer } from '../../styles/shared/BaseLayout';
+import { Column, Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
+import { FaArrowLeft, FaGoogle, FaLightbulb, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { FaGear, FaWandSparkles } from 'react-icons/fa6';
 
 export const Dashboard = () => {
-    const { user, signOut } = useAuth();
-    const { updateTasks, updateEvents, semanticSearch, showSnapshot, autoOrganizeNotes, setShowNotification, setSummary, setSearchResults, isLoading, notificationMessage, showNotification, summary, searchResults, calendarEvents, tasks } = useActions();
+    const { signOut } = useAuth();
+    const { showSnapshot, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, showNotification, searchResults, calendarEvents, tasks } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [notes, setNotes] = useState<Note[]>([]);
@@ -79,23 +78,6 @@ export const Dashboard = () => {
         setSearchResults([]);
     };
 
-    const handleSearch = async (query: string) => {
-        if (!user?.id) return;
-
-        try {
-            if (!query.trim()) {
-                setSearchResults([]);
-                return;
-            }
-
-            semanticSearch(query);
-
-            console.log("searchResults", searchResults);
-        } catch (error) {
-            console.error('Search failed:', error);
-        } 
-    };
-
     const handleDeleteNote = async (noteId: string) => {
         try {
           await NoteService.deleteNote(noteId);
@@ -108,6 +90,21 @@ export const Dashboard = () => {
     const handleSettingsClick = () => {
         setShowSettings(true);
     };
+
+    const handleSearch = async (query: string) => {
+        try {
+            if (!query.trim()) {
+                setSearchResults([]);
+                return;
+            }
+    
+            semanticSearch(query);
+    
+            console.log("searchResults", searchResults);
+        } catch (error) {
+            console.error('Search failed:', error);
+        } 
+      };
 
     const handleCalendarClick = async () => {
         try {
@@ -141,32 +138,39 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             <Header>
-                <SearchBar onSearch={handleSearch} />
-                <SecondaryButton onClick={handleBackClick}>
-                    <MdGridView size={20}/>
-                    <span className='text-label'>Sparkpads</span>
-                </SecondaryButton>
-                <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
-                    <IoMdFlame size={20}/>
-                    <span className='text-label'>New</span>
-                </SecondaryButton>
-                <SecondaryButton onClick={handleSettingsClick}>
-                    <MdSettings size={20}/>
-                    <span className='text-label'>Settings</span>
-                </SecondaryButton>
-                <Divider />
-                <SecondaryButton onClick={autoOrganizeNotes}>
-                    <MdPsychology size={20}/>
-                    <span className='text-label'>Organize</span>
-                </SecondaryButton>
-                <SecondaryButton onClick={() => showSnapshot()}>
-                    <MdLightbulb size={20}/>
-                    <span className='text-label'>Snapshot</span>
-                </SecondaryButton>
-                <SecondaryButton onClick={handleCalendarClick}>
-                    <MdEventAvailable size={20}/>
-                    <span className='text-label'>Connect</span>
-                </SecondaryButton>
+                <Column main='start' cross='start'>
+                    <Row main='start' cross='start' gap='md'>
+                        <SearchBar onSearch={handleSearch} />
+                        <EmptyButton onClick={handleSettingsClick}>
+                            <FaGoogle size={14}/>
+                            <span className='text-label'>Sync</span>
+                        </EmptyButton>
+                        <EmptyButton onClick={handleSettingsClick}>
+                            <FaGear size={14}/>
+                            <span className='text-label'>Settings</span>
+                        </EmptyButton>
+                    </Row>
+                    <Row main='start' cross='start' gap='md'>
+                        { selectedCategory || searchResults.length > 0 ? 
+                            <SecondaryButton onClick={handleBackClick}>
+                                <FaArrowLeft size={14}/>
+                                <span className='text-label'>Back</span>
+                            </SecondaryButton>
+                        : null }
+                        <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
+                            {showRecentNotes ? <FaEyeSlash size={14}/> : <FaEye size={14}/>}
+                            {showRecentNotes ? <span className='text-label'>Hide Recent</span> : <span className='text-label'>Show Recent</span>}
+                        </SecondaryButton>
+                        <SecondaryButton onClick={autoOrganizeNotes}>
+                            <FaWandSparkles size={14}/>
+                            <span className='text-label'>Auto-Organize</span>
+                        </SecondaryButton>
+                        <SecondaryButton onClick={() => showSnapshot()}>
+                            <FaLightbulb size={14}/>
+                            <span className='text-label'>Snapshot</span>
+                        </SecondaryButton>
+                    </Row>
+                </Column>
             </Header>
             {searchResults.length > 0 ? (
                 <>
@@ -179,7 +183,7 @@ export const Dashboard = () => {
                                 {note.content}
                             </NoteContent>
                                 <NoteInfo>
-                                    {note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
+                                    {note.category == 'Unsorted' ? 'Miscellaneous' : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
                                     <br/>
                                     {new Date(note.created_at!).toLocaleDateString('en-US', {
                                         month: 'short',
@@ -201,7 +205,7 @@ export const Dashboard = () => {
                             {showRecentNotes ? 
                                 <>
                                     <NotesRow/>
-                                    <Spacer height='md'/>
+                                    <Spacer height='lg'/>
                                 </>
                              : null}
                             {selectedCategory ? (
@@ -224,6 +228,10 @@ export const Dashboard = () => {
                 >
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>Under construction</ReactMarkdown>     
                 <ThemeToggle />
+                <SecondaryButton onClick={handleCalendarClick}>
+                    <MdEventAvailable size={20}/>
+                    <span className='text-label'>Connect</span>
+                </SecondaryButton>
                 <SecondaryButton onClick={handleLogout}>
                     <MdLogout size={20}/>
                     Logout

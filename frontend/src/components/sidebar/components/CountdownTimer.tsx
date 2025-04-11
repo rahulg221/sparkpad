@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Item } from '../_styles';
+import { Item, Icon, Circle } from '../_styles';
 import { ItemCard } from '../../../styles/shared/Notes.styles';
+import { Row } from '../../../styles/shared/BaseLayout';
+import { FaCalendar } from 'react-icons/fa';
 
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const [timeLeft, setTimeLeft] = useState('');
@@ -48,10 +50,12 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
 
   return (
     <ItemCard>
-      <Item>
-        <span className='content'>{summary}</span>
-        <span className='timer'>{targetDate} → {timeLeft}</span>
-      </Item>
+      <Row main='spaceBetween' cross='center'>
+        <Item>
+          <span className='content'>{summary}</span>
+          <span className='timer'>{targetDate} → {timeLeft}</span>
+        </Item>
+      </Row>
     </ItemCard>
   );
 };

@@ -1,7 +1,9 @@
+from typing import List
 from models import Note
 from services.utils import parse_embedding, preprocess_text, supabase_client
 from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import StandardScaler
+from sklearn.metrics.pairwise import cosine_distances
 from collections import defaultdict
 from sklearn.metrics import silhouette_score
 from dotenv import load_dotenv
@@ -27,7 +29,7 @@ class ClusteringService:
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
         self.user = user
 
-    def update_database(self, clusterData: list[dict], notes: list[Note]):
+    def update_database(self, clusterData: List[dict], notes: List[Note]):
         """
         Updates the database with the new clusters and categories.
         """
@@ -126,7 +128,7 @@ class ClusteringService:
         # Run HDBSCAN
         clusterer = hdbscan.HDBSCAN(
             min_cluster_size=min_cluster_size,
-            min_samples=min_samples or min_cluster_size,
+            min_samples=min_samples,
             metric='euclidean',
             prediction_data=True
         )
@@ -156,10 +158,10 @@ class ClusteringService:
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
         """
-        factor = 1 # Must be >0
+        factor = 0 # Must be >0
 
         if n <= 20:
-            return 1+factor, 0+factor  
+            return 1+factor, 1
         elif n <= 50:
             return 2+factor, 1+factor
         elif n <= 100:
@@ -169,7 +171,7 @@ class ClusteringService:
         else:
             return 9+factor, 6+factor  
 
-    def generate_category(self, notes: list[str]):
+    def generate_category(self, notes: List[str]):
         """
         Generates a category name based on the provided notes.
         """

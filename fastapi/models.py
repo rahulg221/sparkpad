@@ -1,3 +1,4 @@
+from typing import List, Optional
 from pydantic import BaseModel
 
 class Notes(BaseModel):
@@ -7,9 +8,12 @@ class Notes(BaseModel):
 class Note(BaseModel):
     id: str
     content: str
-    embedding: list[float]
+    embedding: Optional[List[float]] = None
     category: str
     cluster: int
+
+class SimpleNote(BaseModel):
+    content: str
 
 class Event(BaseModel):
     note_content: str

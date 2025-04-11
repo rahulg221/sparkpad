@@ -54,24 +54,32 @@ class OpenAIService:
         text = preprocess_text(text)
 
         prompt = f"""
-            You are a smart assistant that takes unstructured notes and converts them into a clean, prioritized bullet list.
+            You are a smart assistant that analyzes unstructured notes and extracts the most important insights.
 
-            Please organize the information from most important to least important using bullet points.
+            Your task is to:
 
-            Guidelines:
+            Identify and list key insights from the notes, in order of importance (most important first)
 
-            1. Use clear and simple language
+            Use clear, simple, and concise language
 
-            2. Eliminate redundant or irrelevant points
+            Merge or condense similar points
 
-            3. Do not include an intro, closing paragraph, or any headers. 
+            Output guidelines:
 
-            4. Avoid using more than five bullet points. Combine related points into one.
+            Do not include an introduction, summary, announcements, or headings
 
-            5. Do not include any other text or formatting. Use only alphabetical characters.
+            Do not use any special formatting (e.g. bullets, numbers, punctuation)
 
-            Here's the content to organize:
+            Do not include any filler language — just the insights
 
+            Use only alphabetical characters (no emojis or symbols)
+
+            Example output (Do not use these exact words, just use this format):
+                Many ideas about new categorization features.
+                Heavily considering switching to chicken breast over thighs.
+                Feeling frustrated this week with sports.
+
+            Here's the content to extract insights from:
             ---  
             {text }
             ---

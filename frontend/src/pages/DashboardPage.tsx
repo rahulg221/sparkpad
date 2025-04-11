@@ -3,6 +3,8 @@ import { Dashboard } from '../components/dashboard/Dashboard';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { FloatingButton } from '../styles/shared/Button.styles';
+import { FaPlus } from 'react-icons/fa';
+import { FaMinus } from 'react-icons/fa';
 
 const PageLayout = styled.div`
   display: flex;
@@ -24,7 +26,7 @@ export const DashboardPage = () => {
   return (  
     <>
       <FloatingButton onClick={() => setIsOpen(prev => !prev)}>
-          {isOpen ? '-' : '+'}
+        {isOpen ? '-' : '+'}
       </FloatingButton>
       <PageLayout>
         <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />

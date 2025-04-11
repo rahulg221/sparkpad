@@ -29,7 +29,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.xs};
 
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   gap: 0.5rem;
 
   &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.primaryLight};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 
   &:disabled {
@@ -52,7 +52,6 @@ export const SecondaryButton = styled.button<{ width?: string }>`
     outline: 2px solid ${({ theme }) => theme.colors.textLight};
   }
 `;
-
 
 export const FloatingButton = styled.button`
   display: flex;
@@ -107,22 +106,11 @@ export const IconButton = styled.button`
   }
 `;
 
-export const TextButton = styled.button`
-  background: none;
+export const EmptyButton = styled(SecondaryButton)`
+  background-color: transparent;
   border: none;
-  color: ${({ theme }) => theme.colors.textLight};
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.fontSize.xs};
 
   &:hover {
-    color: ${({ theme }) => theme.colors.textPrimary};
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.textLight};
+    border-color: ${({ theme }) => theme.colors.primary};
   }
 `;

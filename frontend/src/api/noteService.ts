@@ -84,15 +84,26 @@ export class NoteService {
     }
   }
 
-  static async getNotes(userId: string): Promise<Note[]> {
+  static async getNotes(userId: string, limit?: number): Promise<Note[]> {
     try {
-      const { data } = await supabase
-        .from('notes')
-        .select('*')
-        .eq('user_id', userId)
-        .order('created_at', { ascending: true });
+      if (!limit) {
+        const { data } = await supabase
+          .from('notes')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: true });
 
-      return data || [];
+        return data || [];
+      } else {
+        const { data } = await supabase
+          .from('notes')
+          .select('*')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: true })
+          .limit(limit);
+
+        return data || [];
+      }
     } catch (error) {
       console.error('Failed to get notes:', error);
       return [];
@@ -171,18 +182,19 @@ export class NoteService {
     }
   }
 
-  static async getNotesByCategory(userId: string, category: string): Promise<Note[]> {
+  static async getNotesByCategory(userId: string, category: string, limit: number, offset: number): Promise<Note[]> {
     try {
       const { data, error } = await supabase
         .from('notes')
         .select('*')
         .eq('user_id', userId)
         .eq('category', category)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1);
 
-    if (error) {
-      throw error;
-    }
+      if (error) {
+        throw error;
+      }
 
       return data || [];
     } catch (error) {

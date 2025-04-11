@@ -7,17 +7,18 @@ import { NoteService } from '../../api/noteService';
 import { Note } from '../../models/noteModel';
 import { useAuth } from '../../context/AuthContext';
 import { Column, HorizontalDivider, Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
+import { SearchBar } from '../searchbar/SearchBar';
+import { EmptyButton } from '../../styles/shared/Button.styles';
+import { FaGear } from 'react-icons/fa6';
 
 export const SidebarContent = () => {
-  const {tasks, calendarEvents, bulletPoints, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot} = useActions();
+  const {tasks, calendarEvents, bulletPoints, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot, semanticSearch, searchResults, setSearchResults} = useActions();
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
   const { user } = useAuth();
 
   useEffect(() => {
-    console.log('tasks', tasks);
     getLastSnapshot();
-    console.log('ddtasks', tasks);
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +55,7 @@ export const SidebarContent = () => {
   return (
     <>
       <ScrollView direction='vertical'>
-        <Column main='start' cross='start' padding='sm'>
+        <Column main='start' cross='start'>
           <Spacer height='md'/>
           <Row main='spaceBetween' cross='center'>
             <h1>Sparkpad</h1>
@@ -64,7 +65,7 @@ export const SidebarContent = () => {
           <HorizontalDivider />
           <ItemList items={calendarEvents} title='Events' /> 
           <HorizontalDivider />
-          <ItemList items={bulletPoints} title='Insights' />
+          <ItemList items={bulletPoints} title='Snapshot' />
         </Column>
       </ScrollView>
       <Spacer expand={true} />

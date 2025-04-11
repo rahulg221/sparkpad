@@ -11,7 +11,7 @@ import os
 from dotenv import load_dotenv
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from models import Notes, Note, Event, Task
+from models import Notes, Note, Event, SimpleNote, Task
 
 load_dotenv()
 
@@ -117,7 +117,7 @@ async def create_summary(request: Request, request_body: Notes, user=Depends(Aut
     
 @app.post("/embed")
 @limiter.limit("100/day")
-async def embed_note(request: Request, request_body: Note, user=Depends(AuthService.get_current_user)):
+async def embed_note(request: Request, request_body: SimpleNote, user=Depends(AuthService.get_current_user)):
     try:
         openai_service = OpenAIService()
         embedding = openai_service.generate_embeddings(request_body.content)
@@ -129,7 +129,7 @@ async def embed_note(request: Request, request_body: Note, user=Depends(AuthServ
     
 @app.post("/semantic_search")
 @limiter.limit("50/day")
-async def semantic_search(request: Request, request_body: Note, user = Depends(AuthService.get_current_user)):
+async def semantic_search(request: Request, request_body: SimpleNote, user = Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
     # Get embedding for the query
