@@ -21,7 +21,7 @@ const MainContent = styled.div`
 `;
 
 export const DashboardPage = () => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
 
   return (  
     <>
