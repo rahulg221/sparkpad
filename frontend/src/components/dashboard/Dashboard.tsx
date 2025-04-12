@@ -196,7 +196,7 @@ export const Dashboard = () => {
                                             
                                         </>
                                     ) : (
-                                        <h1>Quick Start Guide</h1>
+                                        <h1>Welcome to SparkPad!</h1>
                                     )}
                                     <NoteCategories handleCategoryClick={handleCategoryClick} />
                                 </>

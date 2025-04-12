@@ -16,24 +16,17 @@ export const Landing = () => {
   return (
     <LandingContainer>
       <ContentContainer>
-        <h1>Spark Journal</h1>
-        <p>Capture the spark before it fades.</p>
+        <h1>Organize</h1>
+        <br />
+        <h1>Summarize</h1>
+        <br />
+        <h1>Schedule</h1>
+        <br />
+        <p>Low friction productivity tool built for ADHD minds, creatives, and fast-paced thinkers.</p>
         <ButtonContainer>
             <PrimaryButton onClick={handleLogin}>Login</PrimaryButton>
             <PrimaryButton onClick={handleSignup}>Signup</PrimaryButton>
         </ButtonContainer>
-        <br />  
-        <h2>Organize</h2>
-        <p>Write now, organize later. The Organize feature leverages semantic grouping and labeling to automatically sort your notes into labeled notebooks, minimizing friction and maximizing organization.</p>
-        <br />
-        <h2>Snapshot</h2>
-        <p>Don't feel like reading through your notes? The Snapshot feature gives you a snapshot of the notes you're currently viewing in a bullet point format, making them easier to digest.</p>
-        <br />
-        <h2>Connect</h2>
-        <p>No more excuses for not using your calendar. The Connect feature allows you to create and view events and tasks using only natural language from your notes.</p>
-        <br />
-        <h2>Search</h2>
-        <p>Need to find something quickly? The Search feature allows you to search for notes based on semantic meaning, making it easier to find what you need.</p>
       </ContentContainer>
     </LandingContainer>
   );

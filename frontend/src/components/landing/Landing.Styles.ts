@@ -4,6 +4,7 @@ export const LandingContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.bgDark};
   position: relative;
@@ -11,8 +12,6 @@ export const LandingContainer = styled.div`
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} transparent;
-  background-image: radial-gradient(${({ theme }) => theme.colors.dotColor} 1px, transparent 1px);
-  background-size: 20px 20px;
 
   &::-webkit-scrollbar {
     width: 8px;

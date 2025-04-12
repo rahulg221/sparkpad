@@ -26,6 +26,8 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
 
   if (isMobile) {
     return (
+      <>
+      { isOpen && (
       <MotionWrapper
         animate={{ x: isOpen ? 0 : "-100%" }}
         initial={{ x: "-100%" }}
@@ -42,9 +44,11 @@ export const SideBar = ({ isOpen }: SideBarProps) => {
       >
         <SidebarContainer>
           <SidebarContent/>
-        </SidebarContainer>
-      </MotionWrapper>
-    );
+          </SidebarContainer>
+        </MotionWrapper>
+      )}
+      </>
+    )
   }
 
   return (
