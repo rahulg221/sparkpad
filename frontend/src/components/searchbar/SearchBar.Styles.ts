@@ -10,8 +10,7 @@ export const SearchInput = styled.input`
   font-size: ${({ theme }) => theme.fontSize.xs};
   font-family: inherit;
   width: 100%;
-  padding-top: ${({ theme }) => theme.spacing.md};
-  padding-bottom: ${({ theme }) => theme.spacing.md};
+  height: 6.5vh;
   padding-left: ${({ theme }) => theme.spacing.xxl};
 
   &:focus {

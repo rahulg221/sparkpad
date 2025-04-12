@@ -26,7 +26,7 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
       <SearchIcon />
       <SearchInput
         type="text"
-        placeholder="Search by meaning..."
+        placeholder="Search notes..."
         value={searchQuery}
         onChange={handleSearch}
         onKeyDown={handleSubmit}
