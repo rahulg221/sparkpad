@@ -52,7 +52,7 @@ export const CategoryBox = styled.div`
     left: 0;
     height: 14px;
     width: 100%;
-    background-color: ${({ theme }) => theme.colors.bgElevated};
+    background-color: ${({ theme }) => theme.colors.topNotePad};
     z-index: 2;
   }
 

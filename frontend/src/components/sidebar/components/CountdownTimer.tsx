@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Item, Icon, Circle } from '../_styles';
 import { ItemCard } from '../../../styles/shared/Notes.styles';
-import { Row } from '../../../styles/shared/BaseLayout';
+import { Column, Row } from '../../../styles/shared/BaseLayout';
 import { FaCalendar, FaClock } from 'react-icons/fa';
-
+import ReactMarkdown from 'react-markdown';
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const [timeLeft, setTimeLeft] = useState('');
   const [dayLabel, setDayLabel] = useState('');           
@@ -36,12 +36,12 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
       const isTomorrow = new Date(now.getTime() + 86400000).toDateString() === target.toDateString();
 
       if (isToday) {
-        setDayLabel('');
+        setDayLabel('Today');
       } else if (isTomorrow) {
-        setDayLabel('Tmr');
+        setDayLabel('Tomorrow');
       } else {
         setDayLabel(new Date(start_time).toLocaleString('en-US', {
-          weekday: 'short',
+          weekday: 'long',
         }));
       }
 
@@ -65,7 +65,12 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
       <Row main='spaceBetween' cross='center'>
         <Item className='inline'>
           <span className='content'>{summary}</span>
-          <span className='timer'>{dayLabel} {targetTime}</span>
+        </Item>
+        <Item className='inline'>
+          <Column main='end' cross='center'>
+              <span className='timer'>{targetTime}</span>
+              <span className='timer'>{dayLabel}</span>
+          </Column>
           <Icon>
             <FaClock size={12}/>
           </Icon>

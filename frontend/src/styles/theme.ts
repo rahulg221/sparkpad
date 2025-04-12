@@ -24,6 +24,7 @@ export const darkTheme = {
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
+    topNotePad: 'rgba(255, 255, 255, 0.03)',
 
     // Semantic folder palette (flipped to work on dark)
     colorOne: 'rgb(255, 193, 7)',         // Stays bright for highlights
@@ -73,8 +74,8 @@ export const lightTheme = {
   // Backgrounds
   bgPure: '#ffffff',
   bgDark: '#ffffff',                     // White app background
-  bgElevated: 'rgba(0, 0, 0, 0.9)',     // Subtle card background
-  bgLight: 'rgba(255, 255, 255, 0.2)',                    // Light gray for inputs, code blocks
+  bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
+  bgLight: 'rgba(0, 0, 0, 0.05)',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text
@@ -92,7 +93,8 @@ export const lightTheme = {
   accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 
   // Dot color (reversed for light bg)
-  dotColor: 'rgba(0, 0, 0, 0.3)',
+  dotColor: 'rgba(0, 0, 0, 0.3)', 
+  topNotePad: 'rgba(0, 0, 0, 0.9)',
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: 'rgb(0, 0, 0)',                   // Highlight color

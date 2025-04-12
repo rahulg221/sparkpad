@@ -81,7 +81,7 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
                             ) : (
                                 <ItemCard key={index}>
                                     <Item className="inline">
-                                        <span className="content">{item}</span>
+                                        <span className="content"><ReactMarkdown>{item}</ReactMarkdown></span>
                                         <Icon>
                                             {title === 'Tasks' ? <FaThumbtack size={12} /> : <FaLightbulb size={12} />}
                                         </Icon>

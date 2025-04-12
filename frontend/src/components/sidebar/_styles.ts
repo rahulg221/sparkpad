@@ -105,28 +105,21 @@ export const Item = styled.li`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 0.5rem;
 
   &.inline {
     flex-direction: row;
     align-items: center;
-    gap: 0.5rem;
 
     width: 100%;             
     overflow: hidden;        
   }
 
   .content {
-    font-size: ${({ theme }) => theme.fontSize.xxs};
-    color: ${({ theme }) => theme.colors.textLight};
-    font-weight: 400;
-    line-height: 1.4;
-    margin: 0;
-    padding: 0;
-
     flex: 1;
     min-width: 0;              
     max-width: 100%;
+    font-size: ${({ theme }) => theme.fontSize.xs};
+    color: ${({ theme }) => theme.colors.textPrimary};
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -136,7 +129,6 @@ export const Item = styled.li`
   .timer {
     color: ${({ theme }) => theme.colors.textLight};
     font-size: ${({ theme }) => theme.fontSize.xxs};
-    margin-right: 4px;
   }
 `;
 
