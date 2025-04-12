@@ -60,4 +60,9 @@ export const CategoryBox = styled.div`
     transform: scale(1.03);
     border: 1px solid ${({ theme }) => theme.colors.primary};
   }
+
+  @media (max-width: 768px) {
+    width: 18vh;
+    height: 22.5vh;
+  }
 `;

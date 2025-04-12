@@ -41,7 +41,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
               {category === "Unsorted" ? (
                 <h2>Miscellaneous</h2>
               ) : (
-                <h2>
+                <h2 style={{ minHeight: '3.6em' }}>
                   {category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}
                 </h2>
               )}
