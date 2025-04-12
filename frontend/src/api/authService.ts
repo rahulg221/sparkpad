@@ -16,7 +16,7 @@ export class AuthService {
 
   static async signOut(): Promise<void> {
     const { error } = await supabase.auth.signOut();
-    //localStorage.clear();
+    localStorage.clear();
 
     if (error) {
       throw error;
@@ -65,7 +65,7 @@ export class AuthService {
       }
     }
 
-    return "Signup successful. Please log in.";
+    return "Signup successful";
   }
   
   static async getCurrentUser(): Promise<User | null> {

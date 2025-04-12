@@ -40,11 +40,10 @@ export const SignUpForm = () => {
         setIsLoading(true);
         const message = await signUp(email, password);
 
-        if (message === 'Signup successful. Please log in.') {
+        if (message === 'Signup successful') {
             signIn(email, password);
             
             navigate('/dashboard');
-            //setSuccess(message);
         } else {
             setError(message);
         }
