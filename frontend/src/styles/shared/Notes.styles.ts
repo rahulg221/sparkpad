@@ -52,7 +52,6 @@ export const ItemCard = styled.div`
   box-sizing: border-box;
   height: auto;
   width: 100%;
-  min-height: 5vh;
   background-color: ${({ theme }) => theme.colors.bgElevated};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
@@ -61,10 +60,6 @@ export const ItemCard = styled.div`
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.bgLight};    
-  }
-
-  @media (max-width: 768px) {
-    min-height: 10vh;
   }
 `;
 
