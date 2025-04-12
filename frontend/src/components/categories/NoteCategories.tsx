@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthContext';
-import { CategoriesContainer, CategoryBox } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { ElevatedContainer } from '../../styles/shared/BaseLayout';
 
@@ -41,9 +41,9 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
               {category === "Unsorted" ? (
                 <h2>Miscellaneous</h2>
               ) : (
-                <h2 style={{ minHeight: '3.6em' }}>
+                <CategoryTitle>
                   {category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}
-                </h2>
+                </CategoryTitle>
               )}
           </div>
         ))}

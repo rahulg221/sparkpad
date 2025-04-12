@@ -66,3 +66,9 @@ export const CategoryBox = styled.div`
     height: 22.5vh;
   }
 `;
+
+export const CategoryTitle = styled.h2`
+  @media (max-width: 768px) {
+    min-height: 3.6em;
+  }
+`;
