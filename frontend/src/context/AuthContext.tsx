@@ -1,10 +1,13 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
 import { AuthService } from '../api/authService';
 import { User } from '../models/userModel';
+import CalendarService from '../api/calendarService';
 
 interface AuthContextType {
     user: User | null;
     isLoading: boolean;
+    isGoogleConnected: boolean;
+    setIsGoogleConnected: (isGoogleConnected: boolean) => void;
     signIn: (email: string, password: string) => Promise<any>;
     signUp: (email: string, password: string) => Promise<any>;
     signOut: () => Promise<void>;
@@ -15,12 +18,18 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const [isGoogleConnected, setIsGoogleConnected] = useState(false);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
                 const user = await AuthService.getCurrentUser();
                 setUser(user);
+
+                if (user) {
+                    const isGoogleConnected = await CalendarService.checkCalendarAccess(user.id!);
+                    setIsGoogleConnected(isGoogleConnected);
+                }
             } catch (err) {
                 console.error('Error fetching user:', err);
             } finally {
@@ -52,6 +61,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         <AuthContext.Provider value={{
             user,
             isLoading,
+            isGoogleConnected,
+            setIsGoogleConnected,
             signIn,
             signUp,
             signOut

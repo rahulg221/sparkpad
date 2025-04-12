@@ -1,7 +1,22 @@
-import { getToken } from './supabaseClient';
+import { getToken, supabase } from './supabaseClient';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class CalendarService {
+  static async checkCalendarAccess(userId: string): Promise<boolean> {
+    const { data, error } = await supabase
+      .from('users')
+      .select('google_connected')
+      .eq('id', userId)
+      .maybeSingle();
+  
+    if (error) {
+      console.error('Error checking calendar access:', error);
+      return false;
+    }
+    
+    return data?.google_connected === true;
+  }  
+
   static async createCalendarEvent(text: string): Promise<string> {
     const token = await getToken();
     let notificationMessage = '';

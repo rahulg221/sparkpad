@@ -18,7 +18,7 @@ export const SidebarContainer = styled.div`
   }
 `;
 
-export const SnapshotContainer = styled(Container)`
+export const SummaryContainer = styled(Container)`
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   margin-bottom: ${({ theme }) => theme.spacing.md};
@@ -67,11 +67,11 @@ export const TextInput = styled.textarea`
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  font-size: ${({ theme }) => theme.fontSize.xxs};
+  font-size: ${({ theme }) => theme.fontSize.xs};
   resize: none;
   line-height: 1.5;
   font-family: inherit;
-  
+
   &:focus {
     outline: none;
     border-color: ${({ theme }) => theme.colors.primary};
@@ -118,7 +118,7 @@ export const Item = styled.li`
     flex: 1;
     min-width: 0;              
     max-width: 100%;
-    font-size: ${({ theme }) => theme.fontSize.xs};
+    font-size: ${({ theme }) => theme.fontSize.xxs};
     color: ${({ theme }) => theme.colors.textPrimary};
     white-space: nowrap;
     overflow: hidden;

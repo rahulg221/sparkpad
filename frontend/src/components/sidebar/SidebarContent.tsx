@@ -7,15 +7,11 @@ import { NoteService } from '../../api/noteService';
 import { Note } from '../../models/noteModel';
 import { useAuth } from '../../context/AuthContext';
 import { Column, HorizontalDivider, Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
-import { SearchBar } from '../searchbar/SearchBar';
-import { EmptyButton } from '../../styles/shared/Button.styles';
-import { FaGear } from 'react-icons/fa6';
-import { IoSparklesSharp } from "react-icons/io5";
 import { Icon } from './_styles';
 import { BsLightningFill } from 'react-icons/bs';
 
 export const SidebarContent = () => {
-  const {tasks, calendarEvents, bulletPoints, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot, semanticSearch, searchResults, setSearchResults} = useActions();
+  const {tasks, calendarEvents, bulletPoints, categories, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot, semanticSearch, searchResults, setSearchResults, setCategories} = useActions();
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
   const { user } = useAuth();
@@ -47,6 +43,7 @@ export const SidebarContent = () => {
 
       setNotificationMessage(notificationMessage);
       setShowNotification(true);
+
       setText('');
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
@@ -71,7 +68,7 @@ export const SidebarContent = () => {
           <HorizontalDivider />
           <ItemList items={calendarEvents} title='Events' /> 
           <HorizontalDivider />
-          <ItemList items={bulletPoints} title='Snapshot' />
+          <ItemList items={bulletPoints} title='Summarize' />
         </Column>
       </ScrollView>
       <Spacer expand={true} />

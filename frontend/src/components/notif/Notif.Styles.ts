@@ -4,8 +4,8 @@ export const NotificationContainer = styled.div`
   position: fixed;
   bottom: 20px;
   right: 20px;
-  background-color: ${({ theme }) => theme.colors.bgLight};
-  color: ${({ theme }) => theme.colors.textPrimary};
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.textSecondary};
   padding: ${({ theme }) => theme.spacing.md};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);

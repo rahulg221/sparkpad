@@ -18,12 +18,14 @@ export const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
-    const { signIn, isLoading } = useAuth();
+    const { signIn } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError('');
+        setIsLoading(true);
         try {
             await signIn(email, password);
             navigate('/dashboard');
@@ -31,6 +33,7 @@ export const LoginForm = () => {
             console.error('Login failed:', err);
             setError(err instanceof Error ? err.message : 'Failed to login. Please try again.');
         }
+        setIsLoading(false);
     };
 
     return (

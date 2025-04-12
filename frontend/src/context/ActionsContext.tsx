@@ -7,7 +7,7 @@ import CalendarService from '../api/calendarService';
 
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
-  showSnapshot: () => void;
+  showSummary: () => void;
   setNotificationMessage: (message: string) => void;
   setShowNotification: (show: boolean) => void;
   setSummary: (summary: string) => void;
@@ -17,11 +17,13 @@ type ActionsContextType = {
   setSearchResults: (results: Note[]) => void;
   updateTasks: () => void;
   updateEvents: () => void;
+  setCategories: (categories: string[]) => void;        
   searchResults: Note[];
   isLoading: boolean;
   notificationMessage: string;
   showNotification: boolean;
   summary: string;
+  categories: string[];
   bulletPoints: string[];
   calendarEvents: string[];
   tasks: string[];
@@ -31,7 +33,7 @@ type ActionsContextType = {
 export const ActionsContext = createContext<ActionsContextType | null>(null);
 
 export const ActionsProvider = ({ children }: { children: ReactNode }) => {
-    const { user } = useAuth();
+    const { user, isGoogleConnected } = useAuth();
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +43,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
     const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [tasks, setTasks] = useState<string[]>([]);
+    const [categories, setCategories] = useState<string[]>([]);
 
     const autoOrganizeNotes = async () => {
         try {
@@ -59,11 +62,14 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
     
-    const showSnapshot = async () => {
+    const showSummary = async () => {
+        setIsLoading(true);
         try {
-            setIsLoading(true);
-            //await updateTasks();
-            //await updateEvents();
+            if (currentNotes.length === 0) {
+                const notes = await NoteService.getNotes(user?.id || '', 50);
+                setCurrentNotes(notes);
+            }
+
             const summary = await NoteService.summarizeNotes(currentNotes);
             setSummary(summary);
 
@@ -76,14 +82,19 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
 
             setBulletPoints(bulletpoints);
             console.log(bulletpoints);
-            setIsLoading(false);
         } catch (err) {
             console.error('Error summarizing daily notes:', err);
+        } finally {
             setIsLoading(false);
         }
     };
 
     const updateTasks = async () => {
+        console.log('updateTasks');
+        console.log(isGoogleConnected);
+        if (!isGoogleConnected) return;
+        console.log('isGoogleConnected');
+        
         try {
             const tasks = await CalendarService.getTasks(); 
             localStorage.setItem('last_tasks', JSON.stringify(tasks));
@@ -95,6 +106,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };
         
     const updateEvents = async () => {
+        if (!isGoogleConnected) return;
+        
         try {
             const events = await CalendarService.getCalendarEvents(); 
             localStorage.setItem('last_events', JSON.stringify(events));
@@ -161,9 +174,9 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             console.error('Error semantic searching:', err);    
         }
     };
-    
+
     return (
-        <ActionsContext.Provider value={{ showSnapshot, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, setSearchResults, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults, tasks, updateTasks, updateEvents}}>
+        <ActionsContext.Provider value={{ showSummary, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, setSearchResults, setCategories, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults, tasks, updateTasks, updateEvents, categories}}>
             {children}
         </ActionsContext.Provider>
     );

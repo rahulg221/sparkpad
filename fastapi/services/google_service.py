@@ -329,6 +329,10 @@ class GoogleService:
                     "token_uri": tokens.get("token_uri")
                 }).execute()
 
+            supabase_client.table("users").update({
+                "google_connected": True
+            }).eq("id", user_id).execute()
+
             return {"message": "Google Calendar connected successfully"}
         except Exception as e:
             print("Google OAuth callback error:", e)

@@ -62,8 +62,8 @@ export const CategoryBox = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 18vh;
-    height: 22.5vh;
+    aspect-ratio: 1 / 1.25; 
+    width: 100%;
   }
 `;
 

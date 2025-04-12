@@ -1,5 +1,6 @@
 import { supabase } from './supabaseClient';
 import { User } from '../models/userModel';
+import { NoteService } from './noteService';
 
 export class AuthService {
   static async signIn(email: string, password: string): Promise<void> {
@@ -47,7 +48,7 @@ export class AuthService {
       .from('users')
       .select()
       .eq('auth_id', data.user?.id)
-      .single();
+      .maybeSingle();
 
     if (!existingUser) {
       const { error: insertError } = await supabase
@@ -57,7 +58,7 @@ export class AuthService {
             auth_id: data.user?.id,
             email: data.user?.email,
           },
-        ]);
+        ]).select();
 
       if (insertError) {
         console.error('Error creating user record:', insertError);

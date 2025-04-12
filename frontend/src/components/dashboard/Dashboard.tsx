@@ -5,7 +5,7 @@ import {
     DashboardWrapper,
     Header,
 } from './Dashboard.Styles';
-import { SecondaryButton, EmptyButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
@@ -13,8 +13,6 @@ import { SearchBar } from '../searchbar/SearchBar';
 import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
 import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
@@ -22,43 +20,41 @@ import { MdEventAvailable, MdLogout } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
-import { Column, Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
-import { FaArrowLeft, FaGoogle, FaLightbulb, FaEye, FaEyeSlash } from 'react-icons/fa';
+import { Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
+import { FaArrowLeft, FaLightbulb, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FaGear, FaWandSparkles } from 'react-icons/fa6';
 
 export const Dashboard = () => {
-    const { signOut } = useAuth();
-    const { showSnapshot, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, showNotification, searchResults, calendarEvents, tasks } = useActions();
+    const { user, signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
+    const { showSummary, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, currentNotes, showNotification, searchResults, calendarEvents, tasks } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [notes, setNotes] = useState<Note[]>([]);
     const [showSettings, setShowSettings] = useState(false);
     const [showRecentNotes, setShowRecentNotes] = useState(false);
 
     useEffect(() => {
-        /*
-        const handleGoogleCallback = async () => {
-            // Add more robust check for calendar and task connections
-            if (calendarEvents.length || tasks.length) {
-                console.log("Already connected to Google");
-                return;
-            }
+        const runOAuthCallback = async () => {
+          if (isGoogleConnected) return;
 
-            const params = new URLSearchParams(window.location.search);
-            const code = params.get("code");
-            if (!code || !window.location.pathname.includes("/auth/google/callback")) return;
+          const params = new URLSearchParams(window.location.search);
+          const code = params.get("code");
+          const isCallback = window.location.pathname.includes("/auth/google/callback");
+      
+          if (!code || !isCallback) return;
+      
+          try {
+            await CalendarService.sendAuthCodeToBackend(code);
 
-            try {
-                await CalendarService.sendAuthCodeToBackend(code);
-                
-                console.log("Calendar connected successfully");
-            } catch (err) {
-                console.error("Failed to complete Google OAuth callback", err);
-            }
+            setIsGoogleConnected(true);
+    
+            window.history.replaceState({}, document.title, "/dashboard");
+          } catch (err) {
+            console.error("OAuth failed", err);
+          }
         };
-
-        handleGoogleCallback();*/
-    }, []);
+      
+        runOAuthCallback();
+    }, []);      
 
     const handleLogout = async () => {{}
         try {
@@ -108,18 +104,8 @@ export const Dashboard = () => {
 
     const handleCalendarClick = async () => {
         try {
-            /*
-            if (calendarEvents.length > 0) {
-                updateEvents();
-            }
-            if (tasks.length > 0) {
-                updateTasks();
-            }*/
-
-            if (calendarEvents.length === 0 && tasks.length === 0) {
-                const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
-                window.location.href = googleAuthUrl; 
-            }
+            const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
+            window.location.href = googleAuthUrl; 
         } catch (err) {
             console.error("Failed to get Google auth URL", err);
         }
@@ -154,9 +140,9 @@ export const Dashboard = () => {
                         <FaWandSparkles size={14}/>
                         <span className='text-label'>Organize</span>
                     </SecondaryButton>
-                    <SecondaryButton onClick={() => showSnapshot()}>
+                    <SecondaryButton onClick={() => showSummary()}>
                         <FaLightbulb size={14}/>
-                        <span className='text-label'>Snapshot</span>
+                        <span className='text-label'>Summarize</span>
                     </SecondaryButton>
                     <SecondaryButton onClick={handleSettingsClick}>
                         <FaGear size={14}/>
@@ -204,7 +190,14 @@ export const Dashboard = () => {
                                 <NotesList category={selectedCategory} />
                             ) : (
                                 <>
-                                    <h1>My Notepads</h1>
+                                    { currentNotes.length > 0 ? (
+                                        <>
+                                            <h1>My Notepads</h1>
+                                            
+                                        </>
+                                    ) : (
+                                        <h1>Quick Start Guide</h1>
+                                    )}
                                     <NoteCategories handleCategoryClick={handleCategoryClick} />
                                 </>
                             )}
@@ -218,7 +211,7 @@ export const Dashboard = () => {
                     onClose={() => setShowSettings(false)}
                     title="Settings"
                 >
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>Under construction</ReactMarkdown>     
+                <h2>Under construction</h2>
                 <ThemeToggle />
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>

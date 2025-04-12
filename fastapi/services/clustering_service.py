@@ -118,7 +118,7 @@ class ClusteringService:
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
         # Reduce dimensionality with UMAP
-        umap_reducer = umap.UMAP(n_components=10, metric="cosine", random_state=42)
+        umap_reducer = umap.UMAP(n_components=15, metric="cosine", random_state=42)
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples

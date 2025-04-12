@@ -14,6 +14,8 @@ import {
     SuccessMessage
 } from './Auth.styles';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
+import { AuthService } from '../../api/authService';
+import { NoteService } from '../../api/noteService';
 
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
@@ -21,7 +23,9 @@ export const SignUpForm = () => {
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
-    const { signUp, isLoading } = useAuth();
+    const { user, signUp, signIn } = useAuth();
+    const [isLoading, setIsLoading] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -33,13 +37,18 @@ export const SignUpForm = () => {
             return;
         }
         
+        setIsLoading(true);
         const message = await signUp(email, password);
-        console.log("Message:", message);
+
         if (message === 'Signup successful. Please log in.') {
-            setSuccess(message);
+            signIn(email, password);
+            
+            navigate('/dashboard');
+            //setSuccess(message);
         } else {
             setError(message);
         }
+        setIsLoading(false);
     };
 
     return (

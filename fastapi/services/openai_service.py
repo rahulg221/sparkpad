@@ -20,10 +20,15 @@ class OpenAIService:
         Generates a category name based on the provided notes.
         """
         input_string = "".join(notes)
-        prompt = f"""Create a category name for the following text: {input_string}
-          1. The category name should be one to three words that capture the main idea of the notes.
-          2. Avoid too generic category names, if the majority of the notes are about a specific topic, the category name should reflect that.
-          3. Avoid non-alphabetical characters other than spaces. 
+        prompt = f"""
+        Create a concise category name from the following text: {input_string}
+
+        Rules:
+        1. The category name must capture the main idea of the notes.
+        2. Be specific, not generic (e.g., use 'Heart Health' instead of 'Health').
+        3. Only use **two words max** (no exceptions).
+        4. Do not include any symbols, punctuation, or numbers — only alphabetic characters and spaces.
+        5. Output only the final category name and nothing else.
         """
 
         # Generate response
@@ -31,7 +36,7 @@ class OpenAIService:
             model="gpt-4o-mini",  
             messages=[{"role": "user", "content": prompt}],  
             max_tokens=10,
-            temperature=0.2,
+            temperature=0.0,
         )
 
         return res.choices[0].message.content.strip()
@@ -84,7 +89,7 @@ class OpenAIService:
 
             Focus on recurring themes or concepts, and action items.
 
-            Create concise points of 1-2 sentences each using markdown.
+            Create concise points of 1-2 sentences each using markdown with a bolded header for each point.
             
             Separate each point with a new line.
             
@@ -97,6 +102,7 @@ class OpenAIService:
         response = self.client.chat.completions.create(
             model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
             max_tokens=1000,
         )
 

@@ -35,7 +35,7 @@ export class NoteService {
       notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
 
       return notificationMessage;
-    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
+    } else if (note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
