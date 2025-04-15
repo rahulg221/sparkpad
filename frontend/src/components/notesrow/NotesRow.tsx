@@ -9,21 +9,26 @@ import { Row, ScrollView } from '../../styles/shared/BaseLayout';
 import { Container } from '../../styles/shared/BaseLayout';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
-
+import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 export const NotesRow = () => {
   const [notes, setNotes] = useState<Note[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
       if (!user?.id) return;
 
+      setIsLoading(true);
+
       try {
         const recentNotes = await NoteService.getMostRecentNotes(user.id, 10);
         setNotes(recentNotes);
       } catch (err) {
         console.error('Error fetching recent notes:', err);
-      }
+      } finally {
+        setIsLoading(false);
+      }   
     };
 
     fetchRecentNotes();
@@ -43,6 +48,7 @@ export const NotesRow = () => {
         <h1>Recent Sparks</h1>
         <ScrollView direction='horizontal'>
                 <Container width="100%">
+                  { isLoading ? <LoadingSpinner /> :
                     <Row main="start" cross="start" gap="md">
                     {notes.map(note => (
                         <NewNoteCard key={note.id}>
@@ -69,6 +75,7 @@ export const NotesRow = () => {
                         </NewNoteCard>
                     ))}
                 </Row>
+                }
             </Container>
         </ScrollView>
     </>

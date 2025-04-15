@@ -83,7 +83,7 @@ export const TextInput = styled.textarea`
   }
 
   &::-webkit-scrollbar {
-    width: 8px;
+    width: 4px;
   }
   
   &::-webkit-scrollbar-track {

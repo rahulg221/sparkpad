@@ -1,7 +1,7 @@
 from typing import List
 from dotenv import load_dotenv
 import openai
-from services.utils import preprocess_text
+from services.utils import preprocess_text, get_category_examples
 import os
 load_dotenv()
 
@@ -20,15 +20,23 @@ class OpenAIService:
         Generates a category name based on the provided notes.
         """
         input_string = "".join(notes)
+        category_examples = "\n".join(get_category_examples())
         prompt = f"""
-        Create a concise category name from the following text: {input_string}
+        Generate a short, clear label that describes the core topic or purpose of the following notes.
 
-        Rules:
-        1. The category name must capture the main idea of the notes.
-        2. Be specific, not generic (e.g., use 'Heart Health' instead of 'Health').
-        3. Only use **two words max** (no exceptions).
-        4. Do not include any symbols, punctuation, or numbers — only alphabetic characters and spaces.
-        5. Output only the final category name and nothing else.
+        Formatting Rules:
+
+        Use Title Case (capitalize each major word)
+
+        Use only letters and spaces (no special characters or punctuation)
+
+        Use 2 to 3 words max (2 preferred if sufficient)
+
+        Examples:
+        {category_examples}
+
+        Notes:
+        {input_string}
         """
 
         # Generate response
@@ -100,7 +108,7 @@ class OpenAIService:
             """
 
         response = self.client.chat.completions.create(
-            model="gpt-4o-mini",
+            model="gpt-3.5-turbo",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
             max_tokens=1000,

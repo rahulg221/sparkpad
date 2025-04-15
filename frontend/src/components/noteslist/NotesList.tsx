@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
+import { ElevatedContainer, Grid, Row, Spacer, VerticalDivider } from '../../styles/shared/BaseLayout';
 import { NoteCard, NoteContent, NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
 import { TrashIcon } from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
@@ -10,6 +10,7 @@ import { SecondaryButton } from '../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 
 interface NotesListProps {
   category: string;
@@ -34,12 +35,10 @@ export const NotesList = ({ category }: NotesListProps) => {
 
       try {
         setIsLoading(true);
-        const userNotes = await NoteService.getNotesByCategory(user.id, category, 50, 0);
         const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, offset);
 
 
         setNotes(visibleNotes);
-        setCurrentNotes(userNotes);
         setIsLoading(false);
       } catch (err) {
         setError('Failed to fetch notes');
@@ -65,6 +64,7 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
       <ElevatedContainer width='100%' padding='lg'>
+        { isLoading ? <LoadingSpinner /> :
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}>
@@ -91,6 +91,7 @@ export const NotesList = ({ category }: NotesListProps) => {
             </NoteCard>
           ))}
         </Grid>
+        }
       </ElevatedContainer>
       <Spacer height='md' />
       <Row main='center' cross='center' gap='md'>

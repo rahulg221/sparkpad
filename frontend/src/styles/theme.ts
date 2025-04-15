@@ -16,6 +16,7 @@ export const darkTheme = {
     primary: 'rgb(255, 214, 10)',            // Vibrant yellow (bright and energetic)
     primaryHover: 'rgb(255, 230, 70)',       // Slightly lighter yellow for hover effect
     primaryLight: 'rgba(255, 214, 10, 0.1)', // Transparent yellow for borders/glows
+    primaryDark: 'rgb(211, 177, 9)', // Transparent yellow for borders/glows
 
     // Accent (Highlight / Spark)
     accent: 'rgb(255, 221, 0)',              // Bold yellow-gold for standout elements
@@ -86,9 +87,10 @@ export const lightTheme = {
   primary: 'rgb(255, 214, 10)',            // Vibrant yellow (bright and energetic)
   primaryHover: 'rgb(255, 230, 70)',       // Slightly lighter yellow for hover effect
   primaryLight: 'rgba(255, 214, 10, 0.1)', // Transparent yellow for borders/glows
+  primaryDark: 'rgb(211, 177, 9)', // Transparent yellow for borders/glows
 
   // Accent (Highlight / Spark)
-  accent: 'rgb(255, 221, 0)',              // Bold yellow-gold for standout elements
+  accent: 'rgb(133, 133, 133)',              // Bold yellow-gold for standout elements
   accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
   accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 

@@ -160,6 +160,9 @@ def remove_time_keywords(text):
         text = re.sub(pattern, "", text, flags=re.IGNORECASE)
     return text.strip()
 
+def get_category_examples():
+    return category_examples
+
 filler_phrases = [
     r"\blet'?s\b",
     r"\btry\b",
@@ -212,3 +215,22 @@ filler_phrases = [
 time_keywords = [
             r"\b(?:on|at|by|around|this|next|the|a|an|in|to|from|between|today|tomorrow|noon|midnight|morning|evening|afternoon|night|pm|am|[0-9]{1,2}(:[0-9]{2})?\s?(am|pm)?)\b"
         ]
+
+category_examples = [
+    "Project Ideas",
+    "App Features",
+    "Meal Prep Recipes",
+    "Gym Workouts",
+    "Book Ideas",
+    "Song Lyric Ideas",
+    "Grocery Lists",
+    "Startup Concepts",
+    "Content Ideas",
+    "Bucket List Items",
+    "Gift Ideas",
+    "Travel Itinerary",
+    "Side Hustle Ideas",
+    "Daily Affirmations",
+    "Favorite Movies"
+    "Favorite Quotes",
+]

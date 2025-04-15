@@ -15,7 +15,7 @@ export const NoteCard = styled.div`
 
   &:hover {
     height: auto; 
-    border-bottom: 1px solid ${({ theme }) => theme.colors.primary};
+    border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
   }
 
   @media (max-width: 768px) {
@@ -39,7 +39,7 @@ export const NewNoteCard = styled.div`
   
   &:hover {
     height: auto; 
-    border: 1px solid ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 `;
 

@@ -1,6 +1,7 @@
 import { supabase, getToken } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import CalendarMethods from './calendarService';
+import { useActions } from '../context/ActionsContext';
 
 const API_URL = import.meta.env.VITE_API_URL;
 
@@ -35,11 +36,11 @@ export class NoteService {
       notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
 
       return notificationMessage;
-    } else if (note.content.startsWith('/t')) {
+    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
-    } else if (!(note.content.startsWith('/e') || note.content.startsWith('/t'))) {
+    } else if (!(NoteService.containsDateTime(note.content) && (note.content.startsWith('/e') || note.content.startsWith('/t')))) {
       try {
         const response = await fetch(`${API_URL}/embed`, {
           method: 'POST',
@@ -186,7 +187,7 @@ export class NoteService {
     try {
       const { data, error } = await supabase
         .from('notes')
-        .select('*')
+        .select('id, content, category, created_at, user_id, cluster')
         .eq('user_id', userId)
         .eq('category', category)
         .order('created_at', { ascending: false })

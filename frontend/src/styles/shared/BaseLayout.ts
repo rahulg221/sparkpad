@@ -134,11 +134,3 @@ export const List = styled.ul`
   padding: 0;
   margin: 0;
 `;
-
-export const LoadingSpinner = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-`;
-

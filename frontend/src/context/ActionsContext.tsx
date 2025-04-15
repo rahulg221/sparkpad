@@ -5,9 +5,13 @@ import { useAuth } from './AuthContext';
 import { Note } from '../models/noteModel';
 import CalendarService from '../api/calendarService';
 
+type showSummaryProps = {
+    category: string;
+}
+
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
-  showSummary: () => void;
+  showSummary: (props: showSummaryProps) => Promise<void>;
   setNotificationMessage: (message: string) => void;
   setShowNotification: (show: boolean) => void;
   setSummary: (summary: string) => void;
@@ -62,15 +66,19 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
     
-    const showSummary = async () => {
+    const showSummary = async ({ category }: showSummaryProps ) => {
         setIsLoading(true);
+        let notes = []
         try {
-            if (currentNotes.length === 0) {
-                const notes = await NoteService.getNotes(user?.id || '', 50);
-                setCurrentNotes(notes);
+            if (category === '') {
+                notes = await NoteService.getNotes(user?.id || '', 25);
+                console.log('No category');
+            } else {
+                notes = await NoteService.getNotesByCategory(user?.id || '', category, 25, 0)
+                console.log('Category: ', category);
             }
 
-            const summary = await NoteService.summarizeNotes(currentNotes);
+            const summary = await NoteService.summarizeNotes(notes);
             setSummary(summary);
 
             localStorage.setItem('last_summary', summary);

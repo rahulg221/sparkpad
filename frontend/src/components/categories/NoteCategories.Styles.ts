@@ -58,7 +58,7 @@ export const CategoryBox = styled.div`
 
   &:hover {
     transform: scale(1.03);
-    border: 1px solid ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 
   @media (max-width: 768px) {

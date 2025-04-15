@@ -10,7 +10,7 @@ import {
   ModalContent,
   ModalFooter
 } from './Modal.Styles';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { EmptyButton, SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface ModalProps {
   isOpen: boolean;
@@ -70,9 +70,9 @@ export const Modal: React.FC<ModalProps> = ({
         <ModalContent>
           {children}
         </ModalContent>
-        <SecondaryButton onClick={onClose}>
+        <EmptyButton onClick={onClose}>
             <ModalContent>Close</ModalContent>
-        </SecondaryButton>
+        </EmptyButton>
         {footer && <ModalFooter>{footer}</ModalFooter>}
       </ModalContainer>
     </ModalOverlay>,

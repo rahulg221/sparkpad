@@ -23,10 +23,11 @@ import { NotesRow } from '../notesrow/NotesRow';
 import { Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
 import { FaArrowLeft, FaLightbulb, FaEye, FaEyeSlash } from 'react-icons/fa';
 import { FaGear, FaWandSparkles } from 'react-icons/fa6';
+import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 
 export const Dashboard = () => {
     const { user, signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { showSummary, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, currentNotes, showNotification, searchResults, calendarEvents, tasks } = useActions();
+    const { showSummary, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, currentNotes, showNotification, searchResults, calendarEvents, tasks, updateTasks, updateEvents } = useActions();
     const navigate = useNavigate();
     const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
     const [showSettings, setShowSettings] = useState(false);
@@ -110,16 +111,6 @@ export const Dashboard = () => {
             console.error("Failed to get Google auth URL", err);
         }
     };
-    
-    const Loader = () => (
-        <div style={{
-            display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-            <h1>Loading...</h1>
-        </div>
-    );
 
     return (
         <DashboardWrapper>
@@ -140,7 +131,7 @@ export const Dashboard = () => {
                         <FaWandSparkles size={14}/>
                         <span className='text-label'>Organize</span>
                     </SecondaryButton>
-                    <SecondaryButton onClick={() => showSummary()}>
+                    <SecondaryButton onClick={() => showSummary({ category: selectedCategory || '' })}>
                         <FaLightbulb size={14}/>
                         <span className='text-label'>Summarize</span>
                     </SecondaryButton>
@@ -178,7 +169,7 @@ export const Dashboard = () => {
               </>
             ) : (
                 <>
-                    {isLoading ? <Loader /> : (
+                    {isLoading ? <LoadingSpinner/> : (
                         <>  
                             {showRecentNotes ? 
                                 <>
@@ -211,11 +202,10 @@ export const Dashboard = () => {
                     onClose={() => setShowSettings(false)}
                     title="Settings"
                 >
-                <h2>Under construction</h2>
                 <ThemeToggle />
                 <SecondaryButton onClick={handleCalendarClick}>
                     <MdEventAvailable size={20}/>
-                    <span className='text-label'>Connect</span>
+                    Sync Google
                 </SecondaryButton>
                 <SecondaryButton onClick={handleLogout}>
                     <MdLogout size={20}/>

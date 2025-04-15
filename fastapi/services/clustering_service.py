@@ -118,7 +118,7 @@ class ClusteringService:
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
         # Reduce dimensionality with UMAP
-        umap_reducer = umap.UMAP(n_components=15, metric="cosine", random_state=42)
+        umap_reducer = umap.UMAP(n_components=10, metric="cosine", random_state=42)
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples
@@ -133,10 +133,20 @@ class ClusteringService:
         )
         labels = clusterer.fit_predict(reduced_embeddings)
 
+        # Get the soft clustering confidence scores
+        probabilities = clusterer.probabilities_
+
+        # Threshold: mark as -1 if probability is too low
+        confidence_threshold = 0.95
+        final_labels = np.array([
+            label if prob >= confidence_threshold else -1
+            for label, prob in zip(labels, probabilities)
+        ])
+
         # Evaluate clustering (excluding outliers)
-        clustered_indices = labels != -1
+        clustered_indices = final_labels != -1
         clustered_points = reduced_embeddings[clustered_indices]
-        clustered_labels = labels[clustered_indices]
+        clustered_labels = final_labels[clustered_indices]
 
         # Only calculate silhouette if we have enough data
         if len(clustered_points) > 1:
@@ -164,8 +174,8 @@ class ClusteringService:
         elif n <= 50:
             return 2+factor, 1+factor
         elif n <= 100:
-            return 4+factor, 2+factor
+            return 2+factor, 2+factor
         elif n <= 300:
-            return 7+factor, 4+factor  
+            return 3+factor, 3+factor  
         else:
-            return 9+factor, 6+factor  
+            return 5+factor, 5+factor  

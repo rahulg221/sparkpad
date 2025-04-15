@@ -38,7 +38,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   gap: 0.5rem;
 
   &:hover:not(:disabled) {
-    border-color: ${({ theme }) => theme.colors.primary};
+    border-color: ${({ theme }) => theme.colors.accent};
   }
 
   &:disabled {

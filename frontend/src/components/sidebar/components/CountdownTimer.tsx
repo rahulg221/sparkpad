@@ -36,7 +36,7 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
       const isTomorrow = new Date(now.getTime() + 86400000).toDateString() === target.toDateString();
 
       if (isToday) {
-        setDayLabel('Today');
+        setDayLabel('');
       } else if (isTomorrow) {
         setDayLabel('Tomorrow');
       } else {

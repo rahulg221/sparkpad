@@ -7,7 +7,7 @@ import { IconButton } from "../../../styles/shared/Button.styles";
 import { MdArrowDropDown, MdArrowDropUp } from "react-icons/md";
 import { CountdownTimer } from "./CountdownTimer";
 import { useActions } from "../../../context/ActionsContext";
-import { LoadingSpinner } from "../../../styles/shared/BaseLayout";
+import { LoadingSpinner } from "../../../styles/shared/LoadingSpinner";
 import ReactMarkdown from "react-markdown";
 
 export const ItemList = ({ items, title }: { items: string[], title: string }) => {
@@ -15,12 +15,12 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
     const { updateTasks, updateEvents, summary } = useActions();
     const [isLoading, setIsLoading] = useState(false);
     const [numberOfItems, setNumberOfItems] = useState(3);
-    const cacheDuration = 1000 * 60 * 10; // 10 minutes
+    const cacheDuration = 1000 * 60 * 5; // 10 minutes
 
     const isCacheStale = (key: string): boolean => {
         const timestamp = localStorage.getItem(`${key}_lastUpdated`);
         if (!timestamp) return true;
-        return Date.now() - parseInt(timestamp, 10) > cacheDuration;
+        return Date.now() - parseInt(timestamp, 5) > cacheDuration;
     };
 
     const toggleShow = () => {
@@ -28,10 +28,11 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
             setNumberOfItems(3);
             setIsLoading(true);
     
-            if (title === 'Tasks' && isCacheStale('tasks')) {
+            //  && isCacheStale('tasks') - Remove cache for now
+            if (title === 'Tasks') {
                 updateTasks();
                 localStorage.setItem('tasks_lastUpdated', Date.now().toString());
-            } else if (title === 'Events' && isCacheStale('events')) {
+            } else if (title === 'Events') {
                 updateEvents();
                 localStorage.setItem('events_lastUpdated', Date.now().toString());
             }
@@ -57,9 +58,7 @@ export const ItemList = ({ items, title }: { items: string[], title: string }) =
                 </Icon>
                 <h2>{title}</h2>
             </Row>
-            {items.length > 0 && (
-                <IconButton onClick={toggleShow}>{showAll ? <MdArrowDropDown size={22} /> : <MdArrowDropUp size={22} />}</IconButton>
-            )}
+            <IconButton onClick={toggleShow}>{showAll ? <MdArrowDropDown size={22} /> : <MdArrowDropUp size={22} />}</IconButton>
         </Row>
         {isLoading ? <LoadingSpinner /> :
             showAll && (
