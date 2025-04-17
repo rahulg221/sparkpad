@@ -25,7 +25,8 @@ export const darkTheme = {
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
-    topNotePad: 'rgba(255, 255, 255, 0.03)',
+    topNotePad: 'rgba(255, 255, 255, 0.1)',
+    treeNode: 'rgb(30, 30, 30)',
 
     // Semantic folder palette (flipped to work on dark)
     colorOne: 'rgb(255, 193, 7)',         // Stays bright for highlights
@@ -90,13 +91,14 @@ export const lightTheme = {
   primaryDark: 'rgb(211, 177, 9)', // Transparent yellow for borders/glows
 
   // Accent (Highlight / Spark)
-  accent: 'rgb(133, 133, 133)',              // Bold yellow-gold for standout elements
+  accent: 'rgb(198, 198, 198)',              // Bold yellow-gold for standout elements
   accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
   accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 
   // Dot color (reversed for light bg)
   dotColor: 'rgba(0, 0, 0, 0.3)', 
   topNotePad: 'rgba(0, 0, 0, 0.9)',
+  treeNode: 'rgb(235, 235, 235)',
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: 'rgb(0, 0, 0)',                   // Highlight color
@@ -137,7 +139,7 @@ export const lightTheme = {
     md: '0.9rem',        // 15px
     lg: '0.95rem',    // 16px
     xl: '1rem',     // 20px
-    xxl: '1.1rem',  
+    xxl: '1.2rem',  
   },
 };
 

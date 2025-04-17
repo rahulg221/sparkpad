@@ -89,19 +89,35 @@ class OpenAIService:
         text = preprocess_text(text)
 
         prompt = f"""
-            Instructions
-            You are a specialized assistant designed to help people with ADHD resurface 
-            important thoughts, patterns, and insights from their notes. Your task is to 
-            analyze the notes I provide and create a condensed, easily digestible summary 
-            that helps me rediscover valuable ideas I may have forgotten.
+            You are a summarization assistant.
 
-            Focus on recurring themes or concepts, and action items.
+            Your task is to summarize the notes provided using the following format and rules:
 
-            Create concise points of 1-2 sentences each using markdown with a bolded header for each point.
-            
-            Separate each point with a new line.
-            
-            Make the summary concise and easily digestible at a glance. 
+            Formatting Rules:
+
+            Format each point as a bolded header, followed by a 1–2 sentence explanation.
+
+            Use valid Markdown syntax: **Header** followed by plain text.
+
+            Add one blank line between each point.
+
+            Strict Constraints:
+
+            Do not refer to the user.
+
+            Do not invent or infer anything not explicitly stated.
+
+            Do not wrap the output in code blocks or triple backticks.
+
+            Do not use bullet points, numbered lists, or emojis.
+
+            Do not include an introduction or closing statement.
+
+            Word Limit:
+
+            The total output must not exceed 300 words.
+
+            Begin only with the first point. Here are the notes:
             ---  
             {text }
             ---

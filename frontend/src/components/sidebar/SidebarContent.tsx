@@ -1,17 +1,17 @@
 // components/sidebar/SidebarContent.tsx
 import React, { useEffect, useState } from 'react';
-import { ItemList } from './components/ItemList';
 import { NoteInput } from './components/NoteInput';
 import { useActions } from '../../context/ActionsContext';
 import { NoteService } from '../../api/noteService';
 import { Note } from '../../models/noteModel';
-import { useAuth } from '../../context/AuthContext';
-import { Column, HorizontalDivider, Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
+import { useAuth } from '../../context/AuthProvider';
+import { Row } from '../../styles/shared/BaseLayout';
+import { FaGear, FaNoteSticky, FaThumbtack, FaTimeline, FaPen } from 'react-icons/fa6';
+import { FaTimes } from 'react-icons/fa';
 import { Icon } from './_styles';
-import { BsLightningFill } from 'react-icons/bs';
 
 export const SidebarContent = () => {
-  const {tasks, calendarEvents, bulletPoints, categories, isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot, semanticSearch, searchResults, setSearchResults, setCategories} = useActions();
+  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot} = useActions();
   const [text, setText] = useState('');
   const [noteLoading, setNoteLoading] = useState(false);
   const { user } = useAuth();
@@ -54,24 +54,12 @@ export const SidebarContent = () => {
 
   return (
     <>
-      <ScrollView direction='vertical'>
-        <Column main='start' cross='start'>
-          <Spacer height='md'/>
-          <Row main='start' cross='center' gap='sm'>
-            <Icon accent={true}>
-              <BsLightningFill size={18} />
-            </Icon>
-            <h1>Sparkpad</h1>
-            {/* Add buttons here later */}
-          </Row>
-          <ItemList items={tasks} title='Tasks' />
-          <HorizontalDivider />
-          <ItemList items={calendarEvents} title='Events' /> 
-          <HorizontalDivider />
-          <ItemList items={bulletPoints} title='Summarize' />
-        </Column>
-      </ScrollView>
-      <Spacer expand={true} />
+      <Row main="start" cross="center" gap="sm">
+        <Icon>
+          <FaPen size={12}/>
+        </Icon>
+        <h2>New Spark</h2>
+      </Row>
       <NoteInput
         text={text}
         isLoading={isLoading}

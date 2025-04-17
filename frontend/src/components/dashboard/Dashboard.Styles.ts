@@ -24,21 +24,10 @@ export const DashboardWrapper = styled.div`
   padding-left: ${({ theme }) => theme.spacing.xl};
   width: 100%;
   background-color: ${({ theme }) => theme.colors.bgPure};
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    height: 2px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.border};
-  }
-
+  
   h1 {
     color: ${({ theme }) => theme.colors.textPrimary};
   }
-
-  
 `;
 
 export const Header = styled.div`

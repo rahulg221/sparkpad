@@ -27,7 +27,7 @@ export const NewNoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
+  margin-bottom: ${({ theme }) => theme.spacing.xl};
   padding: ${({ theme }) => theme.spacing.lg};
   min-height: 20vh;
   width: 200px;

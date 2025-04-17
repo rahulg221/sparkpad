@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { ElevatedContainer, Grid, Row, Spacer, VerticalDivider } from '../../styles/shared/BaseLayout';
 import { NoteCard, NoteContent, NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
 import { TrashIcon } from './NotesList.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { TextButton } from '../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+import { FaList, FaTh } from 'react-icons/fa';
 
 interface NotesListProps {
   category: string;
@@ -62,22 +63,24 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   return (
     <>
-      { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
+      <Row main="spaceBetween" cross="center" gap="sm">
+        { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
+        {$layoutMode === 'grid' ? <FaList size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/> : <FaTh size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/>}
+      </Row>
       <ElevatedContainer width='100%' padding='lg'>
         { isLoading ? <LoadingSpinner /> :
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
-            <NoteCard key={note.id} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}>
+            <NoteCard key={note.id}>
               <NotePreview>
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                  }}
-                >
-                  {note.content}
-                </ReactMarkdown>
+              <ReactMarkdown
+                components={{
+                  ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                  li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                }}
+              >
+                {note.content}
+              </ReactMarkdown>
               </NotePreview>
               <NoteInfo>
                   {new Date(note.created_at!).toLocaleDateString('en-US', {
@@ -95,18 +98,18 @@ export const NotesList = ({ category }: NotesListProps) => {
       </ElevatedContainer>
       <Spacer height='md' />
       <Row main='center' cross='center' gap='md'>
-        <SecondaryButton onClick={() => page > 1 ? setPage(page - 1) : null}>
+        <TextButton onClick={() => page > 1 ? setPage(page - 1) : null}>
           <Row main='center' cross='center' gap='sm'> 
             <MdArrowBack size={16} />
-            <h2>Previous</h2>
+            Previous
           </Row>
-        </SecondaryButton>
-        <SecondaryButton onClick={() => setPage(page + 1)}>
+        </TextButton>
+        <TextButton onClick={() => setPage(page + 1)}>
           <Row main='center' cross='center' gap='sm'> 
-            <h2>Next</h2>
+            Next
             <MdArrowForward size={16} />
           </Row>
-        </SecondaryButton>
+        </TextButton>
       </Row>
       <Spacer height='md' />
     </>

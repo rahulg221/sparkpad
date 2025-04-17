@@ -6,9 +6,7 @@ export const SidebarContainer = styled.div`
   display: flex;
   flex-direction: column;
   position: relative;
-  padding-top: ${({ theme }) => theme.spacing.lg};
-  padding-left: ${({ theme }) => theme.spacing.lg};
-  padding-right: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-right: 1px solid ${({ theme }) => theme.colors.border};
 
@@ -47,7 +45,6 @@ export const Divider = styled.div`
 
 export const Icon = styled.span<{accent?: boolean }>`
   color: ${({ theme, accent }) => accent ? theme.colors.accent : theme.colors.textLight};
-  margin-right: ${({ theme, accent }) => accent ? 0 : theme.spacing.sm};
 `;
 
 export const TextBarForm = styled.form`
@@ -55,15 +52,16 @@ export const TextBarForm = styled.form`
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 `;
 
 export const TextInput = styled.textarea`
   flex: 1;
   width: 100%;
-  min-height: 25vh;
+  height: 100%;
   margin-top: ${({ theme }) => theme.spacing.md};
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.bgLight};
+  background-color: ${({ theme }) => theme.colors.bgDark};
   color: ${({ theme }) => theme.colors.textPrimary};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};

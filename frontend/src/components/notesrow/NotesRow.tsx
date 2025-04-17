@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
@@ -8,8 +8,8 @@ import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Row, ScrollView } from '../../styles/shared/BaseLayout';
 import { Container } from '../../styles/shared/BaseLayout';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+
 export const NotesRow = () => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -17,12 +17,10 @@ export const NotesRow = () => {
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
-      if (!user?.id) return;
-
       setIsLoading(true);
 
       try {
-        const recentNotes = await NoteService.getMostRecentNotes(user.id, 10);
+        const recentNotes = await NoteService.getMostRecentNotes(user?.id!, 10);
         setNotes(recentNotes);
       } catch (err) {
         console.error('Error fetching recent notes:', err);
@@ -32,7 +30,7 @@ export const NotesRow = () => {
     };
 
     fetchRecentNotes();
-  }, [user?.id]);
+  }, []);
 
   const handleDeleteNote = async (noteId: string) => {
     try {
@@ -46,15 +44,16 @@ export const NotesRow = () => {
   return (
     <>            
         <h1>Recent Sparks</h1>
-        <ScrollView direction='horizontal'>
+        {isLoading ? (
+            <LoadingSpinner />
+        ) : (
+            <ScrollView direction='horizontal'>
                 <Container width="100%">
-                  { isLoading ? <LoadingSpinner /> :
                     <Row main="start" cross="start" gap="md">
                     {notes.map(note => (
                         <NewNoteCard key={note.id}>
                             <NotePreview>
                               <ReactMarkdown
-                                remarkPlugins={[remarkGfm]}
                                 components={{
                                   ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
                                   li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
@@ -75,9 +74,9 @@ export const NotesRow = () => {
                         </NewNoteCard>
                     ))}
                 </Row>
-                }
             </Container>
-        </ScrollView>
+          </ScrollView>
+        )}
     </>
   );
 };

@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const CategoriesContainer = styled.div`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   margin: 0 auto;
   padding: ${({ theme }) => theme.spacing.lg};
   align-items: center;
@@ -50,7 +50,7 @@ export const CategoryBox = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    height: 14px;
+    height: 15px;
     width: 100%;
     background-color: ${({ theme }) => theme.colors.topNotePad};
     z-index: 2;

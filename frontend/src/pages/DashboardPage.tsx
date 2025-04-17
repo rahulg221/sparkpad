@@ -3,9 +3,8 @@ import { Dashboard } from '../components/dashboard/Dashboard';
 import styled from 'styled-components';
 import { useState } from 'react';
 import { FloatingButton } from '../styles/shared/Button.styles';
-import { FaPlus } from 'react-icons/fa';
-import { FaMinus } from 'react-icons/fa';
-
+import { ToolBar } from '../components/toolbar/ToolBar';
+import { FaPen, FaPlus } from 'react-icons/fa';
 const PageLayout = styled.div`
   display: flex;
   min-height: 100vh;
@@ -25,14 +24,19 @@ export const DashboardPage = () => {
 
   return (  
     <>
-      <FloatingButton onClick={() => setIsOpen(prev => !prev)}>
-        {isOpen ? '-' : '+'}
-      </FloatingButton>
+      {!isOpen ? (
+        <FloatingButton onClick={() => setIsOpen(prev => !prev)}>
+          <FaPen size={16} color='black' />
+        </FloatingButton>
+      ) : (
+        null
+      )}
       <PageLayout>
-        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <ToolBar />
         <MainContent>
           <Dashboard />
         </MainContent>
+        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
       </PageLayout>
     </>
   );

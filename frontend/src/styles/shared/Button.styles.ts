@@ -2,6 +2,7 @@ import styled from 'styled-components';
 
 export const PrimaryButton = styled.button`
   width: 100%;
+  height: 6.5vh;
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.textSecondary};
@@ -19,38 +20,62 @@ export const PrimaryButton = styled.button`
     opacity: 0.6;
     cursor: not-allowed;
   }
+
+  @media (max-width: 768px) {
+    height: 7.5vh;
+  }
 `;
 
 export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   color: ${({ theme }) => theme.colors.textLight};
-  border: 1.25px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
-  height: 6.5vh;
+  height: 7.5vh;
+  width: ${({ width }) => width || '100%'};
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textLight};
 
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.5rem;
+  justify-content: start;
+  gap: 0.75rem;
 
   &:hover:not(:disabled) {
-    border-color: ${({ theme }) => theme.colors.accent};
-  }
-
-  &:disabled {
-    cursor: not-allowed;
+    background-color: ${({ theme }) => theme.colors.bgLight};
   }
 
   &:focus {
     outline: none;
   }
 
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.textLight};
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+export const TextButton = styled.button<{ width?: string }>`
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: transparent;
+  border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  height: 7.5vh;  
+  width: ${({ width }) => width || '100%'};    
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textLight};
+
+  &:hover:not(:disabled) {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 `;
 
@@ -66,12 +91,10 @@ export const FloatingButton = styled.button`
   height: 56px;
   border-radius: 50%;
   background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.textSecondary};
-  font-size: 24px;
   cursor: pointer;
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.primary};
+    background-color: ${({ theme }) => theme.colors.accent};
   }
 
   &:focus {
@@ -88,30 +111,41 @@ export const FloatingButton = styled.button`
 `;
 
 export const IconButton = styled.button`
-  background: none;
-  border: none;
-  color: ${({ theme }) => theme.colors.textLight};
-  cursor: pointer;
-  font-size: ${({ theme }) => theme.fontSize.sm};
+    background-color: transparent;
+    color: ${({ theme }) => theme.colors.textLight};
+    border: none;
+    cursor: pointer; 
+    padding: 0;
+    margin: 0;
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.textPrimary};
-  }
-
-  &:focus {
-    outline: none;
-  } 
-
-  &:focus-visible {
-    outline: 2px solid ${({ theme }) => theme.colors.textLight};
-  }
+    &:hover {
+        color: ${({ theme }) => theme.colors.primary};
+    }
 `;
 
+
 export const EmptyButton = styled(SecondaryButton)`
+  padding: ${({ theme }) => theme.spacing.md};
   background-color: transparent;
   border: none;
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  height: 7.5vh;
+  width: ${({ width }) => width || '100%'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textLight};
 
-  &:hover {
-    border-color: ${({ theme }) => theme.colors.primary};
+  display: flex;
+  align-items: center;
+  justify-content: start;
+  gap: 0.75rem;
+
+  &:hover:not(:disabled) {
+    color: ${({ theme }) => theme.colors.textSecondary};
+  }
+
+  &:disabled {
+    cursor: not-allowed;
   }
 `;

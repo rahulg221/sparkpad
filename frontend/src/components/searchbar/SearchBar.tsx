@@ -23,10 +23,10 @@ export const SearchBar = ({ onSearch }: SearchBarProps) => {
 
   return (
     <Stack width="100%">
-      <SearchIcon />
+      <SearchIcon size={14}/>
       <SearchInput
         type="text"
-        placeholder="Search notes..."
+        placeholder="Search sparks..."
         value={searchQuery}
         onChange={handleSearch}
         onKeyDown={handleSubmit}

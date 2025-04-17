@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../api/noteService';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthProvider';
 import { CategoriesContainer, CategoryBox, CategoryTitle } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { Column, ElevatedContainer, Row } from '../../styles/shared/BaseLayout';

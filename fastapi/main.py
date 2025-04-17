@@ -103,7 +103,7 @@ async def cluster_notes(request: Request, user=Depends(AuthService.get_current_u
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
 
 @app.post("/summarize")
-@limiter.limit("15/day")
+@limiter.limit("50/day")
 async def create_summary(request: Request, request_body: Notes, user=Depends(AuthService.get_current_user)):
     try:
         # Summarize the notes

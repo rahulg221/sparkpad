@@ -1,18 +1,16 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
     Header,
 } from './Dashboard.Styles';
-import { SecondaryButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
-import { SearchBar } from '../searchbar/SearchBar';
 import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
 import { TrashIcon } from '../noteslist/NotesList.Styles';
-import { Note } from '../../models/noteModel';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
@@ -21,17 +19,23 @@ import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
 import { Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
-import { FaArrowLeft, FaLightbulb, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { FaGear, FaWandSparkles } from 'react-icons/fa6';
+import { FaArrowLeft } from 'react-icons/fa';
+import { FaFolderTree, FaGear } from 'react-icons/fa6';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-
+import { TreeView } from '../tree/Tree';
+import { Summary } from '../summary/Summary';
+import { IoSparkles } from 'react-icons/io5';
+import ReactMarkdown from 'react-markdown';
+import { useSummary } from '../../context/SummaryProvider';
+import { useNotes } from '../../context/NotesProvider';
 export const Dashboard = () => {
-    const { user, signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { showSummary, semanticSearch, autoOrganizeNotes, setShowNotification, setSearchResults, isLoading, notificationMessage, currentNotes, showNotification, searchResults, calendarEvents, tasks, updateTasks, updateEvents } = useActions();
+    const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
+    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification } = useActions();
+    const { isSummaryVisible } = useSummary();
+    const { currentCategory, showTree, setCurrentCategory, setShowTree } = useNotes();
     const navigate = useNavigate();
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-    const [showSettings, setShowSettings] = useState(false);
     const [showRecentNotes, setShowRecentNotes] = useState(false);
+    const { isNoteLoading, searchResults, semanticSearch, setSearchResults } = useNotes();
 
     useEffect(() => {
         const runOAuthCallback = async () => {
@@ -67,12 +71,13 @@ export const Dashboard = () => {
     };
 
     const handleCategoryClick = (category: string) => {
-        setSelectedCategory(category);
+        setCurrentCategory(category);
     };
 
     const handleBackClick = () => {
-        setSelectedCategory(null);
+        setCurrentCategory('');
         setSearchResults([]);
+        setShowTree(false);
     };
 
     const handleDeleteNote = async (noteId: string) => {
@@ -84,25 +89,6 @@ export const Dashboard = () => {
         }
     };
 
-    const handleSettingsClick = () => {
-        setShowSettings(true);
-    };
-
-    const handleSearch = async (query: string) => {
-        try {
-            if (!query.trim()) {
-                setSearchResults([]);
-                return;
-            }
-    
-            semanticSearch(query);
-    
-            console.log("searchResults", searchResults);
-        } catch (error) {
-            console.error('Search failed:', error);
-        } 
-      };
-
     const handleCalendarClick = async () => {
         try {
             const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
@@ -112,36 +98,31 @@ export const Dashboard = () => {
         }
     };
 
+    const handleTreeClick = () => {
+        setShowTree(true);
+    };
+
     return (
         <DashboardWrapper>
             <Header>
-                <Row main='start' cross='start' gap='md'>
-                    { selectedCategory || searchResults.length > 0 ? 
-                        <SecondaryButton onClick={handleBackClick}>
-                            <FaArrowLeft size={14}/>
-                            <span className='text-label'>Back</span>
-                        </SecondaryButton>
-                    : null }
-                    <SearchBar onSearch={handleSearch} />
+                <Row main="spaceBetween" cross="center" gap="md">
+                    {(showTree || currentCategory || searchResults.length > 0) && (
+                        <TextButton onClick={handleBackClick}>
+                            <Row main="center" cross="center" gap="sm">
+                                <FaArrowLeft size={14} />
+                                Back
+                            </Row>
+                        </TextButton>
+                    )}
                     <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
-                        {showRecentNotes ? <FaEyeSlash size={14}/> : <FaEye size={14}/>}
-                        {showRecentNotes ? <span className='text-label'>Hide Recent</span> : <span className='text-label'>Show Recent</span>}
-                    </SecondaryButton>
-                    <SecondaryButton onClick={autoOrganizeNotes}>
-                        <FaWandSparkles size={14}/>
-                        <span className='text-label'>Organize</span>
-                    </SecondaryButton>
-                    <SecondaryButton onClick={() => showSummary({ category: selectedCategory || '' })}>
-                        <FaLightbulb size={14}/>
-                        <span className='text-label'>Summarize</span>
-                    </SecondaryButton>
-                    <SecondaryButton onClick={handleSettingsClick}>
-                        <FaGear size={14}/>
-                        <span className='text-label'>Settings</span>
+                        <IoSparkles size={12} />
+                        {showRecentNotes ? <span className="text-label">Hide Recent</span> : <span className="text-label">View Recent</span>}
                     </SecondaryButton>
                 </Row>
-            </Header>
-            {searchResults.length > 0 ? (
+                </Header>
+            {showTree ? (
+                <TreeView showTree={showTree} />
+            ) : searchResults.length > 0 ? (
                 <>
                 <h1>Search Results</h1>
                 <ElevatedContainer width='100%' padding='lg'>
@@ -149,7 +130,14 @@ export const Dashboard = () => {
                         {searchResults.map((note) => (
                             <NoteCard key={note.id}>
                             <NoteContent>
-                                {note.content}
+                                <ReactMarkdown
+                                    components={{
+                                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                                    }}
+                                >
+                                    {note.content}
+                                </ReactMarkdown>
                             </NoteContent>
                                 <NoteInfo>
                                     {note.category == 'Unsorted' ? 'Miscellaneous' : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
@@ -169,19 +157,22 @@ export const Dashboard = () => {
               </>
             ) : (
                 <>
-                    {isLoading ? <LoadingSpinner/> : (
+                    {isLoading || isNoteLoading ? <LoadingSpinner/> : (
                         <>  
+                            {isSummaryVisible ? 
+                                <Summary/>
+                             : null}
                             {showRecentNotes ? 
                                 <>
                                     <NotesRow/>
                                     <Spacer height='lg'/>
                                 </>
                              : null}
-                            {selectedCategory ? (
-                                <NotesList category={selectedCategory} />
+                            {currentCategory ? (
+                                <NotesList category={currentCategory} />
                             ) : (
                                 <>
-                                    { currentNotes.length > 0 ? (
+                                    { categories.length > 0 ? (
                                         <>
                                             <h1>My Notepads</h1>
                                             
@@ -196,10 +187,10 @@ export const Dashboard = () => {
                     )}
                 </>
             )}
-            {showSettings && (
+            {isSettingsVisible && (
                 <Modal
                     isOpen={true}
-                    onClose={() => setShowSettings(false)}
+                    onClose={() => setIsSettingsVisible(false)}
                     title="Settings"
                 >
                 <ThemeToggle />

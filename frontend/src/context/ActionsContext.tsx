@@ -1,37 +1,27 @@
-// context/AppActionsContext.tsx
 import { createContext, ReactNode, useContext, useState } from 'react';
 import { NoteService } from '../api/noteService';
-import { useAuth } from './AuthContext';
+import { useAuth } from './AuthProvider';
 import { Note } from '../models/noteModel';
 import CalendarService from '../api/calendarService';
 
-type showSummaryProps = {
-    category: string;
-}
-
 type ActionsContextType = {
   autoOrganizeNotes: () => void;
-  showSummary: (props: showSummaryProps) => Promise<void>;
   setNotificationMessage: (message: string) => void;
   setShowNotification: (show: boolean) => void;
-  setSummary: (summary: string) => void;
   setCurrentNotes: (notes: Note[]) => void;
   getLastSnapshot: () => void;
-  semanticSearch: (query: string) => void;
-  setSearchResults: (results: Note[]) => void;
   updateTasks: () => void;
   updateEvents: () => void;
-  setCategories: (categories: string[]) => void;        
-  searchResults: Note[];
+  setCategories: (categories: string[]) => void;    
+  setIsSettingsVisible: (visible: boolean) => void;   
   isLoading: boolean;
   notificationMessage: string;
   showNotification: boolean;
-  summary: string;
   categories: string[];
-  bulletPoints: string[];
   calendarEvents: string[];
   tasks: string[];
   currentNotes: Note[];
+  isSettingsVisible: boolean;           
 };
 
 export const ActionsContext = createContext<ActionsContextType | null>(null);
@@ -41,14 +31,11 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
-    const [summary, setSummary] = useState('');
-    const [bulletPoints, setBulletPoints] = useState<string[]>([]);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
-    const [searchResults, setSearchResults] = useState<Note[]>([]);
     const [tasks, setTasks] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
-
+    const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     const autoOrganizeNotes = async () => {
         try {
             const notes = await NoteService.getNotes(user?.id || '');
@@ -66,36 +53,6 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
     
-    const showSummary = async ({ category }: showSummaryProps ) => {
-        setIsLoading(true);
-        let notes = []
-        try {
-            if (category === '') {
-                notes = await NoteService.getNotes(user?.id || '', 25);
-                console.log('No category');
-            } else {
-                notes = await NoteService.getNotesByCategory(user?.id || '', category, 25, 0)
-                console.log('Category: ', category);
-            }
-
-            const summary = await NoteService.summarizeNotes(notes);
-            setSummary(summary);
-
-            localStorage.setItem('last_summary', summary);
-
-            const bulletpoints = summary
-            .trim()
-            .split('\n')
-            .map(line => line.replace(/^[-]\s*/, '').trim());
-
-            setBulletPoints(bulletpoints);
-            console.log(bulletpoints);
-        } catch (err) {
-            console.error('Error summarizing daily notes:', err);
-        } finally {
-            setIsLoading(false);
-        }
-    };
 
     const updateTasks = async () => {
         console.log('updateTasks');
@@ -153,18 +110,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             } else {
                 last_tasks = ['Sync your Google Account then create tasks by describing them in the capture section.'];
             }
-
-            setSummary(last_summary!);
-
-            const bulletpoints = last_summary!
-            .trim()
-            .split('\n')
-            .map(line => line.replace(/^[-]\s*/, '').trim());
-
             setCalendarEvents(last_events);
             setTasks(last_tasks);
-            setBulletPoints(bulletpoints);
-
             setIsLoading(false);
         } catch (err) {
             console.error('Error finding last summary:', err);
@@ -172,19 +119,26 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    const semanticSearch = async (query: string) => {
-        try {
-            setIsLoading(true);
-            const results = await NoteService.semanticSearch(query);
-            setSearchResults(results);
-            setIsLoading(false);
-        } catch (err) {
-            console.error('Error semantic searching:', err);    
-        }
-    };
-
     return (
-        <ActionsContext.Provider value={{ showSummary, autoOrganizeNotes, getLastSnapshot, setNotificationMessage, setShowNotification, setSummary, setCurrentNotes, semanticSearch, setSearchResults, setCategories, isLoading, notificationMessage, showNotification, summary, bulletPoints, currentNotes, calendarEvents, searchResults, tasks, updateTasks, updateEvents, categories}}>
+        <ActionsContext.Provider value={{ 
+            autoOrganizeNotes, 
+            getLastSnapshot, 
+            setNotificationMessage, 
+            setShowNotification, 
+            setCurrentNotes, 
+            setCategories, 
+            setIsSettingsVisible,
+            isLoading, 
+            notificationMessage, 
+            showNotification, 
+            categories, 
+            calendarEvents, 
+            tasks, 
+            currentNotes,
+            updateTasks,
+            updateEvents,
+            isSettingsVisible
+        }}>
             {children}
         </ActionsContext.Provider>
     );

@@ -53,6 +53,7 @@ export const Column = styled.div<{
   display: flex;
   flex-direction: column;
   width: 100%;
+  height: 100%;
   justify-content: ${({ main }) => alignmentMap[main] || 'flex-start'};
   align-items: ${({ cross }) => alignmentMap[cross] || 'stretch'};
   padding: ${({ padding, theme }) => padding ? theme.spacing[padding] : '0'};
@@ -94,8 +95,9 @@ export const ScrollView = styled.div<{
     overflow-x: ${({ direction }) => direction === 'horizontal' ? 'auto' : 'hidden'};
     max-height: ${({ maxHeight }) => maxHeight || '100%'};
     max-width: ${({ maxWidth }) => maxWidth || '100%'};
-    scrollbar-width: none;
-    
+    scrollbar-width: thin;
+    scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
+
     &::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Edge */
     }
@@ -112,11 +114,17 @@ export const HorizontalDivider = styled.div<{
 `;
 
 export const VerticalDivider = styled.div<{
-  height?: string
+  height?: string,
+  margin?: 'sm' | 'md' | 'lg'
 }>`
   width: 1px;
   height: ${({ height }) => height || '5px'};
   background-color: ${({ theme }) => theme.colors.border};
+  margin: ${({ theme, margin }) => margin ? theme.spacing[margin] : '0'};
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 export const Spacer = styled.div<{
