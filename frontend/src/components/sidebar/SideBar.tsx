@@ -1,66 +1,79 @@
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { SidebarContainer } from "./SideBar.Styles";
-import { SidebarContent } from "./SidebarContent";
-import { useActions } from "../../context/ActionsContext";
+// components/sidebar/SidebarContent.tsx
+import React, { useEffect, useState } from 'react';
+import { NoteInput } from './components/NoteInput';
+import { useActions } from '../../context/ActionsContext';
+import { NoteService } from '../../api/noteService';
+import { Note } from '../../models/noteModel';
+import { useAuth } from '../../context/AuthProvider';
+import { Row, Spacer } from '../../styles/shared/BaseLayout';
+import { FaPen } from 'react-icons/fa6';
+import { Icon, SidebarContainer } from './SideBar.Styles';
+import { FaTimes } from 'react-icons/fa';
+import { IconButton } from '../../styles/shared/Button.styles';
 
-interface SideBarProps {
-  isOpen: boolean;
-  setIsOpen: (v: boolean) => void;
-}
-
-const MotionWrapper = motion.div;
-
-export const SideBar = ({ isOpen, setIsOpen }: SideBarProps) => {
-  const [isMobile, setIsMobile] = useState(false);
+export const SideBar = () => {
+  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot} = useActions();
+  const [text, setText] = useState('');
+  // Fix this? Not sure if this is meant to be from a provider
+  const [noteLoading, setNoteLoading] = useState(false);
+  const { isInputVisible, setIsInputVisible } = useActions();
+  const { user } = useAuth();
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
-    };
-
-    handleResize(); 
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
+    getLastSnapshot();
   }, []);
 
-  if (isMobile) {
-    return (
-      <>
-      { isOpen && (
-      <MotionWrapper
-        drag="x"
-        dragConstraints={{ left: 0, right: 0 }} // constrain to horizontal drag
-        onDragEnd={(_event, info) => {
-          if (info.offset.x > 20) {
-            setIsOpen(false); // close if swiped right enough
-          }
-        }}
-        animate={{ x: isOpen ? 0 : "100%" }}
-        initial={{ x: "100%" }}
-        transition={{ duration: 0.25 }}
-        style={{
-          position: "fixed",
-          top: 0,
-          right: 0,
-          width: "75vw",
-          height: "100vh",
-          zIndex: 1000,
-          touchAction: "none",
-        }}
-      >
-        <SidebarContainer>
-          <SidebarContent/>
-          </SidebarContainer>
-        </MotionWrapper>
-      )}
-      </>
-    )
-  }
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setNoteLoading(true);
+
+      const note: Note = {
+        content: text.trim(),
+        user_id: user?.id || '',
+        category: 'Unsorted',
+        cluster: -1,
+      };
+
+      const notificationMessage = await NoteService.addNote(note);
+
+      if (notificationMessage === 'Calendar task created') {
+        updateTasks();
+      } else if (notificationMessage === 'Calendar event created') {
+        updateEvents();
+      }
+
+      setNotificationMessage(notificationMessage);
+      setShowNotification(true);
+
+      setText('');
+    } catch (error) {
+      console.error('Unexpected error in handleSubmit:', error);
+    } finally {
+      setNoteLoading(false);
+    }
+  };
 
   return (
-    <SidebarContainer style={{ width: '250px' }}>
-      <SidebarContent/>
+    <SidebarContainer isInputVisible={isInputVisible}>
+      <Row main="start" cross="center" gap="sm">
+        <Icon>
+          <FaPen size={14}/>
+        </Icon>
+        <h2>New Spark</h2>
+        <Spacer expand={true} />
+        <IconButton onClick={() => setIsInputVisible(false)}>
+          <FaTimes size={14}/>
+        </IconButton>
+      </Row>
+      <NoteInput
+        text={text}
+        isLoading={isLoading}
+        noteLoading={noteLoading}
+        setText={setText}
+        handleSubmit={handleSubmit}
+      />
     </SidebarContainer>
   );
 };

@@ -40,14 +40,14 @@ export const Input = styled.input`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: none;
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   font-size: ${({ theme }) => theme.fontSize.xs};
   font-family: inherit;
 
   &:focus {
     outline: none;
-    border-color: ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 `;
 

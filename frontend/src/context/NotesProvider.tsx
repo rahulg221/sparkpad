@@ -8,11 +8,13 @@ type NotesContextType = {
     searchResults: Note[];
     isNoteLoading: boolean;
     showTree: boolean;
+    showRecentNotes: boolean;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
     semanticSearch: (query: string) => void;
     setSearchResults: (results: Note[]) => void;
     setShowTree: (show: boolean) => void;
+    setShowRecentNotes: (show: boolean) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
@@ -23,6 +25,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [searchResults, setSearchResults] = useState<Note[]>([]);  
     const [isNoteLoading, setIsNoteLoading] = useState<boolean>(false);
     const [showTree, setShowTree] = useState<boolean>(false);
+    const [showRecentNotes, setShowRecentNotes] = useState<boolean>(false);
 
     const semanticSearch = async (query: string) => {
         try {
@@ -35,7 +38,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isNoteLoading, showTree, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree }}>{children}</NotesContext.Provider>;
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isNoteLoading, showTree, showRecentNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes }}>{children}</NotesContext.Provider>;
 };
 
 export const useNotes = () => {

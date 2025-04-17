@@ -14,7 +14,11 @@ type ActionsContextType = {
   updateEvents: () => void;
   setCategories: (categories: string[]) => void;    
   setIsSettingsVisible: (visible: boolean) => void;   
+  setIsInputVisible: (visible: boolean) => void;        
+  setIsToolBarCollapsed: (collapsed: boolean) => void;      
   isLoading: boolean;
+  isInputVisible: boolean;
+  isToolBarCollapsed: boolean;
   notificationMessage: string;
   showNotification: boolean;
   categories: string[];
@@ -36,6 +40,9 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [tasks, setTasks] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
+    const [isInputVisible, setIsInputVisible] = useState(false);
+    const [isToolBarCollapsed, setIsToolBarCollapsed] = useState(false);
+
     const autoOrganizeNotes = async () => {
         try {
             const notes = await NoteService.getNotes(user?.id || '');
@@ -137,7 +144,11 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             currentNotes,
             updateTasks,
             updateEvents,
-            isSettingsVisible
+            isSettingsVisible,
+            isInputVisible,
+            setIsInputVisible,
+            isToolBarCollapsed,
+            setIsToolBarCollapsed
         }}>
             {children}
         </ActionsContext.Provider>

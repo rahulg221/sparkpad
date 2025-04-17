@@ -13,7 +13,7 @@ interface NoteCategoriesProps {
 
 export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => {
   const { user } = useAuth();
-  const { categories, setCategories } = useActions();
+  const { categories, setCategories, isToolBarCollapsed, isInputVisible } = useActions();
   const { setCurrentNotes } = useActions();
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
@@ -33,7 +33,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
   }, [user?.id]);
 
   return (
-    <ElevatedContainer padding='md'>
+    <>
       { categories.length === 0 ? (
         <Column main='start' cross='start' gap='lg' padding='lg'>
           <Row main='start' cross='start' gap='md'>
@@ -54,7 +54,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
           </Row>
         </Column>
       ) : (
-        <CategoriesContainer>
+        <CategoriesContainer isToolBarCollapsed={isToolBarCollapsed} isInputVisible={isInputVisible}>
           {categories.map((category) => (
             <div key={category}>
             <CategoryBox onClick={() => handleCategoryClick(category)} />
@@ -62,13 +62,13 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                 <h2>Miscellaneous</h2>
               ) : (
                 <CategoryTitle>
-                  {category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}
+                  {category}
                 </CategoryTitle>
               )}
           </div>
         ))}
         </CategoriesContainer>
       )}
-    </ElevatedContainer>
+    </>
   );
 };

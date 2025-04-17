@@ -1,20 +1,22 @@
 import { styled } from "styled-components";
 import { Container } from "../../styles/shared/BaseLayout";
 
-export const SidebarContainer = styled.div`
+export const SidebarContainer = styled.div<{ isInputVisible: boolean }>`
   height: 100vh;
-  display: flex;
-  flex-direction: column;
-  position: relative;
-  padding-left: ${({ theme }) => theme.spacing.md};
-  padding-right: ${({ theme }) => theme.spacing.md};
-  padding-top: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
-  border-left: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  padding-bottom: ${({ theme }) => theme.spacing.xl};
+  padding-top: ${({ theme }) => theme.spacing.md};
+  padding-left: ${({ theme }) => theme.spacing.md};
+  padding-right: ${({ isInputVisible, theme }) => isInputVisible ? theme.spacing.md : '0px'};
+  transition: all 0.3s ease;
+  width: ${({ isInputVisible }) => isInputVisible ? '220px' : '0px'};
+  align-items: ${({ isInputVisible }) => isInputVisible ? 'start' : 'center'};
 
   @media (max-width: 768px) {
-    height: 100dvh;
-    -webkit-overflow-scrolling: touch;
+      width: ${({ isInputVisible }) => isInputVisible ? '220px' : '0px'};
   }
 `;
 

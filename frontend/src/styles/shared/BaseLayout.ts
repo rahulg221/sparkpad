@@ -27,6 +27,7 @@ export const Container = styled.div<{
 export const ElevatedContainer = styled(Container)`
   background-color: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
 `;
 
 export const Row = styled.div<{
@@ -96,7 +97,7 @@ export const ScrollView = styled.div<{
     max-height: ${({ maxHeight }) => maxHeight || '100%'};
     max-width: ${({ maxWidth }) => maxWidth || '100%'};
     scrollbar-width: thin;
-    scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
+    scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 
     &::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Edge */
@@ -129,10 +130,12 @@ export const VerticalDivider = styled.div<{
 
 export const Spacer = styled.div<{
   expand?: boolean,
-  height?: 'sm' | 'md' | 'lg'
+  height?: 'sm' | 'md' | 'lg' | 'xl'  ,
+  width?: 'sm' | 'md' | 'lg' | 'xl'
 }>`
   flex-grow: ${({ expand }) => expand ? 1 : 0};
   height: ${({ theme, height }) => height ? theme.spacing[height] : '0'};
+  width: ${({ theme, width }) => width ? theme.spacing[width] : '0'};
 `;
 
 export const List = styled.ul`

@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { FloatingButton } from '../styles/shared/Button.styles';
 import { ToolBar } from '../components/toolbar/ToolBar';
 import { FaPen, FaPlus } from 'react-icons/fa';
+import { Spacer } from '../styles/shared/BaseLayout';
+import { useActions } from '../context/ActionsContext';
 
 const PageLayout = styled.div`
   display: flex;
@@ -19,16 +21,16 @@ const MainContent = styled.div`
   overflow-y: auto;
 
   scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
+  scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 `;
 
 export const DashboardPage = () => {
-  const [isOpen, setIsOpen] = useState(false);
+  const { isInputVisible, setIsInputVisible } = useActions();
 
   return (  
     <>
-      {!isOpen ? (
-        <FloatingButton onClick={() => setIsOpen(prev => !prev)}>
+      {!isInputVisible ? (
+        <FloatingButton onClick={() => setIsInputVisible(true)}>
           <FaPen size={16} color='white' />
         </FloatingButton>
       ) : (
@@ -39,7 +41,7 @@ export const DashboardPage = () => {
         <MainContent>
           <Dashboard />
         </MainContent>
-        <SideBar isOpen={isOpen} setIsOpen={setIsOpen} />
+        <SideBar/>
       </PageLayout>
     </>
   );

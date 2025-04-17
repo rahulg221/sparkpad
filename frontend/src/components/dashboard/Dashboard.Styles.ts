@@ -18,42 +18,39 @@ export const Divider = styled.div`
 
 export const DashboardWrapper = styled.div`
   flex: 1;
-  min-height: 100vh;
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
+  height: auto;
+  padding-bottom: ${({ theme }) => theme.spacing.xl};
   padding-right: ${({ theme }) => theme.spacing.xl};
   padding-left: ${({ theme }) => theme.spacing.xl};
   width: 100%;
   background-color: ${({ theme }) => theme.colors.bgPure};
-  overflow-y: auto;
   
   h1 {
     color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
+  @media (max-width: 768px) {
+    padding-left: ${({ theme }) => theme.spacing.md};
+    padding-right: ${({ theme }) => theme.spacing.md};
   }
 `;
 
 export const Header = styled.div`
   display: flex;
+  width: 100%;
+  height: auto;
+  justify-content: start;
   align-items: center;
-  flex-wrap: wrap;
-  flex-direction: row;
-  gap: ${({ theme }) => theme.spacing.sm};
-  padding-top: ${({ theme }) => theme.spacing.sm};
-  padding-bottom: ${({ theme }) => theme.spacing.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.xl};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-
-  .text-label {
-    display: inline-block;
-    font-size: ${({ theme }) => theme.fontSize.xs};
-    font-weight: 400;
-    white-space: nowrap;
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-
-  @media (min-width: 768px) {
-    flex-wrap: nowrap;
-  }
 `;
 
+export const Title = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  h1 {
+    font-size: ${({ theme }) => theme.fontSize.lg};
+    margin: 0;
+    white-space: nowrap;
+  }
+`;

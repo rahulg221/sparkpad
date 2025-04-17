@@ -4,12 +4,13 @@ import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
     Header,
+    Title,
 } from './Dashboard.Styles';
 import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
-import { NoteCard, NoteContent, NoteInfo } from '../../styles/shared/Notes.styles';
+import { NoteCard, NoteContent, NoteInfo } from '../noteslist/NotesList.Styles';
 import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
@@ -19,8 +20,7 @@ import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
 import { Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
-import { FaArrowLeft } from 'react-icons/fa';
-import { FaFolderTree, FaGear } from 'react-icons/fa6';
+import { MdArrowBack } from 'react-icons/md';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { TreeView } from '../tree/Tree';
 import { Summary } from '../summary/Summary';
@@ -28,14 +28,24 @@ import { IoSparkles } from 'react-icons/io5';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
+
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
     const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification } = useActions();
-    const { isSummaryVisible } = useSummary();
-    const { currentCategory, showTree, setCurrentCategory, setShowTree } = useNotes();
+    const { isSummaryVisible, setIsSummaryVisible } = useSummary();
+    const { currentCategory, 
+            showTree, 
+            showRecentNotes, 
+            isNoteLoading,
+            searchResults,
+            setCurrentCategory, 
+            setShowTree, 
+            setShowRecentNotes,
+            setSearchResults,
+    } = useNotes();
+
     const navigate = useNavigate();
-    const [showRecentNotes, setShowRecentNotes] = useState(false);
-    const { isNoteLoading, searchResults, semanticSearch, setSearchResults } = useNotes();
+
 
     useEffect(() => {
         const runOAuthCallback = async () => {
@@ -77,6 +87,7 @@ export const Dashboard = () => {
     const handleBackClick = () => {
         setCurrentCategory('');
         setSearchResults([]);
+        setIsSummaryVisible(false);
         setShowTree(false);
     };
 
@@ -102,93 +113,100 @@ export const Dashboard = () => {
         setShowTree(true);
     };
 
+    const renderDashboardContent = () => {
+        if (showTree) {
+          return <TreeView showTree={showTree} />;
+        }
+      
+        if (searchResults.length > 0) {
+          return (
+            <>
+              <h1>Search Results</h1>
+              <ElevatedContainer width='100%' padding='lg'>
+                <Grid columns={1} $layoutMode='list'>
+                  {searchResults.map((note) => (
+                    <NoteCard key={note.id}>
+                      <NoteContent>
+                        <ReactMarkdown
+                          components={{
+                            ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                            li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                          }}
+                        >
+                          {note.content}
+                        </ReactMarkdown>
+                      </NoteContent>
+                      <NoteInfo>
+                        {note.category === 'Unsorted'
+                          ? 'Miscellaneous'
+                          : note.category.replace(/\*\*/g, '').split(' ').slice(0, 2).join(' ')}
+                        <br />
+                        {new Date(note.created_at!).toLocaleDateString('en-US', {
+                          month: 'short',
+                          day: 'numeric',
+                          hour: '2-digit',
+                          minute: '2-digit',
+                        })}
+                        <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                      </NoteInfo>
+                    </NoteCard>
+                  ))}
+                </Grid>
+              </ElevatedContainer>
+            </>
+          );
+        }
+      
+        return (
+          <>
+            {isSummaryVisible && 
+                <>
+                    <Spacer height='xl'/>
+                    <Summary />
+                </>
+            }
+            {showRecentNotes && (
+              <>
+                <Spacer height='xl'/>
+                <NotesRow />
+              </>
+            )}
+            {currentCategory ? (
+                <>
+                    <Spacer height='xl'/>
+                    <NotesList category={currentCategory} />
+                </>
+            ) : (
+              <>
+                {categories.length > 0 ? (
+                  <>
+                    <Spacer height='xl'/>
+                    <h1>My Sparkpads</h1>
+                  </>
+                ) : (
+                  <h1>Welcome to SparkPad!</h1>
+                )}
+                <NoteCategories handleCategoryClick={handleCategoryClick} />
+              </>
+            )}
+          </>
+        );
+      };      
+
     return (
         <DashboardWrapper>
             <Header>
-                <Row main="spaceBetween" cross="center" gap="md">
-                    {(showTree || currentCategory || searchResults.length > 0) && (
-                        <TextButton onClick={handleBackClick}>
-                            <Row main="center" cross="center" gap="sm">
-                                <FaArrowLeft size={14} />
-                                Back
-                            </Row>
-                        </TextButton>
-                    )}
-                    <SecondaryButton onClick={() => setShowRecentNotes(prev => !prev)}>
-                        <IoSparkles size={12} />
-                        {showRecentNotes ? <span className="text-label">Hide Recent</span> : <span className="text-label">View Recent</span>}
-                    </SecondaryButton>
-                </Row>
-                </Header>
-            {showTree ? (
-                <TreeView showTree={showTree} />
-            ) : searchResults.length > 0 ? (
-                <>
-                <h1>Search Results</h1>
-                <ElevatedContainer width='100%' padding='lg'>
-                    <Grid columns={1} $layoutMode='list'>
-                        {searchResults.map((note) => (
-                            <NoteCard key={note.id}>
-                            <NoteContent>
-                                <ReactMarkdown
-                                    components={{
-                                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                                    }}
-                                >
-                                    {note.content}
-                                </ReactMarkdown>
-                            </NoteContent>
-                                <NoteInfo>
-                                    {note.category == 'Unsorted' ? 'Miscellaneous' : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
-                                    <br/>
-                                    {new Date(note.created_at!).toLocaleDateString('en-US', {
-                                        month: 'short',
-                                        day: 'numeric',
-                                        hour: '2-digit',
-                                        minute: '2-digit',
-                                    })}
-                                    <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
-                                </NoteInfo>
-                            </NoteCard>
-                        ))}
-                    </Grid>
-                </ElevatedContainer>
-              </>
-            ) : (
-                <>
-                    {isLoading || isNoteLoading ? <LoadingSpinner/> : (
-                        <>  
-                            {isSummaryVisible ? 
-                                <Summary/>
-                             : null}
-                            {showRecentNotes ? 
-                                <>
-                                    <NotesRow/>
-                                    {/* Fix later */}
-                                    <Spacer height='lg'/>
-                                    <Spacer height='sm'/>
-                                </>
-                             : null}
-                            {currentCategory ? (
-                                <NotesList category={currentCategory} />
-                            ) : (
-                                <>
-                                    { categories.length > 0 ? (
-                                        <>
-                                            <h1>My Notepads</h1>
-                                            
-                                        </>
-                                    ) : (
-                                        <h1>Welcome to SparkPad!</h1>
-                                    )}
-                                    <NoteCategories handleCategoryClick={handleCategoryClick} />
-                                </>
-                            )}
-                        </>
-                    )}
-                </>
-            )}
+                {(showTree || currentCategory || searchResults.length > 0) && (
+                    <TextButton onClick={handleBackClick}>
+                        <Row main="start" cross="center">
+                            <MdArrowBack size={14} />
+                            <Spacer width='sm'/>
+                            Back
+                        </Row>
+                    </TextButton>
+                )}
+            </Header>
+            {renderDashboardContent()}
             {isSettingsVisible && (
                 <Modal
                     isOpen={true}

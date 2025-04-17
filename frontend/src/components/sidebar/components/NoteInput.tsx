@@ -25,7 +25,7 @@ export const NoteInput = ({
         rows={1}
       />
       <PrimaryButton type="submit" disabled={isLoading || noteLoading}>
-          {noteLoading ? 'Creating...' : 'Capture Spark'}
+          {noteLoading ? 'Capturing...' : 'Capture Spark'}
       </PrimaryButton>
   </TextBarForm>
 );

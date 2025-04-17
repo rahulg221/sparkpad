@@ -2,16 +2,14 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
-import { ElevatedContainer, Grid, Row, Spacer, VerticalDivider } from '../../styles/shared/BaseLayout';
-import { NoteCard, NoteContent, NoteInfo, NotePreview } from '../../styles/shared/Notes.styles';
+import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
+import { NoteCard, NoteInfo, NotePreview } from './NotesList.Styles';
 import { TrashIcon } from './NotesList.Styles';
-import { useActions } from '../../context/ActionsContext';
 import { TextButton } from '../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-import { FaList, FaTh } from 'react-icons/fa';
+import { FaBars, FaBorderAll } from 'react-icons/fa';
 
 interface NotesListProps {
   category: string;
@@ -22,9 +20,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const { setCurrentNotes } = useActions();
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
-  const [openNote, setOpenNote] = useState<Note | null>(null);
   const [page, setPage] = useState(1);
   const limit = 9;
 
@@ -37,7 +33,6 @@ export const NotesList = ({ category }: NotesListProps) => {
       try {
         setIsLoading(true);
         const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, offset);
-
 
         setNotes(visibleNotes);
         setIsLoading(false);
@@ -65,31 +60,32 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       <Row main="spaceBetween" cross="center" gap="sm">
         { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
-        {$layoutMode === 'grid' ? <FaList size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/> : <FaTh size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/>}
+        {$layoutMode === 'grid' ? <FaBars size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/> : <FaBorderAll size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/>}
       </Row>
-      <ElevatedContainer width='100%' padding='lg'>
+      <ElevatedContainer width='100%' padding='md'>
+      {notes.length === 0 && <h2>No notes found</h2>}
         { isLoading ? <LoadingSpinner /> :
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id}>
               <NotePreview>
-              <ReactMarkdown
-                components={{
-                  ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                  li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                }}
-              >
-                {note.content}
-              </ReactMarkdown>
+                <ReactMarkdown
+                  components={{
+                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                  }}
+                >
+                  {note.content}
+                </ReactMarkdown>
               </NotePreview>
               <NoteInfo>
-                  {new Date(note.created_at!).toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                  })}
-                  <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                {new Date(note.created_at!).toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  hour: '2-digit',
+                  minute: '2-digit',
+                })}
+                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
               </NoteInfo>
             </NoteCard>
           ))}

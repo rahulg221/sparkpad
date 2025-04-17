@@ -7,7 +7,7 @@ export const PrimaryButton = styled.button`
   background-color: ${({ theme }) => theme.colors.primary};
   color: ${({ theme }) => theme.colors.textSecondary};
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: ${({ theme }) => theme.fontSize.xs};
@@ -30,12 +30,12 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgDark};
   color: ${({ theme }) => theme.colors.textLight};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  height: 7.5vh;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  height: 6.5vh;
   width: ${({ width }) => width || '100%'};
   cursor: pointer;
   transition: all 0.2s ease;
-  font-size: ${({ theme }) => theme.fontSize.sm};
+  font-size: ${({ theme }) => theme.fontSize.xs};
   color: ${({ theme }) => theme.colors.textLight};
 
   display: flex;
@@ -110,16 +110,21 @@ export const FloatingButton = styled.button`
   }
 `;
 
-export const IconButton = styled.button`
+export const IconButton = styled.button<{ width?: string }>`
     background-color: transparent;
     color: ${({ theme }) => theme.colors.textLight};
     border: none;
     cursor: pointer; 
     padding: 0;
     margin: 0;
+    width: ${({ width }) => width || 'fit-content'};
+
+    &:focus {
+        outline: none;
+    }
 
     &:hover {
-        color: ${({ theme }) => theme.colors.primary};
+        color: ${({ theme }) => theme.colors.textPrimary};
     }
 `;
 

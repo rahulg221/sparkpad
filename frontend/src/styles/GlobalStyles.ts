@@ -33,8 +33,8 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h2 {
-    font-size: ${({ theme }) => theme.fontSize.xs};
-    color: ${({ theme }) => theme.colors.textLight};
+    font-size: ${({ theme }) => theme.fontSize.sm};
+    color: ${({ theme }) => theme.colors.textPrimary};
     font-weight: 400;
   }
 
