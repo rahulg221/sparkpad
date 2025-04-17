@@ -3,9 +3,9 @@ import { FaSearch } from 'react-icons/fa'; // Import search icon from react-icon
 
 // Update your SearchInput to include padding for the icon
 export const SearchInput = styled.input`
-  background-color: ${({ theme }) => theme.colors.bgDark};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: none;
   color: ${({ theme }) => theme.colors.textPrimary};
   font-size: ${({ theme }) => theme.fontSize.xs};
   font-family: inherit;
@@ -13,8 +13,8 @@ export const SearchInput = styled.input`
   padding-left: ${({ theme }) => theme.spacing.xxl};
 
   &:focus {
-    outline: 1px solid ${({ theme }) => theme.colors.primary};
-    border-color: ${({ theme }) => theme.colors.primary};
+    outline: none;
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 
   &::placeholder {

@@ -24,6 +24,7 @@ export const DashboardWrapper = styled.div`
   padding-left: ${({ theme }) => theme.spacing.xl};
   width: 100%;
   background-color: ${({ theme }) => theme.colors.bgPure};
+  overflow-y: auto;
   
   h1 {
     color: ${({ theme }) => theme.colors.textPrimary};

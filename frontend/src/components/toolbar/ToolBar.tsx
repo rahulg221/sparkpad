@@ -54,17 +54,17 @@ export const ToolBar = () => {
         <ToolBarContainer isCollapsed={isCollapsed}>
             <Column main="spaceBetween" cross="start">   
                 <Container width="100%">
-                    <Spacer height='lg' />
                     {!isCollapsed && <Row main="start" cross="center" gap="sm">
                         <IconWrapper>
                             <TbServerSpark size={20} />
                         </IconWrapper>
                         <h1 style={{ margin: 0, fontSize: '1.1rem'}}>Sparkpad</h1>
+                        <Spacer expand={true}/>
+                        <SecondaryButton onClick={() => setIsCollapsed(prev => !prev)} width="fit">
+                            <FaChevronLeft size={14} />
+                        </SecondaryButton>
                     </Row>}
-                    {isCollapsed && <IconWrapper>
-                        <TbServerSpark size={20}/>
-                    </IconWrapper>}
-                    <Spacer height='lg' />
+                    {isCollapsed && <SecondaryButton onClick={() => setIsCollapsed(prev => !prev)}><FaChevronRight size={14} /></SecondaryButton>}
                     {isCollapsed ? <SecondaryButton onClick={() => setIsCollapsed(prev => !prev)}><FaSearch size={14} /></SecondaryButton> : <SearchBar onSearch={handleSearch} />}
                     <SecondaryButton onClick={handleOrganizeClick}>
                         <FaWandMagicSparkles size={14} />
@@ -80,10 +80,6 @@ export const ToolBar = () => {
                     </SecondaryButton>
                 </Container>
                 <Container width="100%">
-                    <SecondaryButton onClick={() => setIsCollapsed(prev => !prev)}>
-                        {isCollapsed ? <FaChevronRight size={14} /> : <FaChevronLeft size={14} />}
-                        {isCollapsed ? null : 'Minimize'}
-                    </SecondaryButton>
                     <SecondaryButton onClick={handleSettingsClick}>
                         <FaGear size={14} />
                         {isCollapsed ? null : 'Settings'}

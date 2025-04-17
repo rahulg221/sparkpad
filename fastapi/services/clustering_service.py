@@ -174,8 +174,8 @@ class ClusteringService:
         elif n <= 50:
             return 2+factor, 1+factor
         elif n <= 100:
-            return 2+factor, 2+factor
+            return 3+factor, 3+factor
         elif n <= 300:
-            return 3+factor, 3+factor  
+            return 4+factor, 4+factor  
         else:
             return 5+factor, 5+factor  

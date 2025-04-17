@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Item, Icon, Circle } from '../_styles';
+import { Item, Icon, Circle } from '../SideBar.Styles';
 import { ItemCard } from '../../../styles/shared/Notes.styles';
 import { Column, Row } from '../../../styles/shared/BaseLayout';
 import { FaCalendar, FaClock } from 'react-icons/fa';

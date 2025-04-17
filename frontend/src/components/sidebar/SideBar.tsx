@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { SidebarContainer } from "./_styles";
+import { SidebarContainer } from "./SideBar.Styles";
 import { SidebarContent } from "./SidebarContent";
 import { useActions } from "../../context/ActionsContext";
 

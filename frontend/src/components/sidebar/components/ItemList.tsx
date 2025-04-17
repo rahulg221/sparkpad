@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Row, List } from "../../../styles/shared/BaseLayout";
 import { ItemCard } from "../../../styles/shared/Notes.styles.ts";
-import { Icon, Item, ListContainer, SummaryContainer } from "../_styles";
+import { Icon, Item, ListContainer, SummaryContainer } from "../SideBar.Styles.ts";
 import { FaCalendar, FaCheckCircle, FaLightbulb, FaThumbtack, FaChevronUp, FaChevronDown, FaRegCalendar } from "react-icons/fa";
 import { EmptyButton, IconButton } from "../../../styles/shared/Button.styles";
 import { CountdownTimer } from "./CountdownTimer";

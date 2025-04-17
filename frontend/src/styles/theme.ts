@@ -74,7 +74,7 @@ export const darkTheme = {
 export const lightTheme = {
   colors: {
   // Backgrounds
-  bgPure: '#ffffff',
+  bgPure: 'rgb(250, 250, 250)',
   bgDark: '#ffffff',                     // White app background
   bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
   bgLight: 'rgba(0, 0, 0, 0.05)',                    // Light gray for inputs, code blocks
@@ -91,7 +91,7 @@ export const lightTheme = {
   primaryDark: 'rgb(211, 177, 9)', // Transparent yellow for borders/glows
 
   // Accent (Highlight / Spark)
-  accent: 'rgb(198, 198, 198)',              // Bold yellow-gold for standout elements
+  accent: 'rgb(0, 0, 0)',              // Bold yellow-gold for standout elements
   accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
   accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 

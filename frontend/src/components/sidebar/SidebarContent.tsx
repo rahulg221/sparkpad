@@ -8,7 +8,7 @@ import { useAuth } from '../../context/AuthProvider';
 import { Row } from '../../styles/shared/BaseLayout';
 import { FaGear, FaNoteSticky, FaThumbtack, FaTimeline, FaPen } from 'react-icons/fa6';
 import { FaTimes } from 'react-icons/fa';
-import { Icon } from './_styles';
+import { Icon } from './SideBar.Styles';
 
 export const SidebarContent = () => {
   const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot} = useActions();

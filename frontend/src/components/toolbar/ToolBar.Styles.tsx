@@ -4,7 +4,7 @@ import { Container } from '../../styles/shared/BaseLayout';
 export const ToolBarContainer = styled(Container)<{ isCollapsed: boolean }>`
     background-color: ${({ theme }) => theme.colors.bgDark};
     border: 1px solid ${({ theme }) => theme.colors.border};
-    border-radius: ${({ theme }) => theme.borderRadius};
+    border-radius: 0;
     padding: ${({ theme }) => theme.spacing.md};
     transition: all 0.3s ease;
     width: ${({ isCollapsed }) => isCollapsed ? '4.5vw' : '18vw'};

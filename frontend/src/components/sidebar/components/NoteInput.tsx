@@ -1,4 +1,4 @@
-import { TextBarForm, TextInput } from '../_styles';
+import { TextBarForm, TextInput } from '../SideBar.Styles';
 import { PrimaryButton } from '../../../styles/shared/Button.styles';
 import { Stack } from '../../../styles/shared/BaseLayout';
 

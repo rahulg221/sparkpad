@@ -165,7 +165,9 @@ export const Dashboard = () => {
                             {showRecentNotes ? 
                                 <>
                                     <NotesRow/>
+                                    {/* Fix later */}
                                     <Spacer height='lg'/>
+                                    <Spacer height='sm'/>
                                 </>
                              : null}
                             {currentCategory ? (

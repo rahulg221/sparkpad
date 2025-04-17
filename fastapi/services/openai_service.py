@@ -115,7 +115,7 @@ class OpenAIService:
 
             Word Limit:
 
-            The total output must not exceed 300 words.
+            The total output must not exceed 150 words.
 
             Begin only with the first point. Here are the notes:
             ---  
@@ -124,7 +124,7 @@ class OpenAIService:
             """
 
         response = self.client.chat.completions.create(
-            model="gpt-3.5-turbo",
+            model="gpt-4o-mini",
             messages=[{"role": "user", "content": prompt}],
             temperature=0.0,
             max_tokens=1000,
