@@ -3,7 +3,7 @@ import { Container } from '../../styles/shared/BaseLayout';
 
 export const ToolBarContainer = styled(Container)<{ isToolBarCollapsed: boolean}>`
     background-color: ${({ theme }) => theme.colors.bgDark};
-    border: 1px solid ${({ theme }) => theme.colors.border};
+    border-right: 1px solid ${({ theme }) => theme.colors.border};
     border-radius: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     padding-left: ${({ theme }) => theme.spacing.md};

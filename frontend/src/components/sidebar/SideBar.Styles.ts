@@ -4,7 +4,7 @@ import { Container } from "../../styles/shared/BaseLayout";
 export const SidebarContainer = styled.div<{ isInputVisible: boolean }>`
   height: 100vh;
   background-color: ${({ theme }) => theme.colors.bgDark};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border-left: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding-bottom: ${({ theme }) => theme.spacing.xl};
