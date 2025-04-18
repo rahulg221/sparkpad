@@ -31,7 +31,7 @@ export const TreeNodeBox = styled.div<{ isCategory: boolean }>`
   width: 100%;
   height: 100%;
   padding: ${({ theme }) => theme.spacing.xs};
-  background-color: ${({ theme }) => theme.colors.treeNode};
+  background-color: ${({ theme }) => theme.colors.bgLight};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);

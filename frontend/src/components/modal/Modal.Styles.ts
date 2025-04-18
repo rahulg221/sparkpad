@@ -6,7 +6,7 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: ${({ theme }) => theme.colors.bgDark};
+  background-color: transparent;
   border: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   justify-content: center;
@@ -21,6 +21,7 @@ export const ModalContainer = styled.div`
   max-width: 900px;
   height: 60vh;                 
   background: ${({ theme }) => theme.colors.bgLight};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow: hidden;
 `;
@@ -45,11 +46,15 @@ export const ModalContent = styled.div`
   height: 50vh;              
   overflow-y: auto;
   padding: ${({ theme }) => theme.spacing.lg};
+
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgLight};
 `;
 
 export const ModalFooter = styled.div`
   margin-top: auto;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
+  height: 8vh;
   display: flex;
   justify-content: flex-end;
   align-items: center;

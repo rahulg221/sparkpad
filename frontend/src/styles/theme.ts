@@ -4,7 +4,7 @@ export const darkTheme = {
     bgPure: 'rgb(12, 12, 12)', // Pure black app background
     bgDark: 'rgb(18, 18, 18)',           // Most surfaces
     bgElevated: 'rgba(255, 255, 255, 0.03)', // Flexible surfaces
-    bgLight: 'rgba(255, 255, 255, 0.05)',          // Dark gray for inputs, blocks
+    bgLight: 'rgb(24, 24, 24)',          // Dark gray for inputs, blocks
     
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
@@ -77,7 +77,7 @@ export const lightTheme = {
   bgPure: 'rgb(245, 245, 245)',
   bgDark: 'rgb(250, 250, 250)',                     // White app background
   bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
-  bgLight: 'rgba(0, 0, 0, 0.05)',                    // Light gray for inputs, code blocks
+  bgLight: 'rgb(170, 170, 170)',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text

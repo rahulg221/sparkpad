@@ -33,7 +33,7 @@ import { Note } from '../../models/noteModel';
 import { CustomDropdown } from '../dropdown/Dropdown';
 import { ModalContent } from '../modal/Modal.Styles';
 import { SmallHeader } from '../toolbar/ToolBar.Styles';
-import { UpdateNoteModal } from '../modal/EditModal';
+import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
@@ -250,7 +250,6 @@ export const Dashboard = () => {
                     categories={categories}
                 />
             )}
-            
             {isSettingsVisible && (
                 <Modal
                     isOpen={true}
