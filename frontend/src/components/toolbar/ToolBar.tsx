@@ -63,7 +63,7 @@ export const ToolBar = () => {
     return (
         <ToolBarContainer isToolBarCollapsed={isToolBarCollapsed}>
             <Column main="spaceBetween" cross="start">   
-                <Container width="100%">
+                <Container width="100%" height="100%">
                     {!isToolBarCollapsed && <Spacer height='xl'/>}
                     {!isToolBarCollapsed && <Row main="start" cross="center" gap="sm">
                         <IconWrapper>

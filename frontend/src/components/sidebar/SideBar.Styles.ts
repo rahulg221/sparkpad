@@ -2,7 +2,7 @@ import { styled } from "styled-components";
 import { Container } from "../../styles/shared/BaseLayout";
 
 export const SidebarContainer = styled.div<{ isInputVisible: boolean }>`
-  height: 100vh;
+  height: 100dvh;
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-left: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 0;

@@ -11,7 +11,7 @@ import { Icon, SidebarContainer } from './SideBar.Styles';
 import { FaTimes } from 'react-icons/fa';
 import { IconButton } from '../../styles/shared/Button.styles';
 import { useNotes } from '../../context/NotesProvider';
-
+// Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
   const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents } = useActions();
   const [text, setText] = useState('');
@@ -20,6 +20,7 @@ export const SideBar = () => {
   const [noteLoading, setNoteLoading] = useState(false);
   const { isInputVisible, setIsInputVisible } = useActions();
   const { user } = useAuth();
+  const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,6 +47,10 @@ export const SideBar = () => {
       setShowNotification(true);
 
       setText('');
+
+      if (isMobile) {
+        setIsInputVisible(false);
+      }
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
     } finally {
