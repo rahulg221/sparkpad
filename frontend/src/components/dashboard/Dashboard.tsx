@@ -31,6 +31,9 @@ import { FaPen, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import { CustomDropdown } from '../dropdown/Dropdown';
+import { ModalContent } from '../modal/Modal.Styles';
+import { SmallHeader } from '../toolbar/ToolBar.Styles';
+import { UpdateNoteModal } from '../modal/EditModal';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
@@ -237,15 +240,17 @@ export const Dashboard = () => {
             )}
             {renderDashboardContent()}
             {isUpdateNoteOpen && (
-            <Modal
-                    isOpen={true}
+                <UpdateNoteModal
+                    isOpen={isUpdateNoteOpen}
                     onClose={() => setIsUpdateNoteOpen(false)}
                     onSave={() => handleUpdateNote(noteToUpdate!.id!)}
-                    title="Move Note"
-                >
-                <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
-                </Modal>
+                    noteContent={noteToUpdate?.content || ''}   
+                    newCategory={newCategory}
+                    setNewCategory={setNewCategory}
+                    categories={categories}
+                />
             )}
+            
             {isSettingsVisible && (
                 <Modal
                     isOpen={true}

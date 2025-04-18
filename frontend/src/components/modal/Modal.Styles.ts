@@ -17,9 +17,9 @@ export const ModalOverlay = styled.div`
 export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 90vw;
+  width: 60vw;
   max-width: 900px;
-  height: 80vh;                 
+  height: 60vh;                 
   background: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow: hidden;

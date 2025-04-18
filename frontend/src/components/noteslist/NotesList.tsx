@@ -16,6 +16,7 @@ import { ModalContent } from '../modal/Modal.Styles';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { CustomDropdown } from '../dropdown/Dropdown';
 import { useActions } from '../../context/ActionsContext';
+import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 
 interface NotesListProps {
   category: string;
@@ -139,18 +140,16 @@ export const NotesList = ({ category }: NotesListProps) => {
       </Row>
       <Spacer height='md' />
       {isUpdateNoteOpen && (
-          <Modal
-                isOpen={true}
-                onClose={() => setIsUpdateNoteOpen(false)}
-                onSave={() => handleUpdateNote(noteToUpdate!.id!)}
-                title="Edit Note"
-            >
-            <ModalContent>
-              <SmallHeader>Move to</SmallHeader>
-              <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
-            </ModalContent>
-          </Modal>
-        )}
+          <UpdateNoteModal
+              isOpen={isUpdateNoteOpen}
+              onClose={() => setIsUpdateNoteOpen(false)}
+              onSave={() => handleUpdateNote(noteToUpdate!.id!)}
+              noteContent={noteToUpdate?.content || ''}   
+              newCategory={newCategory}
+              setNewCategory={setNewCategory}
+              categories={categories}
+          />
+      )}
     </>
   );
 }; 
