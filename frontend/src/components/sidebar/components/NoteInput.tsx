@@ -6,12 +6,16 @@ export const NoteInput = ({
   text,
   isLoading,
   noteLoading,
+  writeInCurrentCategory,
+  currentCategory,
   setText,
   handleSubmit,
 }: {
   text: string;
   isLoading: boolean;
   noteLoading: boolean;
+  writeInCurrentCategory: boolean;
+  currentCategory: string;
   setText: (val: string) => void;
   handleSubmit: (e: React.FormEvent) => void;
 }) => (
@@ -20,7 +24,7 @@ export const NoteInput = ({
         as="textarea"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder="Capture the spark before it fades..."
+        placeholder={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write anything...'}
         disabled={isLoading}
         rows={1}
       />

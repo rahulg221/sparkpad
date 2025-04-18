@@ -15,41 +15,22 @@ export const ModalOverlay = styled.div`
 `;
 
 export const ModalContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.bgLight};
-  padding: ${({ theme }) => theme.spacing.md};
-  color: ${({ theme }) => theme.colors.textPrimary};
+  display: flex;
+  flex-direction: column;
+  width: 90vw;
+  max-width: 900px;
+  height: 80vh;                 
+  background: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-  width: 90%;
-  max-width: 35vw;
-  min-height: 75vh;
-  overflow-y: auto;
-  position: relative;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.bgLight};
-    border-radius: ${({ theme }) => theme.borderRadius.sm};
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.colors.border};
-    border-radius: ${({ theme }) => theme.borderRadius.sm};
-  }
-  
-  &::-webkit-scrollbar-thumb:hover {
-    background: ${({ theme }) => theme.colors.textLight};
-  }
+  overflow: hidden;
 `;
 
 export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.lg};
+  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-top: ${({ theme }) => theme.spacing.lg};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
 `;
 
@@ -60,13 +41,18 @@ export const ModalTitle = styled.h2`
 `;
 
 export const ModalContent = styled.div`
+  flex: 1 1 auto;
+  height: 50vh;              
+  overflow-y: auto;
   padding: ${({ theme }) => theme.spacing.lg};
 `;
 
 export const ModalFooter = styled.div`
-  padding: ${({ theme }) => theme.spacing.lg};
+  margin-top: auto;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing.md};
   gap: ${({ theme }) => theme.spacing.md};
 `;

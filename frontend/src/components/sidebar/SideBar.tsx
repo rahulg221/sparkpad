@@ -66,9 +66,11 @@ export const SideBar = () => {
         </IconButton>
       </Row>
       <NoteInput
-        text={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write anything...'}
+        text={text}
         isLoading={isLoading}
         noteLoading={noteLoading}
+        writeInCurrentCategory={writeInCurrentCategory}
+        currentCategory={currentCategory}
         setText={setText}
         handleSubmit={handleSubmit}
       />

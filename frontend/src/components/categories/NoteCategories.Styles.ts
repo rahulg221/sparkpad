@@ -27,7 +27,7 @@ export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isI
 export const CategoryBox = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.bgLight};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.sm};
   height: 20vh;
   width: 16vh;
@@ -50,8 +50,8 @@ export const CategoryBox = styled.div`
     height: 100%;
     background-color: black;
     z-index: 2;
-    border-top-left-radius: ${({ theme }) => theme.borderRadius.sm};
-    border-bottom-left-radius: ${({ theme }) => theme.borderRadius.sm};
+    border-top-left-radius: ${({ theme }) => theme.borderRadius.md};
+    border-bottom-left-radius: ${({ theme }) => theme.borderRadius.md};
   }
 
   /* Right paper edge (white strip) */

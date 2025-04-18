@@ -5,8 +5,8 @@ export const TreeContainer = styled.div`
     height: 80vh;
 
     .rd3t-link {
-    stroke: ${({ theme }) => theme.colors.border};
-    stroke-width: 1.5px;
+      stroke: ${({ theme }) => theme.colors.accent};
+      stroke-width: 1.5px;
     }
 
     .rd3t-node circle {

@@ -22,8 +22,8 @@ export const IconWrapper = styled.div`
   align-items: center;
   justify-content: center;
 
-  width: 28px;               
-  height: 28px;
+  width: 24px;               
+  height: 24px;
   border-radius: 50%;        
   background-color: ${({ theme }) => theme.colors.primary}; 
   color: black;       

@@ -59,7 +59,7 @@ export const TreeView = ({ showTree }: TreeViewProps) => {
   return (
     <>
       <Row main="spaceBetween" cross="center" gap="md">
-        <h1 style={{ margin: 0 }}>My Tree</h1>
+        <h1 style={{ margin: 0 }}>My Sparks</h1>
         <CustomDropdown value={numNotes} onChange={(val: number | string) => setNumNotes(val as number)} options={[15, 30, 45, 60, 75]} />
       </Row>
       <ScrollView direction="horizontal">

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
+import { SmallHeader } from '../../components/toolbar/ToolBar.Styles';
 import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
 import { NoteCard, NoteInfo, NotePreview, SmallIconButton } from './NotesList.Styles';
 import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
@@ -105,18 +106,16 @@ export const NotesList = ({ category }: NotesListProps) => {
                   minute: '2-digit',
                 })}
                 <Spacer expand={true} />
-                <>
-                  <SmallIconButton onClick={() => {
-                    setNoteToUpdate(note);
-                    setIsUpdateNoteOpen(true);
-                  }}>
-                    <FaPen size={14} />
-                  </SmallIconButton>
-                  <Spacer width='sm' />
-                  <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
-                    <FaTrash size={14} />
-                  </SmallIconButton>
-                </>
+                <SmallIconButton onClick={() => {
+                  setNoteToUpdate(note);
+                  setIsUpdateNoteOpen(true);
+                }}>
+                  <FaPen size={14} />
+                </SmallIconButton>
+                <Spacer width='sm' />
+                <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
+                  <FaTrash size={14} />
+                </SmallIconButton>
               </NoteInfo>
             </NoteCard>
           ))}
@@ -144,10 +143,13 @@ export const NotesList = ({ category }: NotesListProps) => {
                 isOpen={true}
                 onClose={() => setIsUpdateNoteOpen(false)}
                 onSave={() => handleUpdateNote(noteToUpdate!.id!)}
-                title="Move Note"
+                title="Edit Note"
             >
-            <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
-            </Modal>
+            <ModalContent>
+              <SmallHeader>Move to</SmallHeader>
+              <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
+            </ModalContent>
+          </Modal>
         )}
     </>
   );

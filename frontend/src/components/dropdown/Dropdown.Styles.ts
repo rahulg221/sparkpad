@@ -28,7 +28,7 @@ export const DropdownList = styled.ul`
   top: 100%;
   left: 0;
   width: 100%;
-  background: ${({ theme }) => theme.colors.bgElevated};
+  background: ${({ theme }) => theme.colors.bgLight};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   margin-top: 4px;
@@ -39,7 +39,7 @@ export const DropdownList = styled.ul`
 
 export const DropdownItem = styled.li`
   padding: 6px 10px;
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.textPrimary};
   cursor: pointer;
   transition: background 0.2s ease;
 

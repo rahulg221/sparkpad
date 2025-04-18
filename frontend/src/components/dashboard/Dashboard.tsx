@@ -27,13 +27,18 @@ import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
 import { Container } from '../../styles/shared/BaseLayout';
-import { FaTrash } from 'react-icons/fa';
+import { FaPen, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
+import { Note } from '../../models/noteModel';
+import { CustomDropdown } from '../dropdown/Dropdown';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
     const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification } = useActions();
     const { isSummaryVisible, setIsSummaryVisible } = useSummary();
+    const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
+    const [newCategory, setNewCategory] = useState('');
+    const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
     const { currentCategory, 
             showTree, 
             showRecentNotes, 
@@ -103,6 +108,15 @@ export const Dashboard = () => {
         }
     };
 
+    const handleUpdateNote = async (noteId: string) => {
+        try {
+          await NoteService.updateNote(noteId, newCategory);
+          setIsUpdateNoteOpen(false);
+        } catch (err) {
+          console.error('Error updating note:', err);
+        }
+    }
+
     const handleCalendarClick = async () => {
         try {
             const googleAuthUrl = await CalendarService.getGoogleAuthUrl();
@@ -118,21 +132,13 @@ export const Dashboard = () => {
           return <TreeView showTree={showTree} />;
         }
       
-        // Show loading spinner while notes are loading
-        if (isSearchLoading) {
-          return (
-            <Container width="100%" height="100%">
-              <LoadingSpinner />
-            </Container>
-          );
-        }
-      
         // Search results mode
         if (searchResults.length > 0) {
           return (
             <>
               <h1>Search Results</h1>
               <ElevatedContainer width="100%" padding="lg">
+                {isSearchLoading ? <LoadingSpinner /> :
                 <Grid columns={1} $layoutMode="list">
                   {searchResults.map((note) => (
                     <NoteCard key={note.id} $layoutMode="list">
@@ -157,13 +163,22 @@ export const Dashboard = () => {
                           hour: "2-digit",
                           minute: "2-digit",
                         })}
+                        <Spacer expand={true} />
+                        <SmallIconButton onClick={() => {
+                            setNoteToUpdate(note);
+                            setIsUpdateNoteOpen(true);
+                        }}>
+                        <FaPen size={14} />
+                        </SmallIconButton>
+                        <Spacer width='sm' />
                         <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
-                          <FaTrash size={14} />
+                        <FaTrash size={14} />
                         </SmallIconButton>
                       </NoteInfo>
                     </NoteCard>
                   ))}
                 </Grid>
+                }
               </ElevatedContainer>
             </>
           );
@@ -221,6 +236,16 @@ export const Dashboard = () => {
                     </TextButton>
             )}
             {renderDashboardContent()}
+            {isUpdateNoteOpen && (
+            <Modal
+                    isOpen={true}
+                    onClose={() => setIsUpdateNoteOpen(false)}
+                    onSave={() => handleUpdateNote(noteToUpdate!.id!)}
+                    title="Move Note"
+                >
+                <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
+                </Modal>
+            )}
             {isSettingsVisible && (
                 <Modal
                     isOpen={true}

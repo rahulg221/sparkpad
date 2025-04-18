@@ -24,9 +24,7 @@ export const Modal: React.FC<ModalProps> = ({
   onClose, 
   onSave,
   title, 
-  children, 
-  footer 
-}) => {
+  children}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
   // Close when clicking outside the modal
@@ -70,15 +68,10 @@ export const Modal: React.FC<ModalProps> = ({
         <ModalContent>
           {children}
         </ModalContent>
-        <Row main="center" cross="center" gap="md">
-            <TextButton onClick={onSave}>
-                <ModalContent>Save</ModalContent>
-            </TextButton>
-            <TextButton onClick={onClose}>
-                <ModalContent>Close</ModalContent>
-            </TextButton>
-        </Row>
-        {footer && <ModalFooter>{footer}</ModalFooter>}
+        <ModalFooter>
+          <TextButton onClick={onSave}>Save</TextButton>
+          <TextButton onClick={onClose}>Close</TextButton>
+        </ModalFooter>
       </ModalContainer>
     </ModalOverlay>,
     document.body
