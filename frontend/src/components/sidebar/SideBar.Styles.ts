@@ -16,7 +16,7 @@ export const SidebarContainer = styled.div<{ isInputVisible: boolean }>`
   align-items: ${({ isInputVisible }) => isInputVisible ? 'start' : 'center'};
 
   @media (max-width: 768px) {
-      width: ${({ isInputVisible }) => isInputVisible ? '220px' : '0px'};
+      width: ${({ isInputVisible }) => isInputVisible ? '100%' : '0px'};
   }
 `;
 
