@@ -1,5 +1,4 @@
 import styled from 'styled-components';
-import { IoClose } from 'react-icons/io5';
 
 export const ModalOverlay = styled.div`
   position: fixed;
@@ -17,12 +16,13 @@ export const ModalOverlay = styled.div`
 
 export const ModalContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.bgLight};
+  padding: ${({ theme }) => theme.spacing.md};
   color: ${({ theme }) => theme.colors.textPrimary};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
   width: 90%;
-  max-width: 500px;
-  max-height: 90vh;
+  max-width: 35vw;
+  min-height: 75vh;
   overflow-y: auto;
   position: relative;
 
@@ -57,28 +57,6 @@ export const ModalTitle = styled.h2`
   margin: 0;
   font-size: ${({ theme }) => theme.fontSize.lg};
   color: ${({ theme }) => theme.colors.textPrimary};
-`;
-
-export const CloseButton = styled.button`
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: ${({ theme }) => theme.spacing.sm};
-  border-radius: 50%;
-  color: ${({ theme }) => theme.colors.textLight};
-  transition: all 0.2s ease;
-
-  &:hover {
-    background-color: ${({ theme }) => theme.colors.bgLight};
-    color: ${({ theme }) => theme.colors.textPrimary};
-  }
-`;
-
-export const CloseIcon = styled(IoClose)`
-  font-size: 24px;
 `;
 
 export const ModalContent = styled.div`

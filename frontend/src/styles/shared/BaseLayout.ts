@@ -13,7 +13,7 @@ export const Container = styled.div<{
     height?: string, 
     width?: string,
     padding?: 'sm' | 'md' | 'lg',
-    margin?: 'sm' | 'md' | 'lg'
+    margin?: 'sm' | 'md' | 'lg',
 }>`
   background-color: transparent;
   padding: ${({ theme, padding }) => padding ? theme.spacing[padding] : '0'};
@@ -22,7 +22,6 @@ export const Container = styled.div<{
   height: ${({ height }) => height || 'auto'};
   width: ${({ width }) => width || 'auto'};
 `;
-
 
 export const ElevatedContainer = styled(Container)`
   background-color: ${({ theme }) => theme.colors.bgDark};

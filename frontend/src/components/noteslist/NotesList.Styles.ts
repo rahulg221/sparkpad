@@ -1,7 +1,7 @@
 import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
 
-export const TrashIcon = styled(MdDeleteOutline)`
+export const SmallIconButton = styled.div`
   width: 20px;
   height: 20px;
   color: ${({ theme }) => theme.colors.textLight};
@@ -13,12 +13,12 @@ export const TrashIcon = styled(MdDeleteOutline)`
   }
 `;
 
-export const NoteCard = styled.div`
+export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: auto;
-  min-height: 20vh;
+  min-height: 15vh;
   max-height: 30vh;
   width: 100%;
   margin-bottom: ${({ theme }) => theme.spacing.sm};
@@ -32,7 +32,9 @@ export const NoteCard = styled.div`
   }
 
   &:last-child {
-    border-bottom: none;
+    ${({ $layoutMode }) => $layoutMode === 'list' && `
+      border-bottom: none;
+    `}
   }
 
   @media (max-width: 768px) {
@@ -78,7 +80,7 @@ export const NoteInfo = styled.p`
   font-size: ${({ theme }) => theme.fontSize.xs};
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: start;
 `;
 
 export const NoteContent = styled.div`

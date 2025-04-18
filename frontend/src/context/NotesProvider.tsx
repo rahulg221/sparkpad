@@ -1,20 +1,26 @@
 import { createContext, ReactNode, useContext, useState } from "react";
 import { Note } from "../models/noteModel";
 import { NoteService } from "../api/noteService";
+import { useAuth } from "./AuthProvider";
+import { useActions } from "./ActionsContext";
 
 type NotesContextType = {
     currentNotes: Note[];
     currentCategory: string;
     searchResults: Note[];
-    isNoteLoading: boolean;
+    isSearchLoading: boolean;
+    isCategoriesLoading: boolean;
     showTree: boolean;
     showRecentNotes: boolean;
+    writeInCurrentCategory: boolean;
+    autoOrganizeNotes: () => void;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
     semanticSearch: (query: string) => void;
     setSearchResults: (results: Note[]) => void;
     setShowTree: (show: boolean) => void;
     setShowRecentNotes: (show: boolean) => void;
+    setWriteInCurrentCategory: (write: boolean) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
@@ -23,23 +29,46 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
     const [currentCategory, setCurrentCategory] = useState<string>(''); 
     const [searchResults, setSearchResults] = useState<Note[]>([]);  
-    const [isNoteLoading, setIsNoteLoading] = useState<boolean>(false);
+    const [isSearchLoading, setIsSearchLoading] = useState(false);
+    const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
     const [showTree, setShowTree] = useState<boolean>(false);
     const [showRecentNotes, setShowRecentNotes] = useState<boolean>(false);
+    const [writeInCurrentCategory, setWriteInCurrentCategory] = useState<boolean>(false);
+    const { user } = useAuth();
+    const { setNotificationMessage, setShowNotification } = useActions();
+
+    const autoOrganizeNotes = async () => {
+        try {
+            setIsCategoriesLoading(true);
+
+            const notes = await NoteService.getNotes(user?.id || '');
+            if (notes.length < 15) {
+                setNotificationMessage('You need at least 15 notes to auto-organize');
+                setShowNotification(true);
+                return;
+            }
+
+            await NoteService.groupAndLabelNotes(notes);
+            setIsCategoriesLoading(false);
+        } catch (err) {
+            setIsCategoriesLoading(false);
+            console.error('Error testing clustering:', err);
+        }
+    };
 
     const semanticSearch = async (query: string) => {
         try {
-            setIsNoteLoading(true);
+            setIsSearchLoading(true);
             const results = await NoteService.semanticSearch(query);
             setSearchResults(results);
-            setIsNoteLoading(false);
+            setIsSearchLoading(false);
         } catch (err) {
             console.error('Error semantic searching:', err);    
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isNoteLoading, showTree, showRecentNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes }}>{children}</NotesContext.Provider>;
-};
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, showTree, showRecentNotes, writeInCurrentCategory, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory }}>{children}</NotesContext.Provider>;
+};  
 
 export const useNotes = () => {
     const context = useContext(NotesContext);

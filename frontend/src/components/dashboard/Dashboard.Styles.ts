@@ -18,6 +18,7 @@ export const Divider = styled.div`
 
 export const DashboardWrapper = styled.div`
   flex: 1;
+  min-height: 100%;
   height: auto;
   padding-bottom: ${({ theme }) => theme.spacing.xl};
   padding-right: ${({ theme }) => theme.spacing.xl};
@@ -38,6 +39,8 @@ export const DashboardWrapper = styled.div`
 export const Header = styled.div`
   display: flex;
   width: 100%;
+  margin: 0;
+  padding: 0;
   height: auto;
   justify-content: start;
   align-items: center;

@@ -90,7 +90,7 @@ async def create_new_task(request: Request, request_body: Task, user=Depends(Aut
         raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
-@limiter.limit("10/day")
+@limiter.limit("25/day") # Lower this later
 async def cluster_notes(request: Request, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes

@@ -3,13 +3,18 @@ import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { NoteCard, NoteInfo, NotePreview } from './NotesList.Styles';
-import { TrashIcon } from './NotesList.Styles';
-import { TextButton } from '../../styles/shared/Button.styles';
-import { MdArrowBack, MdArrowForward } from 'react-icons/md';
+import { NoteCard, NoteInfo, NotePreview, SmallIconButton } from './NotesList.Styles';
+import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
+import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-import { FaBars, FaBorderAll } from 'react-icons/fa';
+import { FaBars, FaBorderAll, FaTrash } from 'react-icons/fa';
+import { FaPen } from 'react-icons/fa6';
+import { Modal } from '../modal/Modal';
+import { ModalContent } from '../modal/Modal.Styles'; 
+import { ThemeToggle } from '../themetoggle/ThemeToggle';
+import { CustomDropdown } from '../dropdown/Dropdown';
+import { useActions } from '../../context/ActionsContext';
 
 interface NotesListProps {
   category: string;
@@ -20,10 +25,14 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
+  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
-  const limit = 9;
-
+  const limit = 15;
+  const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
+  const [newCategory, setNewCategory] = useState('');
+  const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
+  const { categories } = useActions();
+  
   useEffect(() => {
     const fetchNotes = async () => {
       if (!user?.id) return;
@@ -56,6 +65,16 @@ export const NotesList = ({ category }: NotesListProps) => {
     }
   };
 
+  const handleUpdateNote = async (noteId: string) => {
+    try {
+      await NoteService.updateNote(noteId, newCategory);
+      setNotes(notes.filter(note => note.id !== noteId));
+      setIsUpdateNoteOpen(false);
+    } catch (err) {
+      console.error('Error updating note:', err);
+    }
+  }
+
   return (
     <>
       <Row main="spaceBetween" cross="center" gap="sm">
@@ -67,7 +86,7 @@ export const NotesList = ({ category }: NotesListProps) => {
         { isLoading ? <LoadingSpinner /> :
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
-            <NoteCard key={note.id}>
+            <NoteCard key={note.id} $layoutMode={$layoutMode}>
               <NotePreview>
                 <ReactMarkdown
                   components={{
@@ -85,7 +104,19 @@ export const NotesList = ({ category }: NotesListProps) => {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}
-                <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                <Spacer expand={true} />
+                <>
+                  <SmallIconButton onClick={() => {
+                    setNoteToUpdate(note);
+                    setIsUpdateNoteOpen(true);
+                  }}>
+                    <FaPen size={14} />
+                  </SmallIconButton>
+                  <Spacer width='sm' />
+                  <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
+                    <FaTrash size={14} />
+                  </SmallIconButton>
+                </>
               </NoteInfo>
             </NoteCard>
           ))}
@@ -93,7 +124,7 @@ export const NotesList = ({ category }: NotesListProps) => {
         }
       </ElevatedContainer>
       <Spacer height='md' />
-      <Row main='center' cross='center' gap='md'>
+      <Row main='center' cross='center'>
         <TextButton onClick={() => page > 1 ? setPage(page - 1) : null}>
           <Row main='center' cross='center' gap='sm'> 
             <MdArrowBack size={16} />
@@ -108,6 +139,16 @@ export const NotesList = ({ category }: NotesListProps) => {
         </TextButton>
       </Row>
       <Spacer height='md' />
+      {isUpdateNoteOpen && (
+          <Modal
+                isOpen={true}
+                onClose={() => setIsUpdateNoteOpen(false)}
+                onSave={() => handleUpdateNote(noteToUpdate!.id!)}
+                title="Move Note"
+            >
+            <CustomDropdown value={newCategory} onChange={(val: string | number) => setNewCategory(val as string)} options={categories} />
+            </Modal>
+        )}
     </>
   );
 }; 

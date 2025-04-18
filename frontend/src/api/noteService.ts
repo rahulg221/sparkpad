@@ -85,6 +85,15 @@ export class NoteService {
     }
   }
 
+  static async updateNote(noteId: string, category: string): Promise<string> {
+    try {
+      await supabase.from('notes').update({ category, created_at: new Date().toISOString() }).eq('id', noteId);
+      return 'Successfully updated note!';
+    } catch {
+      return 'Failed to update note';
+    }
+  }
+
   static async getNotes(userId: string, limit?: number): Promise<Note[]> {
     try {
       if (!limit) {

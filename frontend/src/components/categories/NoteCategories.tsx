@@ -1,11 +1,15 @@
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, IconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { Column, ElevatedContainer, Row } from '../../styles/shared/BaseLayout';
+import { Column, Row, Stack } from '../../styles/shared/BaseLayout';
 import { FaLightbulb, FaPlus, FaWandSparkles } from 'react-icons/fa6';
-import { FaCalendar, FaCheckCircle, FaSearch } from 'react-icons/fa';
+import { FaCalendar } from 'react-icons/fa';
+import { IoPencilOutline } from 'react-icons/io5';
+import { useNotes } from '../../context/NotesProvider';
+import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+import { Container } from '../../styles/shared/BaseLayout';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -13,8 +17,8 @@ interface NoteCategoriesProps {
 
 export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => {
   const { user } = useAuth();
-  const { categories, setCategories, isToolBarCollapsed, isInputVisible } = useActions();
-  const { setCurrentNotes } = useActions();
+  const { categories, setCategories, setIsInputVisible, isToolBarCollapsed, isInputVisible } = useActions();
+  const { setWriteInCurrentCategory, isCategoriesLoading } = useNotes();
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
   useEffect(() => {
@@ -31,6 +35,11 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
 
     fetchCategories();
   }, [user?.id]);
+
+  const handlePenClick = () => {
+    setIsInputVisible(true);
+    setWriteInCurrentCategory(true);
+  }
 
   return (
     <>
@@ -55,18 +64,29 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
         </Column>
       ) : (
         <CategoriesContainer isToolBarCollapsed={isToolBarCollapsed} isInputVisible={isInputVisible}>
-          {categories.map((category) => (
-            <div key={category}>
-            <CategoryBox onClick={() => handleCategoryClick(category)} />
+          {isCategoriesLoading ? (
+            <LoadingSpinner />
+          ) : (
+            <>
+              {categories.map((category) => (
+                <div key={category}>
+              <Stack onClick={() => handleCategoryClick(category)}>
+                  <CategoryBox></CategoryBox>
+                  <IconContainer onClick={handlePenClick}>
+                    <IoPencilOutline size={50} />
+                  </IconContainer>
+              </Stack>
               {category === "Unsorted" ? (
                 <h2>Miscellaneous</h2>
               ) : (
                 <CategoryTitle>
                   {category}
                 </CategoryTitle>
-              )}
-          </div>
-        ))}
+                )}
+              </div>
+            ))}
+            </>
+          )}
         </CategoriesContainer>
       )}
     </>

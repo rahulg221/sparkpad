@@ -57,7 +57,6 @@ export const SecondaryButton = styled.button<{ width?: string }>`
 `;
 
 export const TextButton = styled.button<{ width?: string }>`
-  padding: ${({ theme }) => theme.spacing.md};
   background-color: transparent;
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.sm};

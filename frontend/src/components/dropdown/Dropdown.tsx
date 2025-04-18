@@ -7,13 +7,13 @@ export const CustomDropdown = ({
   onChange,
   options,
 }: {
-  value: number;
-  onChange: (val: number) => void;
-  options: number[];
+  value: number | string;
+  onChange: (val: number | string) => void;
+  options: number[] | string[];
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
-  const handleSelect = (val: number) => {
+  const handleSelect = (val: number | string) => {
     onChange(val);
     setIsOpen(false);
   };
@@ -21,13 +21,14 @@ export const CustomDropdown = ({
   return (
     <DropdownWrapper>
       <DropdownHeader onClick={() => setIsOpen(prev => !prev)}>
-        Show {value} notes <FaChevronDown size={12} />
+        {typeof value === 'number' ? `${value} notes` : value}
+        <FaChevronDown size={12} />
       </DropdownHeader>
       {isOpen && (
         <DropdownList>
           {options.map((opt) => (
             <DropdownItem key={opt} onClick={() => handleSelect(opt)}>
-              Show {opt} notes
+              {typeof opt === 'number' ? `${opt} notes` : opt}
             </DropdownItem>
           ))}
         </DropdownList>

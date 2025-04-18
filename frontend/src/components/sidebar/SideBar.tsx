@@ -10,18 +10,16 @@ import { FaPen } from 'react-icons/fa6';
 import { Icon, SidebarContainer } from './SideBar.Styles';
 import { FaTimes } from 'react-icons/fa';
 import { IconButton } from '../../styles/shared/Button.styles';
+import { useNotes } from '../../context/NotesProvider';
 
 export const SideBar = () => {
-  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, getLastSnapshot} = useActions();
+  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents } = useActions();
   const [text, setText] = useState('');
+  const { currentCategory, writeInCurrentCategory } = useNotes();
   // Fix this? Not sure if this is meant to be from a provider
   const [noteLoading, setNoteLoading] = useState(false);
   const { isInputVisible, setIsInputVisible } = useActions();
   const { user } = useAuth();
-
-  useEffect(() => {
-    getLastSnapshot();
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +30,7 @@ export const SideBar = () => {
       const note: Note = {
         content: text.trim(),
         user_id: user?.id || '',
-        category: 'Unsorted',
+        category: writeInCurrentCategory ? currentCategory : 'Unsorted',
         cluster: -1,
       };
 
@@ -68,7 +66,7 @@ export const SideBar = () => {
         </IconButton>
       </Row>
       <NoteInput
-        text={text}
+        text={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write anything...'}
         isLoading={isLoading}
         noteLoading={noteLoading}
         setText={setText}

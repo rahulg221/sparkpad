@@ -12,9 +12,9 @@ import { TbServerSpark } from 'react-icons/tb';
 import { Circle } from '../sidebar/SideBar.Styles';
 
 export const ToolBar = () => {
-    const { autoOrganizeNotes, setIsSettingsVisible, setIsInputVisible, setIsToolBarCollapsed, isToolBarCollapsed } = useActions();
+    const { setIsSettingsVisible, setIsInputVisible, setIsToolBarCollapsed, isToolBarCollapsed } = useActions();
     const { createSummary, isSummaryVisible, setIsSummaryVisible } = useSummary();
-    const { showTree, semanticSearch, setShowTree, setShowRecentNotes } = useNotes();
+    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes } = useNotes();
 
     const handleSummaryClick = () => {
         if (!isSummaryVisible) {

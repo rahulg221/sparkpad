@@ -1,12 +1,11 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
-    bgPure: 'rgb(10, 10, 10)',
-    bgDark: 'rgb(19, 19, 19)',           // Pure black app background
-    bgElevated: 'rgba(255, 255, 255, 0.03)',
+    bgPure: 'rgb(12, 12, 12)', // Pure black app background
+    bgDark: 'rgb(18, 18, 18)',           // Most surfaces
+    bgElevated: 'rgba(255, 255, 255, 0.03)', // Flexible surfaces
     bgLight: 'rgba(255, 255, 255, 0.05)',          // Dark gray for inputs, blocks
     
-
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
     textLight: 'rgba(255, 255, 255, 0.75)',
@@ -14,25 +13,25 @@ export const darkTheme = {
     textSecondary: 'rgb(0, 0, 0)',
 
     // Primary color
-    primary: 'rgb(255, 230, 70)',            // Vibrant yellow (bright and energetic)
-    primaryHover: 'rgb(255, 236, 111)',       // Slightly lighter yellow for hover effect
+    primary: 'rgb(233, 217, 113)',            // Vibrant yellow (bright and energetic)
+    primaryHover: 'rgb(253, 241, 159)',       // Slightly lighter yellow for hover effect
     primaryLight: 'rgba(255, 214, 10, 0.1)', // Transparent yellow for borders/glows
     primaryDark: 'rgb(211, 177, 9)', // Transparent yellow for borders/glows
 
     // Accent (Highlight / Spark)
-    accent: 'rgb(255, 230, 70)',              // Bold yellow-gold for standout elements
+    accent: 'rgb(233, 217, 113)',              // Bold yellow-gold for standout elements
     accentHover: 'rgba(255, 221, 0, 0.4)',   // Glowing hover yellow
     accentLight: 'rgba(255, 221, 0, 0.1)',   // Light yellow for borders/glows
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
-    topNotePad: 'rgba(255, 255, 255, 0.1)',
+    topNotePad: 'rgb(255, 255, 255)',     
     treeNode: 'rgb(30, 30, 30)',
 
     // Semantic folder palette (flipped to work on dark)
     colorOne: 'rgb(255, 193, 7)',         // Stays bright for highlights
-    colorTwo: 'rgb(14, 14, 14)',         // Notepad background
-    colorThree: 'rgba(255, 255, 255, 0.2)',         // Dots and lines on notepad
+    colorTwo: 'transparent',             // Notepad background
+    colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: '#2a2a2a',        // Neutral dark base
 
     // Utility / Semantic

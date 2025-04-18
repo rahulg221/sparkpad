@@ -6,7 +6,7 @@ import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { useState, useEffect } from 'react';
 import Tree from 'react-d3-tree';
 import { TreeContainer, TreeNodeBox, TreeNodeContent } from './Tree.Styles';
-import { CustomDropdown } from './Dropdown';
+import { CustomDropdown } from '../dropdown/Dropdown';
 
 type TreeViewProps = {
   showTree: boolean;
@@ -60,7 +60,7 @@ export const TreeView = ({ showTree }: TreeViewProps) => {
     <>
       <Row main="spaceBetween" cross="center" gap="md">
         <h1 style={{ margin: 0 }}>My Tree</h1>
-        <CustomDropdown value={numNotes} onChange={setNumNotes} options={[15, 30, 45, 60, 75]} />
+        <CustomDropdown value={numNotes} onChange={(val: number | string) => setNumNotes(val as number)} options={[15, 30, 45, 60, 75]} />
       </Row>
       <ScrollView direction="horizontal">
         <Container width="100%">

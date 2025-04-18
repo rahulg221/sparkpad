@@ -11,6 +11,7 @@ const SpinnerWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: 100vw;
   height: 100%; 
 `;
 
@@ -19,7 +20,6 @@ const Spinner = styled.div`
   border: 3px solid ${({ theme }) => theme. colors.accent};
   border-top: 3px solid ${({ theme }) => theme.colors.bgElevated};
   border-radius: 50%;
-  margin: ${({ theme }) => theme.spacing.xxl};
   width: 30px;
   height: 30px;
   animation: ${spin} 1s linear infinite;

@@ -7,13 +7,13 @@ import { ActionsProvider } from './ActionsContext';
 export const AppProviders = ({ children }: { children: React.ReactNode }) => {
   return (
     <AuthProvider>
-      <NotesProvider>
-        <SummaryProvider>
-          <ActionsProvider>
+      <ActionsProvider>
+        <NotesProvider>
+          <SummaryProvider>
             {children}
-          </ActionsProvider>
-        </SummaryProvider>
-      </NotesProvider>
+          </SummaryProvider>
+        </NotesProvider>
+      </ActionsProvider>
     </AuthProvider>
   );
 };

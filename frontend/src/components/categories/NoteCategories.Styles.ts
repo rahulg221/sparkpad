@@ -26,9 +26,8 @@ export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isI
 
 export const CategoryBox = styled.div`
   position: relative;
-  background-color: ${({ theme }) => theme.colors.colorThree};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding: ${({ theme }) => theme.spacing.sm};
   height: 20vh;
   width: 16vh;
@@ -39,30 +38,57 @@ export const CategoryBox = styled.div`
   cursor: pointer;
   transition: all 0.2s ease;
   overflow: hidden;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
 
-  /* Simulate notepad lines */
-  background-image: repeating-linear-gradient(
-    to bottom,
-    ${({ theme }) => theme.colors.colorTwo},
-    ${({ theme }) => theme.colors.colorTwo} 14px,
-    rgba(255, 255, 255, 0.03) 15px
-  );
-
-  /* Thin light grey box at the top instead of dots */
+  /* Left binding (black spine) */
   &::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
-    height: 15px;
-    width: 100%;
-    background-color: ${({ theme }) => theme.colors.topNotePad};
+    width: 4px;
+    height: 100%;
+    background-color: black;
     z-index: 2;
+    border-top-left-radius: ${({ theme }) => theme.borderRadius.sm};
+    border-bottom-left-radius: ${({ theme }) => theme.borderRadius.sm};
+  }
+
+  /* Right paper edge (white strip) */
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 1px;
+    height: 100%;
+    background-color: white;
+    z-index: 1;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
   }
 
   &:hover {
-    transform: scale(1.03);
-    border: 1px solid ${({ theme }) => theme.colors.accent};
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+`;
+
+export const IconContainer = styled.div`
+  position: absolute;
+  top: 30px;
+  left: 30px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.accent};
+  padding: ${({ theme }) => theme.spacing.sm};
+  z-index: 3;
+  transition: all 0.2s ease;
+  &:hover {
+    transform: translateY(-4px);
   }
 `;
 

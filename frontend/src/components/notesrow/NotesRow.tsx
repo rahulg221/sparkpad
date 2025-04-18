@@ -4,13 +4,13 @@ import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { NoteInfo, NotePreview } from './NotesRow.Styles';
 import { NewNoteCard } from './NotesRow.Styles';
-import { TrashIcon } from '../noteslist/NotesList.Styles';
+import { SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
 import { Container } from '../../styles/shared/BaseLayout';
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { IconButton } from '../../styles/shared/Button.styles';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaTrash } from 'react-icons/fa';
 import { useNotes } from '../../context/NotesProvider';
 
 export const NotesRow = () => {
@@ -78,7 +78,9 @@ export const NotesRow = () => {
                               hour: '2-digit',
                               minute: '2-digit',
                               })}
-                              <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                              <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
+                                <FaTrash size={14} />
+                              </SmallIconButton>
                           </NoteInfo>
                       </NewNoteCard>
                   ))}

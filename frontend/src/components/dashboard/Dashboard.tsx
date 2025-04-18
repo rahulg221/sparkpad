@@ -10,8 +10,6 @@ import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
-import { NoteCard, NoteContent, NoteInfo } from '../noteslist/NotesList.Styles';
-import { TrashIcon } from '../noteslist/NotesList.Styles';
 import { Notification } from '../notif/Notification';
 import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
@@ -28,6 +26,9 @@ import { IoSparkles } from 'react-icons/io5';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
+import { Container } from '../../styles/shared/BaseLayout';
+import { FaTrash } from 'react-icons/fa';
+import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
@@ -36,12 +37,12 @@ export const Dashboard = () => {
     const { currentCategory, 
             showTree, 
             showRecentNotes, 
-            isNoteLoading,
             searchResults,
+            isSearchLoading,
             setCurrentCategory, 
             setShowTree, 
-            setShowRecentNotes,
             setSearchResults,
+            setWriteInCurrentCategory,
     } = useNotes();
 
     const navigate = useNavigate();
@@ -73,6 +74,7 @@ export const Dashboard = () => {
 
     const handleLogout = async () => {{}
         try {
+            handleBackClick();
             await signOut();
             navigate('/login', { replace: true });
         } catch (err) {
@@ -89,6 +91,7 @@ export const Dashboard = () => {
         setSearchResults([]);
         setIsSummaryVisible(false);
         setShowTree(false);
+        setWriteInCurrentCategory(false);
     };
 
     const handleDeleteNote = async (noteId: string) => {
@@ -109,23 +112,30 @@ export const Dashboard = () => {
         }
     };
 
-    const handleTreeClick = () => {
-        setShowTree(true);
-    };
-
     const renderDashboardContent = () => {
+        // Tree View overrides everything
         if (showTree) {
           return <TreeView showTree={showTree} />;
         }
       
+        // Show loading spinner while notes are loading
+        if (isSearchLoading) {
+          return (
+            <Container width="100%" height="100%">
+              <LoadingSpinner />
+            </Container>
+          );
+        }
+      
+        // Search results mode
         if (searchResults.length > 0) {
           return (
             <>
               <h1>Search Results</h1>
-              <ElevatedContainer width='100%' padding='lg'>
-                <Grid columns={1} $layoutMode='list'>
+              <ElevatedContainer width="100%" padding="lg">
+                <Grid columns={1} $layoutMode="list">
                   {searchResults.map((note) => (
-                    <NoteCard key={note.id}>
+                    <NoteCard key={note.id} $layoutMode="list">
                       <NoteContent>
                         <ReactMarkdown
                           components={{
@@ -137,17 +147,19 @@ export const Dashboard = () => {
                         </ReactMarkdown>
                       </NoteContent>
                       <NoteInfo>
-                        {note.category === 'Unsorted'
-                          ? 'Miscellaneous'
-                          : note.category.replace(/\*\*/g, '').split(' ').slice(0, 2).join(' ')}
+                        {note.category === "Unsorted"
+                          ? "Miscellaneous"
+                          : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
                         <br />
-                        {new Date(note.created_at!).toLocaleDateString('en-US', {
-                          month: 'short',
-                          day: 'numeric',
-                          hour: '2-digit',
-                          minute: '2-digit',
+                        {new Date(note.created_at!).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
                         })}
-                        <TrashIcon onClick={() => handleDeleteNote(note.id!)} />
+                        <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
+                          <FaTrash size={14} />
+                        </SmallIconButton>
                       </NoteInfo>
                     </NoteCard>
                   ))}
@@ -157,30 +169,33 @@ export const Dashboard = () => {
           );
         }
       
+        // Default dashboard view
         return (
           <>
-            {isSummaryVisible && 
-                <>
-                    <Spacer height='xl'/>
-                    <Summary />
-                </>
-            }
+            {isSummaryVisible && (
+              <>
+                <Spacer height="xl" />
+                <Summary />
+              </>
+            )}
+      
             {showRecentNotes && (
               <>
-                <Spacer height='xl'/>
+                <Spacer height="xl" />
                 <NotesRow />
               </>
             )}
+      
             {currentCategory ? (
-                <>
-                    <Spacer height='xl'/>
-                    <NotesList category={currentCategory} />
-                </>
+              <>
+                <Spacer height="xl" />
+                <NotesList category={currentCategory} />
+              </>
             ) : (
               <>
                 {categories.length > 0 ? (
                   <>
-                    <Spacer height='xl'/>
+                    <Spacer height="xl" />
                     <h1>My Sparkpads</h1>
                   </>
                 ) : (
@@ -191,12 +206,12 @@ export const Dashboard = () => {
             )}
           </>
         );
-      };      
+      };
+      
 
     return (
         <DashboardWrapper>
-            <Header>
-                {(showTree || currentCategory || searchResults.length > 0) && (
+            {(showTree || currentCategory || searchResults.length > 0) && (
                     <TextButton onClick={handleBackClick}>
                         <Row main="start" cross="center">
                             <MdArrowBack size={14} />
@@ -204,12 +219,12 @@ export const Dashboard = () => {
                             Back
                         </Row>
                     </TextButton>
-                )}
-            </Header>
+            )}
             {renderDashboardContent()}
             {isSettingsVisible && (
                 <Modal
                     isOpen={true}
+                    onSave={() => setIsSettingsVisible(false)}
                     onClose={() => setIsSettingsVisible(false)}
                     title="Settings"
                 >

@@ -4,17 +4,16 @@ import {
   ModalOverlay,
   ModalContainer,
   ModalHeader,
-  ModalTitle,
-  CloseButton,
-  CloseIcon,
   ModalContent,
   ModalFooter
 } from './Modal.Styles';
-import { EmptyButton, SecondaryButton } from '../../styles/shared/Button.styles';
+import { TextButton } from '../../styles/shared/Button.styles';
+import { Row } from '../../styles/shared/BaseLayout';
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
+  onSave: () => void;
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
@@ -23,6 +22,7 @@ interface ModalProps {
 export const Modal: React.FC<ModalProps> = ({ 
   isOpen, 
   onClose, 
+  onSave,
   title, 
   children, 
   footer 
@@ -70,9 +70,14 @@ export const Modal: React.FC<ModalProps> = ({
         <ModalContent>
           {children}
         </ModalContent>
-        <EmptyButton onClick={onClose}>
-            <ModalContent>Close</ModalContent>
-        </EmptyButton>
+        <Row main="center" cross="center" gap="md">
+            <TextButton onClick={onSave}>
+                <ModalContent>Save</ModalContent>
+            </TextButton>
+            <TextButton onClick={onClose}>
+                <ModalContent>Close</ModalContent>
+            </TextButton>
+        </Row>
         {footer && <ModalFooter>{footer}</ModalFooter>}
       </ModalContainer>
     </ModalOverlay>,
