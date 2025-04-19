@@ -1,6 +1,12 @@
+from dotenv import load_dotenv
 from fastapi import Request
-from imports import *
 import supabase
+import os
+import string
+import re
+from datetime import datetime, timedelta
+import calendar
+import pytz
 
 load_dotenv()
 
@@ -27,7 +33,7 @@ def preprocess_text(text: str) -> str:
     Returns:
         str: The preprocessed text.
     """
-    
+
     text = text.lower()
     text = text.translate(str.maketrans("", "", string.punctuation))
     text = " ".join(text.split())
