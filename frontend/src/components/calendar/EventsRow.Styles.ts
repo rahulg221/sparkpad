@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const NoteInfo = styled.div`
+export const EventInfo = styled.div`
   margin-top: ${({ theme }) => theme.spacing.sm};
   font-size: ${({ theme }) => theme.fontSize.xs};
   color: ${({ theme }) => theme.colors.textLight};
@@ -9,7 +9,7 @@ export const NoteInfo = styled.div`
   align-items: center;
 `;
 
-export const NewNoteCard = styled.div`
+export const EventCard = styled.div`
   background-color: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -32,7 +32,7 @@ export const NewNoteCard = styled.div`
   }
 `;
 
-export const NotePreview = styled.div`
+export const EventPreview = styled.div`
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
@@ -49,7 +49,7 @@ export const NotePreview = styled.div`
 
   opacity: 1;
 
-  ${NewNoteCard}:hover & {
+  ${EventCard}:hover & {
     -webkit-line-clamp: unset;
     display: block;
     overflow: visible;

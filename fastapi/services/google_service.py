@@ -148,7 +148,7 @@ class GoogleService:
         title = remove_filler_phrases(title)
 
         if not due_time:
-            return {"error": "Could not extract date and time"}
+            due_time = datetime.now().isoformat()
 
         eastern = pytz.timezone('America/New_York')
         due_datetime = datetime.fromisoformat(due_time)

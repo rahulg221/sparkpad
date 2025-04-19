@@ -48,7 +48,7 @@ export const NotesRow = () => {
   return (
     <>            
         <Row main="spaceBetween" cross="start">
-            <h1>My Sparks</h1>
+            <h1>Recent Sparks</h1>
             <IconButton onClick={() => setShowRecentNotes(false)}>
                 <FaTimes size={14} />
             </IconButton>

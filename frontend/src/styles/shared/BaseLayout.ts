@@ -98,8 +98,29 @@ export const ScrollView = styled.div<{
     scrollbar-width: thin;
     scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 
+    /* Hide scrollbar by default */
     &::-webkit-scrollbar {
-      display: none; /* Chrome, Safari, Edge */
+      width: 8px;
+      height: 8px;
+      background-color: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: transparent;
+      border-radius: 4px;
+    }
+
+    /* Show scrollbar on hover */
+    &:hover::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.border};
+    }
+
+    /* For Firefox */
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &:hover {
+      scrollbar-color: ${({ theme }) => theme.colors.border} transparent;
     }
 `;
 

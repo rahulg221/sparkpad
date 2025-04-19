@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Column, Container, Row, Spacer, Stack } from '../../styles/shared/BaseLayout';
-import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaSignOutAlt, FaPen} from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaSignOutAlt, FaPen, FaCalendar} from 'react-icons/fa';
 import { SecondaryButton, IconButton } from '../../styles/shared/Button.styles';
 import { IconWrapper, ToolBarContainer, SmallHeader } from './ToolBar.Styles';
 import { FaBook, FaClockRotateLeft, FaFolderTree, FaGear, FaTableColumns, FaTimeline, FaWandMagicSparkles, FaWindowMaximize, FaWindowMinimize, FaWindowRestore, FaWindows } from 'react-icons/fa6';
@@ -12,9 +12,9 @@ import { TbFileTextSpark, TbServerSpark } from 'react-icons/tb';
 import { Circle } from '../sidebar/SideBar.Styles';
 
 export const ToolBar = () => {
-    const { setIsSettingsVisible, setIsInputVisible, setIsToolBarCollapsed, isToolBarCollapsed } = useActions();
+    const { setIsSettingsVisible, setIsInputVisible, setIsToolBarCollapsed, isInputVisible, isToolBarCollapsed, setIsEventsVisible, isEventsVisible, setIsTasksVisible, isTasksVisible } = useActions();
     const { createSummary, isSummaryVisible, setIsSummaryVisible } = useSummary();
-    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes } = useNotes();
+    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes } = useNotes();
 
     const handleSummaryClick = () => {
         if (!isSummaryVisible) {
@@ -45,12 +45,36 @@ export const ToolBar = () => {
     };
 
     const handleRecentNotesClick = () => {
-        setShowRecentNotes(true);
+        if (showRecentNotes) {
+            setShowRecentNotes(false);
+        } else {
+            setShowRecentNotes(true);
+        }
     };
 
     const handleNewSparkClick = () => {
-        setIsInputVisible(true);
+        if (isInputVisible) {
+            setIsInputVisible(false);
+        } else {
+            setIsInputVisible(true);
+        }
     };  
+
+    const handleEventsClick = () => {
+        if (isEventsVisible) {
+            setIsEventsVisible(false);
+        } else {
+            setIsEventsVisible(true);
+        }
+    };
+
+    const handleTasksClick = () => {
+        if (isTasksVisible) {
+            setIsTasksVisible(false);
+        } else {
+            setIsTasksVisible(true);
+        }
+    };
 
     const handleToolBarClick = () => {
         if (isToolBarCollapsed) {
@@ -92,13 +116,21 @@ export const ToolBar = () => {
                         {isToolBarCollapsed ? null : 'Summarize'}
                     </SecondaryButton>
                     {!isToolBarCollapsed && <SmallHeader>Explore</SmallHeader>}
-                    <SecondaryButton onClick={handleVisualizeClick}>
-                        <FaFolderTree size={14} />
-                        {isToolBarCollapsed ? null : 'Tree'}
+                    <SecondaryButton onClick={handleTasksClick}>
+                        <FaCalendar size={14} />
+                        {isToolBarCollapsed ? null : 'Tasks'}
+                    </SecondaryButton>
+                    <SecondaryButton onClick={handleEventsClick}>
+                        <FaCalendar size={14} />
+                        {isToolBarCollapsed ? null : 'Events'}
                     </SecondaryButton>
                     <SecondaryButton onClick={handleRecentNotesClick}>
                         <FaTableColumns size={14} />
-                        {isToolBarCollapsed ? null : 'Panel'}
+                        {isToolBarCollapsed ? null : 'Recent'}
+                    </SecondaryButton>
+                    <SecondaryButton onClick={handleVisualizeClick}>
+                        <FaFolderTree size={14} />
+                        {isToolBarCollapsed ? null : 'Tree'}
                     </SecondaryButton>
                 </Container>
                 <Container width="100%">

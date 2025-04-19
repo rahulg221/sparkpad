@@ -11,12 +11,16 @@ type ActionsContextType = {
   updateTasks: () => void;
   updateEvents: () => void;
   setCategories: (categories: string[]) => void;    
+  setIsEventsVisible: (visible: boolean) => void;
+  setIsTasksVisible: (visible: boolean) => void;
   setIsSettingsVisible: (visible: boolean) => void;   
   setIsInputVisible: (visible: boolean) => void;        
   setIsToolBarCollapsed: (collapsed: boolean) => void;      
   isLoading: boolean;
   isInputVisible: boolean;
+  isEventsVisible: boolean;                                             
   isToolBarCollapsed: boolean;
+  isTasksVisible: boolean;
   notificationMessage: string;
   showNotification: boolean;
   categories: string[];
@@ -40,6 +44,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
     const [isInputVisible, setIsInputVisible] = useState(false);
     const [isToolBarCollapsed, setIsToolBarCollapsed] = useState(false);
+    const [isEventsVisible, setIsEventsVisible] = useState(false);
+    const [isTasksVisible, setIsTasksVisible] = useState(false);
 
     const updateTasks = async () => {
         console.log('updateTasks');
@@ -71,14 +77,15 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };     
 
     return (
-        <ActionsContext.Provider value={{ 
+        <ActionsContext.Provider value={{   
             setNotificationMessage, 
             setShowNotification, 
             setCurrentNotes, 
             setCategories, 
             setIsSettingsVisible,
+            setIsEventsVisible,
             isLoading, 
-            notificationMessage, 
+            notificationMessage,                
             showNotification, 
             categories, 
             calendarEvents, 
@@ -90,7 +97,10 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             isInputVisible,
             setIsInputVisible,
             isToolBarCollapsed,
-            setIsToolBarCollapsed
+            setIsToolBarCollapsed,
+            isEventsVisible,
+            isTasksVisible,
+            setIsTasksVisible,
         }}>
             {children}
         </ActionsContext.Provider>

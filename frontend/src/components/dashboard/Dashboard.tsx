@@ -3,8 +3,6 @@ import { useAuth } from '../../context/AuthProvider';
 import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
-    Header,
-    Title,
 } from './Dashboard.Styles';
 import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
@@ -34,10 +32,12 @@ import { CustomDropdown } from '../dropdown/Dropdown';
 import { ModalContent } from '../modal/Modal.Styles';
 import { SmallHeader } from '../toolbar/ToolBar.Styles';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
+import { EventsRow } from '../calendar/EventsRow';
+import { TasksRow } from '../calendar/TasksRow';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification } = useActions();
+    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible   } = useActions();
     const { isSummaryVisible, setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
@@ -51,6 +51,7 @@ export const Dashboard = () => {
             setShowTree, 
             setSearchResults,
             setWriteInCurrentCategory,
+            setShowRecentNotes,
     } = useNotes();
 
     const navigate = useNavigate();
@@ -92,6 +93,10 @@ export const Dashboard = () => {
 
     const handleCategoryClick = (category: string) => {
         setCurrentCategory(category);
+        setIsEventsVisible(false);
+        setIsTasksVisible(false);
+        setShowRecentNotes(false);    
+        setIsSummaryVisible(false);
     };
 
     const handleBackClick = () => {
@@ -196,6 +201,20 @@ export const Dashboard = () => {
                 <Summary />
               </>
             )}
+
+            {isTasksVisible && (
+              <>
+                <Spacer height="xl" />
+                <TasksRow />
+              </>
+            )}
+
+            {isEventsVisible && (
+              <>
+                <Spacer height="xl" />
+                <EventsRow />
+              </>
+            )}
       
             {showRecentNotes && (
               <>
@@ -214,7 +233,7 @@ export const Dashboard = () => {
                 {categories.length > 0 ? (
                   <>
                     <Spacer height="xl" />
-                    <h1>My Sparkpads</h1>
+                    <h1>Sparkpads</h1>
                   </>
                 ) : (
                   <h1>Welcome to SparkPad!</h1>
@@ -230,13 +249,13 @@ export const Dashboard = () => {
     return (
         <DashboardWrapper>
             {(showTree || currentCategory || searchResults.length > 0) && (
-                    <TextButton onClick={handleBackClick}>
-                        <Row main="start" cross="center">
-                            <MdArrowBack size={14} />
-                            <Spacer width='sm'/>
-                            Back
-                        </Row>
-                    </TextButton>
+              <TextButton onClick={handleBackClick}>
+                  <Row main="start" cross="center">
+                      <MdArrowBack size={14} />
+                      <Spacer width='sm'/>
+                      Back
+                  </Row>
+              </TextButton>
             )}
             {renderDashboardContent()}
             {isUpdateNoteOpen && (

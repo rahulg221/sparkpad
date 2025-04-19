@@ -14,7 +14,6 @@ from slowapi.errors import RateLimitExceeded
 from models import Notes, Note, Event, SimpleNote, Task
 import json
 
-
 load_dotenv()
 
 SUPABASE_URL = os.getenv("SUPABASE_URL")
@@ -165,7 +164,7 @@ async def semantic_search(request: Request, request_body: SimpleNote, user = Dep
     return results.data
 
 @app.get("/gettasks")
-@limiter.limit("10/minute")
+@limiter.limit("100/day")
 async def get_tasks(request: Request, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
@@ -179,7 +178,7 @@ async def get_tasks(request: Request, user=Depends(AuthService.get_current_user)
         raise HTTPException(status_code=500, detail="Failed to get tasks")
     
 @app.get("/getevents")
-@limiter.limit("10/minute")
+@limiter.limit("100/day")
 async def get_events(request: Request, user=Depends(AuthService.get_current_user)):
     auth_id = user["sub"]
 
@@ -193,7 +192,7 @@ async def get_events(request: Request, user=Depends(AuthService.get_current_user
         raise HTTPException(status_code=500, detail="Failed to get calendar events")
 
 @app.get("/auth/google/url")
-@limiter.limit("5/day")
+@limiter.limit("100/day")
 async def get_google_auth_url(request: Request, user=Depends(AuthService.get_current_user)):
     try:
         # Get the Google auth URL

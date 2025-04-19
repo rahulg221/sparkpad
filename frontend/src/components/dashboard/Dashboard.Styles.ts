@@ -35,25 +35,3 @@ export const DashboardWrapper = styled.div`
     padding-right: ${({ theme }) => theme.spacing.md};
   }
 `;
-
-export const Header = styled.div`
-  display: flex;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  height: auto;
-  justify-content: start;
-  align-items: center;
-`;
-
-export const Title = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  h1 {
-    font-size: ${({ theme }) => theme.fontSize.lg};
-    margin: 0;
-    white-space: nowrap;
-  }
-`;

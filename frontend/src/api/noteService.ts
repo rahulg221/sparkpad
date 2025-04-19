@@ -1,14 +1,12 @@
 import { supabase, getToken } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import CalendarMethods from './calendarService';
-import { useActions } from '../context/ActionsContext';
-import { CustomNotepad } from '../models/customNotepadModel';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class NoteService {    
   static async createCustomNotepad(userId: string, label: string): Promise<void> {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from('custom_notepads')
         .insert([{ user_id: userId, label }])
         .select();
@@ -54,11 +52,11 @@ export class NoteService {
       notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
 
       return notificationMessage;
-    } else if (NoteService.containsDateTime(note.content) && note.content.startsWith('/t')) {
+    } else if (note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
-    } else if (!(NoteService.containsDateTime(note.content) && (note.content.startsWith('/e') || note.content.startsWith('/t')))) {
+    } else if (!((note.content.startsWith('/e') || note.content.startsWith('/t')))) {
       try {
         const response = await fetch(`${API_URL}/embed`, {
           method: 'POST',
