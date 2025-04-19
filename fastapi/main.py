@@ -53,6 +53,11 @@ async def attach_user_to_request(request: Request, call_next):
 def main(user = Depends(AuthService.get_current_user)):
     return {"/label": "Clustering and labeling text.", "/event": "Creating a Google Calendar event.", "/summarize": "Producing a daily report."}
 
+#@app.on_event("startup")
+#async def init_centroids(request: Request, user=Depends(AuthService.get_current_user)):
+#    clustering_service = ClusteringService(user)
+#    clustering_service.generate_type_centroids()
+
 @app.options("/{full_path:path}")
 async def preflight_handler(full_path: str):
     return Response(status_code=200)

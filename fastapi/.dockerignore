@@ -1,6 +1,59 @@
+# Python cache files
 __pycache__/
 *.pyc
 *.pyo
-*.log
+*.pyd
+.Python
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+
+# Environment and local development
 .env
+.venv/
+testenv/
+env/
+venv/
+ENV/
+.python-version
+
+# Git
 .git/
+.gitignore
+
+# Editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Project specific
+*.log
+*.sqlite
+*.db
+*.ipynb
+.ipynb_checkpoints/
+
+# Large files and directories that might be in your project
+assets/
+data/
+models/
+*.pkl
+*.h5
+*.model
+*.bin
+
+# Documentation
+docs/
+*.md
+LICENSE
+
+# Testing
+test/
+tests/

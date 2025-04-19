@@ -2,9 +2,8 @@ from typing import List
 from services.openai_service import OpenAIService
 from models import Note
 from services.utils import parse_embedding, preprocess_text, supabase_client
-from sentence_transformers import SentenceTransformer
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics.pairwise import cosine_distances
+from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
 from sklearn.metrics import silhouette_score
 from dotenv import load_dotenv
@@ -12,7 +11,6 @@ import umap
 import hdbscan
 import numpy as np
 import pandas as pd
-import nltk
 import openai
 import os
 
@@ -49,7 +47,43 @@ class ClusteringService:
                 raise Exception("Note not found in database.")
             
         return {"success": "Database updated successfully"}
+    
+    def generate_type_centroids(self, examples: dict[str, list[str]]) -> dict[str, np.ndarray]:
+        """
+        Generates the centroids for the note types.
+        """
 
+        centroids = {}
+
+        for note_type, examples in examples.items():
+            # Get the embeddings for the examples
+            embeddings = [OpenAIService().generate_embeddings(example) for example in examples]
+
+            # Calculate the centroid of the embeddings
+            centroid = np.mean(embeddings, axis=0)
+            centroids[note_type] = centroid
+
+        return centroids
+
+    def generate_note_type(self, note_content: str, centroids: dict[str, np.ndarray]) -> str:
+        """
+        Generates a type for a note.
+        """
+
+        # Get the embeddings for the note
+        embedding = OpenAIService().generate_embeddings(note_content)
+
+        labels = list(centroids.keys())
+        centroid_matrix = np.array([centroids[label] for label in labels])
+
+        # Calculate the cosine similarity between the embedding and the centroids
+        similarities = cosine_similarity([embedding], centroid_matrix)[0]
+
+        # Get the label of the centroid with the highest similarity
+        note_type = labels[np.argmax(similarities)]
+
+        return note_type
+        
     def group_and_label_notes(self):
         """
         Groups notes into clusters and labels each cluster with a category.

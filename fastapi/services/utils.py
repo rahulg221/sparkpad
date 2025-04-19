@@ -17,34 +17,21 @@ def parse_embedding(note: dict) -> dict:
         note["embedding"] = json.loads(note["embedding"])
     return note
 
-def preprocess_text(note_content):
+def preprocess_text(text: str) -> str:
     """
     Preprocesses a given text by performing the following steps:
         1. Converts the text to lower case.
         2. Removes punctuation and extra spaces.
-        3. Removes stopwords.
-        4. Converts words to their base form using lemmatization.
     Args:
         text (str): The text to be preprocessed.
     Returns:
         str: The preprocessed text.
     """
-
-    # Convert to lower case
-    note_content = note_content.lower()  
-
-    # Remove punctuation, extra spaces, and stopwords
-    note_content = note_content.translate(str.maketrans("", "", string.punctuation))  
-    note_content = " ".join(note_content.split())  # Remove extra spaces
     
-    stop_words = set(stopwords.words("english"))
-    words = [word for word in note_content.split() if word not in stop_words]
-    
-    # Convert words to their base form
-    lemmatizer = WordNetLemmatizer()
-    note_content = " ".join([lemmatizer.lemmatize(word) for word in words])  
-
-    return note_content
+    text = text.lower()
+    text = text.translate(str.maketrans("", "", string.punctuation))
+    text = " ".join(text.split())
+    return text
 
 def extract_datetime(text, base_datetime=None):
     """
