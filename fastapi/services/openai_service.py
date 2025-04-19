@@ -3,6 +3,8 @@ from dotenv import load_dotenv
 import openai
 from services.utils import preprocess_text, get_category_examples
 import os
+import json
+
 load_dotenv()
 
 client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -48,7 +50,7 @@ class OpenAIService:
         )
 
         return res.choices[0].message.content.strip()
-
+    
     def generate_embeddings(self, note_content: str) -> list[float]:
         """
         Generates a semantic embedding for a single note.

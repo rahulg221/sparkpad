@@ -12,6 +12,8 @@ from dotenv import load_dotenv
 from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from models import Notes, Note, Event, SimpleNote, Task
+import json
+
 
 load_dotenv()
 
