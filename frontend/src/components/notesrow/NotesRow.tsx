@@ -17,7 +17,7 @@ export const NotesRow = () => {
   const [recentNotes, setRecentNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const { user } = useAuth();
-  const { setShowRecentNotes } = useNotes();
+  const { refreshNotes, setShowRecentNotes } = useNotes();
 
   useEffect(() => {
     const fetchRecentNotes = async () => {
@@ -34,7 +34,7 @@ export const NotesRow = () => {
     };
 
     fetchRecentNotes();
-  }, []);
+  }, [refreshNotes]);
 
   const handleDeleteNote = async (noteId: string) => {
     try {

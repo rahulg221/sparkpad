@@ -1,6 +1,6 @@
 import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
-
+import { Container } from "../../styles/shared/BaseLayout";
 export const SmallIconButton = styled.div`
   width: 20px;
   height: 20px;
@@ -13,61 +13,76 @@ export const SmallIconButton = styled.div`
   }
 `;
 
+export const NoteContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: auto;
+  background-color: transparent;
+`;  
+
 export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: auto;
-  min-height: 15vh;
-  max-height: 30vh;
   width: 100%;
-  margin-bottom: ${({ theme }) => theme.spacing.sm};
   padding: ${({ theme }) => theme.spacing.md};
-  background-color: transparent;
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  background-color: ${({ theme }) => theme.colors.bgDark};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  overflow: hidden;
+
+  max-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '25vh' : '30vh'};
+  transition: max-height 0.5s ease, border 0.3s ease;
 
   &:hover {
-    height: auto; 
-    border-bottom: 1px solid ${({ theme }) => theme.colors.accent};
-  }
-
-  &:last-child {
-    ${({ $layoutMode }) => $layoutMode === 'list' && `
-      border-bottom: none;
-    `}
+    max-height: 80vh;
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 
   @media (max-width: 768px) {
-    min-height: 15vh;
+    max-height: 15vh;
   }
 `;
 
-export const NotePreview = styled.div`
+export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   word-break: break-word;
   overflow-wrap: anywhere;
+  transition: all 0.4s ease-in-out;
 
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  ${({ $layoutMode }) =>
+    $layoutMode === 'grid' ?
+    `
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    ` :
+    `
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    `
+  }
 
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
-
-  &:hover {
+  ${NoteCard}:hover & {
     -webkit-line-clamp: unset;
+    display: block;
     overflow: visible;
-    text-overflow: clip;
+    text-overflow: unset;
   }
 
   .markdown-ul {
     padding-left: 1.2rem;
     list-style-type: disc;
-    margin: 0;
+    margin: 0.5rem 0;
   }
 
   .markdown-li {

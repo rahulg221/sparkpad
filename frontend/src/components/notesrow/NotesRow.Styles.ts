@@ -16,16 +16,19 @@ export const NewNoteCard = styled.div`
   margin-bottom: ${({ theme }) => theme.spacing.xl};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};
-  min-height: 20vh;
   width: 200px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
-  
+  overflow: hidden;
+
+  min-height: 20vh;
+  transition: max-height 0.5s ease, border 0.3s ease;
+
   &:hover {
-    height: auto; 
+    max-height: 80vh;
     border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 `;
@@ -43,13 +46,16 @@ export const NotePreview = styled.div`
   overflow: hidden;
   text-overflow: ellipsis;
 
-  transition: all 0.2s ease-in-out;
-  cursor: pointer;
+  transition: all 0.4s ease-in-out;
 
-  &:hover {
+  opacity: 1;
+
+  ${NewNoteCard}:hover & {
     -webkit-line-clamp: unset;
+    display: block;
     overflow: visible;
-    text-overflow: clip;
+    text-overflow: unset;
+    opacity: 1;
   }
 
   .markdown-ul {

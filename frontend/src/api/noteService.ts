@@ -2,10 +2,28 @@ import { supabase, getToken } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import CalendarMethods from './calendarService';
 import { useActions } from '../context/ActionsContext';
-
+import { CustomNotepad } from '../models/customNotepadModel';
 const API_URL = import.meta.env.VITE_API_URL;
 
-export class NoteService {      
+export class NoteService {    
+  static async createCustomNotepad(userId: string, label: string): Promise<void> {
+    try {
+      const { data, error } = await supabase
+        .from('custom_notepads')
+        .insert([{ user_id: userId, label }])
+        .select();
+
+      if (error) {
+        throw error;
+      }
+
+      return;
+    } catch (error) {
+      console.error('Failed to create custom notepad:', error);
+      return;
+    }
+  }
+
   static async getMostRecentNotes(userId: string, k: number = 5): Promise<Note[]> {
     try {
       const { data, error } = await supabase
@@ -87,7 +105,7 @@ export class NoteService {
 
   static async updateNote(noteId: string, category: string): Promise<string> {
     try {
-      await supabase.from('notes').update({ category, created_at: new Date().toISOString() }).eq('id', noteId);
+      await supabase.from('notes').update({ category }).eq('id', noteId);
       return 'Successfully updated note!';
     } catch {
       return 'Failed to update note';

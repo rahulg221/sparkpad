@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle, IconContainer } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, Icon, IconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
 import { Column, Row, Stack } from '../../styles/shared/BaseLayout';
 import { FaLightbulb, FaPlus, FaWandSparkles } from 'react-icons/fa6';
@@ -72,12 +72,14 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                 <div key={category}>
               <Stack onClick={() => handleCategoryClick(category)}>
                   <CategoryBox></CategoryBox>
-                  <IconContainer onClick={handlePenClick}>
-                    <IoPencilOutline size={50} />
+                  <IconContainer>
+                    <Icon onClick={handlePenClick}>
+                      <IoPencilOutline size={45} />
+                    </Icon>
                   </IconContainer>
               </Stack>
               {category === "Unsorted" ? (
-                <h2>Miscellaneous</h2>
+                <CategoryTitle>Miscellaneous</CategoryTitle>
               ) : (
                 <CategoryTitle>
                   {category}

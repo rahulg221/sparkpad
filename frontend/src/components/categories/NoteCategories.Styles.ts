@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isInputVisible: boolean }>`
   display: grid;
-  grid-template-columns:  repeat(4, 1fr);
+  grid-template-columns:  repeat(5, 1fr);
   align-items: center;
   justify-content: center;
   gap: ${({ theme }) => theme.spacing.lg};
@@ -29,8 +29,8 @@ export const CategoryBox = styled.div`
   background-color: ${({ theme }) => theme.colors.bgLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.sm};
-  height: 20vh;
-  width: 16vh;
+  height: 15vh;
+  width: 12vh;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -76,7 +76,7 @@ export const CategoryBox = styled.div`
 
 export const IconContainer = styled.div`
   position: absolute;
-  top: 30px;
+  top: 20px;
   left: 30px;
   width: 100%;
   height: 100%;
@@ -86,6 +86,10 @@ export const IconContainer = styled.div`
   color: ${({ theme }) => theme.colors.accent};
   padding: ${({ theme }) => theme.spacing.sm};
   z-index: 3;
+`;
+
+export const Icon = styled.div`
+  cursor: pointer;
   transition: all 0.2s ease;
   &:hover {
     transform: translateY(-4px);
@@ -93,6 +97,7 @@ export const IconContainer = styled.div`
 `;
 
 export const CategoryTitle = styled.h2`
+  font-size: ${({ theme }) => theme.fontSize.xxs};
   @media (max-width: 768px) {
     min-height: 3.6em;
   }

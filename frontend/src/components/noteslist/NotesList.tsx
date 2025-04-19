@@ -3,8 +3,8 @@ import { useAuth } from '../../context/AuthProvider';
 import { Note } from '../../models/noteModel';
 import { NoteService } from '../../api/noteService';
 import { SmallHeader } from '../../components/toolbar/ToolBar.Styles';
-import { ElevatedContainer, Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { NoteCard, NoteInfo, NotePreview, SmallIconButton } from './NotesList.Styles';
+import { Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
+import { NoteCard, NoteInfo, NotePreview, SmallIconButton, NoteContainer } from './NotesList.Styles';
 import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
@@ -17,6 +17,8 @@ import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { CustomDropdown } from '../dropdown/Dropdown';
 import { useActions } from '../../context/ActionsContext';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
+import { useNotes } from '../../context/NotesProvider';
+import remarkGfm from 'remark-gfm';
 
 interface NotesListProps {
   category: string;
@@ -29,33 +31,39 @@ export const NotesList = ({ category }: NotesListProps) => {
   const { user } = useAuth();
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
-  const limit = 15;
+  const [limit, setLimit] = useState(15);
   const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
+  const [totalNotes, setTotalNotes] = useState(0);
+  const [offset, setOffset] = useState(0);
   const { categories } = useActions();
+  const { refreshNotes } = useNotes();
   
   useEffect(() => {
-    const fetchNotes = async () => {
-      if (!user?.id) return;
-
-      const offset = (page - 1) * limit;
-
-      try {
-        setIsLoading(true);
-        const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, offset);
-
-        setNotes(visibleNotes);
-        setIsLoading(false);
-      } catch (err) {
-        setError('Failed to fetch notes');
-        console.error('Error fetching notes:', err);
-        setIsLoading(false);
-      } 
-    };
-
     fetchNotes();
-  }, [user?.id, page]);
+  }, [user?.id, page, refreshNotes, limit]);
+
+  const fetchNotes = async () => {
+    console.log('fetching notes');
+    if (!user?.id) return;
+
+    const count = await NoteService.getNotesCountByCategory(user.id, category);
+    setTotalNotes(count);
+    setOffset((page - 1) * limit);
+
+    try {
+      setIsLoading(true);
+      const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, offset);
+
+      setNotes(visibleNotes);
+      setIsLoading(false);
+    } catch (err) {
+      setError('Failed to fetch notes');
+      console.error('Error fetching notes:', err);
+      setIsLoading(false);
+    } 
+  };
 
   const handleDeleteNote = async (noteId: string) => {
     try {
@@ -77,20 +85,30 @@ export const NotesList = ({ category }: NotesListProps) => {
     }
   }
 
+  const handleLayoutMode = () => {
+    setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid');
+  }
+  
   return (
     <>
       <Row main="spaceBetween" cross="center" gap="sm">
-        { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
-        {$layoutMode === 'grid' ? <FaBars size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/> : <FaBorderAll size={14} onClick={() => setLayoutMode(prev => prev === 'grid' ? 'list' : 'grid')}/>}
+        <Row main='start' cross='center' gap='sm'>
+          { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
+        </Row>
+        <Row main='end' cross='center' gap='sm'>
+          <h2>{offset + 1} - {totalNotes > offset + limit ? offset + limit : totalNotes} of {totalNotes} sparks • Page {page}</h2>
+          {$layoutMode === 'grid' ? <FaBars size={14} onClick={handleLayoutMode}/> : <FaBorderAll size={14} onClick={handleLayoutMode}/>}
+        </Row>
       </Row>
-      <ElevatedContainer width='100%' padding='md'>
+      <NoteContainer>
       {notes.length === 0 && <h2>No notes found</h2>}
         { isLoading ? <LoadingSpinner /> :
         <Grid columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} $layoutMode={$layoutMode}>
-              <NotePreview>
+              <NotePreview $layoutMode={$layoutMode}>
                 <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
                   components={{
                     ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
                     li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
@@ -122,7 +140,7 @@ export const NotesList = ({ category }: NotesListProps) => {
           ))}
         </Grid>
         }
-      </ElevatedContainer>
+      </NoteContainer>
       <Spacer height='md' />
       <Row main='center' cross='center'>
         <TextButton onClick={() => page > 1 ? setPage(page - 1) : null}>

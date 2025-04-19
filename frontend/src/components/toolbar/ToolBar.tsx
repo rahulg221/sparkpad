@@ -8,7 +8,7 @@ import { useActions } from '../../context/ActionsContext';
 import { useSummary } from '../../context/SummaryProvider';
 import { SearchBar } from '../searchbar/SearchBar';
 import { useNotes } from '../../context/NotesProvider';
-import { TbServerSpark } from 'react-icons/tb';
+import { TbFileTextSpark, TbServerSpark } from 'react-icons/tb';
 import { Circle } from '../sidebar/SideBar.Styles';
 
 export const ToolBar = () => {
@@ -67,7 +67,7 @@ export const ToolBar = () => {
                     {!isToolBarCollapsed && <Spacer height='xl'/>}
                     {!isToolBarCollapsed && <Row main="start" cross="center" gap="sm">
                         <IconWrapper>
-                            <TbServerSpark size={14} />
+                            <TbFileTextSpark size={14} />
                         </IconWrapper>
                         <h1 style={{ margin: 0, fontSize: '1.1rem'}}>Sparkpad</h1>
                         <Spacer expand={true}/>

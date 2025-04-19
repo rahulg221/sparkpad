@@ -13,6 +13,7 @@ type NotesContextType = {
     showTree: boolean;
     showRecentNotes: boolean;
     writeInCurrentCategory: boolean;
+    refreshNotes: boolean;
     autoOrganizeNotes: () => void;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
@@ -21,6 +22,7 @@ type NotesContextType = {
     setShowTree: (show: boolean) => void;
     setShowRecentNotes: (show: boolean) => void;
     setWriteInCurrentCategory: (write: boolean) => void;
+    setRefreshNotes: (refresh: boolean) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
@@ -34,6 +36,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [showTree, setShowTree] = useState<boolean>(false);
     const [showRecentNotes, setShowRecentNotes] = useState<boolean>(false);
     const [writeInCurrentCategory, setWriteInCurrentCategory] = useState<boolean>(false);
+    const [refreshNotes, setRefreshNotes] = useState<boolean>(false);
     const { user } = useAuth();
     const { setNotificationMessage, setShowNotification } = useActions();
 
@@ -67,7 +70,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, showTree, showRecentNotes, writeInCurrentCategory, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory }}>{children}</NotesContext.Provider>;
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes }}>{children}</NotesContext.Provider>;
 };  
 
 export const useNotes = () => {

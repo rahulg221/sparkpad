@@ -6,7 +6,7 @@ export const ModalOverlay = styled.div`
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: transparent;
+  background-color: ${({ theme }) => theme.colors.overlay};
   border: 1px solid ${({ theme }) => theme.colors.border};
   display: flex;
   justify-content: center;
@@ -20,7 +20,7 @@ export const ModalContainer = styled.div`
   width: 60vw;
   max-width: 900px;
   height: 60vh;                 
-  background: ${({ theme }) => theme.colors.bgLight};
+  background: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow: hidden;

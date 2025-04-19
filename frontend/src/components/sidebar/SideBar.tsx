@@ -15,7 +15,7 @@ import { useNotes } from '../../context/NotesProvider';
 export const SideBar = () => {
   const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents } = useActions();
   const [text, setText] = useState('');
-  const { currentCategory, writeInCurrentCategory } = useNotes();
+  const { currentCategory, writeInCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
   // Fix this? Not sure if this is meant to be from a provider
   const [noteLoading, setNoteLoading] = useState(false);
   const { isInputVisible, setIsInputVisible } = useActions();
@@ -50,6 +50,13 @@ export const SideBar = () => {
 
       if (isMobile) {
         setIsInputVisible(false);
+      }
+
+      // Refresh notes when new note is added, listening for the refreshNotes state on NotesList
+      if (!refreshNotes) {
+        setRefreshNotes(true);
+      } else {
+        setRefreshNotes(false);
       }
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);

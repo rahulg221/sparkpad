@@ -7,10 +7,7 @@ import { useState, useEffect } from 'react';
 import Tree, { TreeNodeDatum } from 'react-d3-tree';
 import { TreeContainer, TreeNodeBox, TreeNodeContent } from './Tree.Styles';
 import { CustomDropdown } from '../dropdown/Dropdown';
-import { Modal } from '../modal/Modal';
 import { useActions } from '../../context/ActionsContext';
-import { ModalContent } from '../modal/Modal.Styles';
-import { SmallHeader } from '../toolbar/ToolBar.Styles';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 
 type TreeViewProps = {
@@ -43,7 +40,7 @@ export const TreeView = ({ showTree }: TreeViewProps) => {
 
     setIsLoading(true);
     try {
-      const notes = await NoteService.getNotes(user.id, numNotes);
+      const notes = await NoteService.getMostRecentNotes(user.id, numNotes);
 
       // Group notes by category
       const categoryMap = notes.reduce((acc: Record<string, any[]>, note: any) => {
@@ -103,7 +100,7 @@ export const TreeView = ({ showTree }: TreeViewProps) => {
                   zoom={zoom}
                   collapsible={false} // disabled
                   zoomable={true}
-                  separation={{ siblings: 0.5, nonSiblings: 2 }}
+                  separation={{ siblings: 0.5, nonSiblings: 1.5 }}
                   pathFunc="elbow"
                   depthFactor={250}
                   renderCustomNodeElement={({ nodeDatum }) => {

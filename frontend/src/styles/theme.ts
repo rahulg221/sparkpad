@@ -27,12 +27,13 @@ export const darkTheme = {
     dotColor: 'rgba(255, 255, 255, 0.1)',
     topNotePad: 'rgb(255, 255, 255)',     
     treeNode: 'rgb(30, 30, 30)',
+    overlay: 'rgba(0, 0, 0, 0.4)',
 
     // Semantic folder palette (flipped to work on dark)
     colorOne: 'rgb(255, 193, 7)',         // Stays bright for highlights
     colorTwo: 'transparent',             // Notepad background
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
-    colorFour: '#2a2a2a',        // Neutral dark base
+    colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
     // Utility / Semantic
     border: '#444444',           // Dark gray borders
@@ -74,10 +75,10 @@ export const darkTheme = {
 export const lightTheme = {
   colors: {
   // Backgrounds
-  bgPure: 'rgb(245, 245, 245)',
-  bgDark: 'rgb(250, 250, 250)',                     // White app background
+  bgPure: 'rgb(252, 252, 252)',
+  bgDark: 'rgb(255, 255, 255)',                     // White app background
   bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
-  bgLight: 'rgb(170, 170, 170)',                    // Light gray for inputs, code blocks
+  bgLight: 'rgb(234, 234, 234)',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text
@@ -100,12 +101,13 @@ export const lightTheme = {
   dotColor: 'rgba(0, 0, 0, 0.3)', 
   topNotePad: 'rgba(0, 0, 0, 0.9)',
   treeNode: 'rgb(235, 235, 235)',
+  overlay: 'rgba(0, 0, 0, 0.4)',
 
   // Semantic folder palette (light versions of the dark theme)
   colorOne: 'rgb(0, 0, 0)',                   // Highlight color
   colorTwo: 'rgb(255, 255, 255)',         // Notepad background
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
-  colorFour: '#fafafa',
+  colorFour: 'rgb(187, 187, 187)',
 
   // Utility / Semantic
   border: '#444444',           // Dark gray borders
