@@ -153,7 +153,7 @@ class ClusteringService:
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
         # Reduce dimensionality with UMAP
-        umap_reducer = umap.UMAP(n_components=10, metric="cosine", random_state=42)
+        umap_reducer = umap.UMAP(n_neighbors=15, metric="cosine", min_dist=0.0, random_state=42)
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
         # Dynamically select min_cluster_size and min_samples
@@ -207,10 +207,10 @@ class ClusteringService:
         if n <= 20:
             return 1+factor, 1
         elif n <= 50:
-            return 2+factor, 1+factor
+            return 4+factor, 4+factor
         elif n <= 100:
-            return 3+factor, 3+factor
+            return 6+factor, 6+factor
         elif n <= 300:
-            return 4+factor, 4+factor  
+            return 8+factor, 8+factor  
         else:
-            return 5+factor, 5+factor  
+            return 10+factor, 10+factor  
