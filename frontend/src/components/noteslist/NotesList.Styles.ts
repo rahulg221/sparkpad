@@ -31,7 +31,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.cardBackground};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 1px solid ${({ theme }) => theme.colors.cardColor};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   overflow: hidden;
 
   min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '20vh' : '35vh'};
@@ -39,7 +39,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
 
   &:hover {
     max-height: 80vh;
-    border: 1px solid ${({ theme }) => theme.colors.accent};
+    border: 1px solid ${({ theme }) => theme.colors.primary};
   }
 
   @media (max-width: 768px) {

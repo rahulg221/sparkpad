@@ -35,10 +35,10 @@ export const darkTheme = {
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
-    taskBackground: 'rgba(156, 168, 199, 0.1)',
-    eventBackground: 'rgba(191, 169, 201, 0.1)',
-    taskColor: 'rgb(156, 168, 199)',   // slate blue
-    eventColor: 'rgb(191, 169, 201)',  // dusty lavendar
+    taskBackground: 'rgb(18, 18, 18)',
+    eventBackground: 'rgb(18, 18, 18)',
+    taskColor: 'rgb(106, 146, 246)',   // slate blue
+    eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
     cardBackground: 'rgb(18, 18, 18)',
     cardColor: '#444444',
@@ -117,10 +117,10 @@ export const lightTheme = {
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
 
-  taskBackground: 'rgba(156, 168, 199, 0.1)',
-  eventBackground: 'rgba(191, 169, 201, 0.1)',
-  taskColor: 'rgb(156, 168, 199)',   // slate blue
-  eventColor: 'rgb(191, 169, 201)',  // dusty lavendar
+  taskBackground: 'rgba(201, 217, 255, 0.1)',
+  eventBackground: 'rgba(224, 201, 255, 0.1)',
+  taskColor: 'rgb(106, 146, 246)',   // slate blue
+  eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
   primarySurface: 'rgba(255, 214, 10, 0.1)',
   cardBackground: 'rgba(255, 214, 10, 0.1)',

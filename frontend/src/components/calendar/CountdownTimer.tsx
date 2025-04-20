@@ -4,7 +4,7 @@ import { ItemCard } from '../../styles/shared/Notes.styles';
 import { Column, Row } from '../../styles/shared/BaseLayout';
 import { FaCalendar, FaClock, FaTrash } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
-import { Card, CardInfo, CardPreview } from './EventsRow.Styles';
+import { Card, CardInfo, CardPreview } from './Calendar.Styles';
 import { NoteInfo } from '../notesrow/NotesRow.Styles';
 import { NotePreview } from '../notesrow/NotesRow.Styles';
 import { SmallIconButton } from '../noteslist/NotesList.Styles';
@@ -69,7 +69,7 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
 
   return (
     <Card type="event">
-      <CardPreview>
+      <CardPreview type="event">
           <ReactMarkdown>
             {eventInfo}
           </ReactMarkdown>

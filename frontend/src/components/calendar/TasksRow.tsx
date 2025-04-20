@@ -1,12 +1,12 @@
 import { useEffect, useState } from 'react';
-import { Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
+import { Column, Row, ScrollView, Spacer } from '../../styles/shared/BaseLayout';
 import { Container } from '../../styles/shared/BaseLayout';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { IconButton } from '../../styles/shared/Button.styles';
 import { FaTimes } from 'react-icons/fa';
 import { useTheme } from 'styled-components';
 import { useActions } from '../../context/ActionsContext';
-import { Card, CardPreview, CardInfo } from './EventsRow.Styles';
+import { Card, CardPreview, CardInfo, TaskContainer } from './Calendar.Styles';
 import ReactMarkdown from 'react-markdown';
 import { FaThumbtack } from 'react-icons/fa6';
 
@@ -14,6 +14,7 @@ export const TasksRow = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { setIsTasksVisible, updateTasks, tasks } = useActions();
   const theme = useTheme();
+
   useEffect(() => {
     const fetchTasks = async () => {
       setIsLoading(true);
@@ -32,35 +33,34 @@ export const TasksRow = () => {
 
   return (
     <>            
-        <Row main="spaceBetween" cross="start">
-            <h1>Upcoming Tasks</h1>
-            <IconButton onClick={() => setIsTasksVisible(false)}>
-                <FaTimes size={14} />
-            </IconButton>
-        </Row>
-          <ScrollView direction='horizontal'>
-              <Container width="100%">
-                {isLoading ? (
-                  <LoadingSpinner />
-                ) : (
-                  <Row main="start" cross="start" gap="md">
-                    {tasks.map(task => (
-                      <Card type="task">
-                        <CardPreview>
+        <ScrollView direction='vertical'>
+            <Row main="spaceBetween" cross="start">
+                <h1>Tasks</h1>
+                <IconButton onClick={() => setIsTasksVisible(false)}>
+                    <FaTimes size={14} />
+                </IconButton>
+            </Row>
+            <TaskContainer>
+              {isLoading ? (
+                <LoadingSpinner />
+              ) : (
+                <Column main="start" cross="start" gap="md">
+                  {tasks.map(task => (
+                    <Card type="task">
+                      <Row main="spaceBetween" cross="center">
+                        <CardPreview type="task">
                             <ReactMarkdown>
                                 {task}
-                            </ReactMarkdown>
+                          </ReactMarkdown>
                         </CardPreview>
-                        <CardInfo>
-                            <Spacer expand={true} />
-                            <FaThumbtack size={14} color={theme.colors.taskColor} />       
-                        </CardInfo>
-                      </Card>
-                    ))}
-                  </Row>
-            )}  
-          </Container>
-        </ScrollView>
+                        <FaThumbtack size={14} color={theme.colors.taskColor} />       
+                      </Row>
+                    </Card>
+                  ))}
+                </Column>
+          )}  
+        </TaskContainer>
+      </ScrollView>
     </>
   );
 };

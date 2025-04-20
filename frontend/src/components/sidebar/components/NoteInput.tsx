@@ -24,6 +24,12 @@ export const NoteInput = ({
         as="textarea"
         value={text}
         onChange={(e) => setText(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" && !e.shiftKey && text.trim() !== "") {
+            e.preventDefault();  
+            handleSubmit(e);  
+          }
+        }}
         placeholder={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write to the void...'}
         disabled={isLoading}
         rows={1}

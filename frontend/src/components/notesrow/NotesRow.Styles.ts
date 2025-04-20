@@ -11,7 +11,7 @@ export const NoteInfo = styled.div`
 
 export const NewNoteCard = styled.div`
   background-color: ${({ theme }) => theme.colors.cardBackground};
-  border: 1px solid ${({ theme }) => theme.colors.cardColor};
+  border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};

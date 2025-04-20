@@ -29,7 +29,7 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
+  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
@@ -42,6 +42,10 @@ export const NotesList = ({ category }: NotesListProps) => {
   
   useEffect(() => {
     fetchNotes();
+
+    if (window.innerWidth < 768) {
+      setLayoutMode('list');
+    }
   }, [user?.id, page, refreshNotes, limit]);
 
   const fetchNotes = async () => {

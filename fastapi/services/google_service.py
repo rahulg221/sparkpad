@@ -55,13 +55,17 @@ class GoogleService:
             tasklist=primary_tasklist_id,
             dueMax=next_week.isoformat(),
             showCompleted=False,
-            showDeleted=False
+            showDeleted=False,
         ).execute()
 
-        tasks = tasks_result.get("items", [])
+        sorted_tasks = sorted(
+            tasks_result.get("items", []),
+            key=lambda task: task.get("due", "")
+        )
+
         tasks_list = []
 
-        for task in tasks:
+        for task in sorted_tasks:
             title = task.get("title", "No Title")
             tasks_list.append(title)
 
