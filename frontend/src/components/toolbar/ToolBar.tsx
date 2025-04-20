@@ -115,6 +115,10 @@ export const ToolBar = () => {
                         <FaLightbulb size={14} />
                         {isToolBarCollapsed ? null : 'Summarize'}
                     </SecondaryButton>
+                    <SecondaryButton onClick={handleVisualizeClick} title="Visualize your sparks in a tree structure">
+                        <FaFolderTree size={14} />
+                        {isToolBarCollapsed ? null : 'Visualize'}
+                    </SecondaryButton>
                     {!isToolBarCollapsed && <SmallHeader>Explore</SmallHeader>}
                     <SecondaryButton onClick={handleTasksClick} title="View your Google Tasks">
                         <FaThumbtack size={14} />
@@ -127,10 +131,6 @@ export const ToolBar = () => {
                     <SecondaryButton onClick={handleRecentNotesClick} title="View your recent sparks">
                         <FaTableColumns size={14} />
                         {isToolBarCollapsed ? null : 'Recent'}
-                    </SecondaryButton>
-                    <SecondaryButton onClick={handleVisualizeClick} title="Visualize your sparks in a tree structure">
-                        <FaFolderTree size={14} />
-                        {isToolBarCollapsed ? null : 'Visualize'}
                     </SecondaryButton>
                 </Container>
                 <Container width="100%">

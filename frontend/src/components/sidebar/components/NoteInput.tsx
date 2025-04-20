@@ -24,7 +24,7 @@ export const NoteInput = ({
         as="textarea"
         value={text}
         onChange={(e) => setText(e.target.value)}
-        placeholder={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write anything...'}
+        placeholder={writeInCurrentCategory ? 'Writing in ' + currentCategory + '...' : 'Write to the void...'}
         disabled={isLoading}
         rows={1}
       />

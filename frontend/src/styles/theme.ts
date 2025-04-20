@@ -35,10 +35,13 @@ export const darkTheme = {
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
-    taskBackground: 'rgba(241, 85, 85, 0.05)',
-    eventBackground: 'rgba(97, 141, 224, 0.05)',
-    taskColor: 'rgb(244, 118, 118)',   // pastel coral
-    eventColor: 'rgb(128, 168, 241)',  // pastel blue
+    taskBackground: 'rgba(156, 168, 199, 0.1)',
+    eventBackground: 'rgba(191, 169, 201, 0.1)',
+    taskColor: 'rgb(156, 168, 199)',   // slate blue
+    eventColor: 'rgb(191, 169, 201)',  // dusty lavendar
+
+    cardBackground: 'rgb(18, 18, 18)',
+    cardColor: '#444444',
 
     // Utility / Semantic
     border: '#444444',           // Dark gray borders
@@ -80,10 +83,10 @@ export const darkTheme = {
 export const lightTheme = {
   colors: {
   // Backgrounds
-  bgPure: 'rgb(252, 252, 252)',
+  bgPure: 'rgb(255, 255, 255)',
   bgDark: 'rgb(255, 255, 255)',                     // White app background
   bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
-  bgLight: 'rgb(234, 234, 234)',                    // Light gray for inputs, code blocks
+  bgLight: 'rgb(238, 238, 238)',                    // Light gray for inputs, code blocks
 
   // Text colors
   textPrimary: '#0a0a0a',                // High-contrast black text
@@ -114,10 +117,14 @@ export const lightTheme = {
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
 
-  taskBackground: 'rgba(240, 46, 46, 0.05)',
-  eventBackground: 'rgba(53, 114, 228, 0.05)',
-  taskColor: 'rgb(240, 46, 46)',   // pastel coral
-  eventColor: 'rgb(53, 114, 228)',  // pastel blue
+  taskBackground: 'rgba(156, 168, 199, 0.1)',
+  eventBackground: 'rgba(191, 169, 201, 0.1)',
+  taskColor: 'rgb(156, 168, 199)',   // slate blue
+  eventColor: 'rgb(191, 169, 201)',  // dusty lavendar
+
+  primarySurface: 'rgba(255, 214, 10, 0.1)',
+  cardBackground: 'rgba(255, 214, 10, 0.1)',
+  cardColor: 'rgb(255, 214, 10)',
 
   // Utility / Semantic
   border: '#444444',           // Dark gray borders

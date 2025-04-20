@@ -5,7 +5,7 @@ import { Container } from "../../styles/shared/BaseLayout";
 export const SmallIconButton = styled.div`
   width: 20px;
   height: 20px;
-  color: ${({ theme }) => theme.colors.accent};
+  color: ${({ theme }) => theme.colors.textLight};
   cursor: pointer;
   transition: color 0.2s ease;
 
@@ -29,12 +29,12 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   height: auto;
   width: 100%;
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.bgDark};
+  background-color: ${({ theme }) => theme.colors.cardBackground};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  border: 1px solid ${({ theme }) => theme.colors.cardColor};
   overflow: hidden;
 
-  max-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '25vh' : '30vh'};
+  min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '20vh' : '35vh'};
   transition: max-height 0.5s ease, border 0.3s ease;
 
   &:hover {
@@ -59,14 +59,14 @@ export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
     $layoutMode === 'grid' ?
     `
       display: -webkit-box;
-      -webkit-line-clamp: 4;
+      -webkit-line-clamp: 7;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
     ` :
     `
       display: -webkit-box;
-      -webkit-line-clamp: 2;
+      -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;
