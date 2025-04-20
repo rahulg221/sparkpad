@@ -9,7 +9,7 @@ export const darkTheme = {
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
     textLight: 'rgba(255, 255, 255, 0.75)',
-    textFaint: 'rgba(255, 255, 255, 0.5)',
+    textFaint: 'rgba(255, 255, 255, 0.35)',
     textSecondary: 'rgb(0, 0, 0)',
 
     // Primary color
@@ -34,6 +34,11 @@ export const darkTheme = {
     colorTwo: 'transparent',             // Notepad background
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
+
+    taskBackground: 'rgba(241, 85, 85, 0.05)',
+    eventBackground: 'rgba(97, 141, 224, 0.05)',
+    taskColor: 'rgb(244, 118, 118)',   // pastel coral
+    eventColor: 'rgb(128, 168, 241)',  // pastel blue
 
     // Utility / Semantic
     border: '#444444',           // Dark gray borders
@@ -108,6 +113,11 @@ export const lightTheme = {
   colorTwo: 'rgb(255, 255, 255)',         // Notepad background
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
+
+  taskBackground: 'rgba(240, 46, 46, 0.05)',
+  eventBackground: 'rgba(53, 114, 228, 0.05)',
+  taskColor: 'rgb(240, 46, 46)',   // pastel coral
+  eventColor: 'rgb(53, 114, 228)',  // pastel blue
 
   // Utility / Semantic
   border: '#444444',           // Dark gray borders

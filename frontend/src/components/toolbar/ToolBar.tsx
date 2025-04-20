@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Column, Container, Row, Spacer, Stack } from '../../styles/shared/BaseLayout';
-import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaSignOutAlt, FaPen, FaCalendar} from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaSignOutAlt, FaPen, FaCalendar, FaThumbtack} from 'react-icons/fa';
 import { SecondaryButton, IconButton } from '../../styles/shared/Button.styles';
 import { IconWrapper, ToolBarContainer, SmallHeader } from './ToolBar.Styles';
 import { FaBook, FaClockRotateLeft, FaFolderTree, FaGear, FaTableColumns, FaTimeline, FaWandMagicSparkles, FaWindowMaximize, FaWindowMinimize, FaWindowRestore, FaWindows } from 'react-icons/fa6';
@@ -103,38 +103,38 @@ export const ToolBar = () => {
                     {isToolBarCollapsed && <SecondaryButton onClick={handleToolBarClick}><FaChevronRight size={14} /></SecondaryButton>}
                     {isToolBarCollapsed ? <SecondaryButton onClick={handleToolBarClick}><FaSearch size={14} /></SecondaryButton> : <SearchBar onSearch={handleSearch} />}
                     {!isToolBarCollapsed && <SmallHeader>Tools</SmallHeader>}
-                    <SecondaryButton onClick={handleNewSparkClick}>
+                    <SecondaryButton onClick={handleNewSparkClick} title="Capture a new spark">
                         <FaPen size={14} />
                         {isToolBarCollapsed ? null : 'Capture'}
                     </SecondaryButton>
-                    <SecondaryButton onClick={handleOrganizeClick}>
+                    <SecondaryButton onClick={handleOrganizeClick} title="Automatically organize your sparks into sparkpads">
                         <FaWandMagicSparkles size={14} />
                         {isToolBarCollapsed ? null : 'Organize'}
                     </SecondaryButton>
-                    <SecondaryButton onClick={handleSummaryClick}>
+                    <SecondaryButton onClick={handleSummaryClick} title="Summarize your sparks into a concise summary">
                         <FaLightbulb size={14} />
                         {isToolBarCollapsed ? null : 'Summarize'}
                     </SecondaryButton>
                     {!isToolBarCollapsed && <SmallHeader>Explore</SmallHeader>}
-                    <SecondaryButton onClick={handleTasksClick}>
-                        <FaCalendar size={14} />
+                    <SecondaryButton onClick={handleTasksClick} title="View your Google Tasks">
+                        <FaThumbtack size={14} />
                         {isToolBarCollapsed ? null : 'Tasks'}
                     </SecondaryButton>
-                    <SecondaryButton onClick={handleEventsClick}>
+                    <SecondaryButton onClick={handleEventsClick} title="View your Google Calendar events">
                         <FaCalendar size={14} />
                         {isToolBarCollapsed ? null : 'Events'}
                     </SecondaryButton>
-                    <SecondaryButton onClick={handleRecentNotesClick}>
+                    <SecondaryButton onClick={handleRecentNotesClick} title="View your recent sparks">
                         <FaTableColumns size={14} />
                         {isToolBarCollapsed ? null : 'Recent'}
                     </SecondaryButton>
-                    <SecondaryButton onClick={handleVisualizeClick}>
+                    <SecondaryButton onClick={handleVisualizeClick} title="Visualize your sparks in a tree structure">
                         <FaFolderTree size={14} />
-                        {isToolBarCollapsed ? null : 'Tree'}
+                        {isToolBarCollapsed ? null : 'Visualize'}
                     </SecondaryButton>
                 </Container>
                 <Container width="100%">
-                    <SecondaryButton onClick={handleSettingsClick}>
+                    <SecondaryButton onClick={handleSettingsClick} title="Configure your Sparkpad settings">
                         <FaGear size={14} />
                         {isToolBarCollapsed ? null : 'Settings'}
                     </SecondaryButton>

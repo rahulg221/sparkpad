@@ -1,10 +1,11 @@
 import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
 import { Container } from "../../styles/shared/BaseLayout";
+
 export const SmallIconButton = styled.div`
   width: 20px;
   height: 20px;
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.accent};
   cursor: pointer;
   transition: color 0.2s ease;
 
@@ -27,7 +28,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   justify-content: space-between;
   height: auto;
   width: 100%;
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.border};

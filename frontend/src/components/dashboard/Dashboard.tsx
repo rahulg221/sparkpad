@@ -93,10 +93,6 @@ export const Dashboard = () => {
 
     const handleCategoryClick = (category: string) => {
         setCurrentCategory(category);
-        setIsEventsVisible(false);
-        setIsTasksVisible(false);
-        setShowRecentNotes(false);    
-        setIsSummaryVisible(false);
     };
 
     const handleBackClick = () => {

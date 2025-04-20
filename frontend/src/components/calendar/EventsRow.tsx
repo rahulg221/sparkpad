@@ -17,7 +17,7 @@ export const EventsRow = () => {
       setIsLoading(true);
 
       try {
-        updateEvents();
+        await updateEvents();
       } catch (err) {
         console.error('Error fetching recent notes:', err);
       } finally {

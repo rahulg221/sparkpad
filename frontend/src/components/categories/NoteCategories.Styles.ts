@@ -4,14 +4,11 @@ export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isI
   display: grid;
   grid-template-columns:  repeat(5, 1fr);
   align-items: center;
-  justify-content: center;
-  gap: ${({ theme }) => theme.spacing.lg};
+  justify-content: start;
+  gap: ${({ theme }) => theme.spacing.xl};
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.bgDark};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => theme.spacing.xl};
+  background-color: transparent;
+  padding-top: ${({ theme }) => theme.spacing.lg};
 
   h2 {
     margin-top: ${({ theme }) => theme.spacing.md};
