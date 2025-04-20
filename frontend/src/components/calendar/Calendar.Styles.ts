@@ -31,6 +31,8 @@ export const EventContainer = styled.div`
   overflow-x: auto;
   overflow-y: hidden;
 
+  scrollbar-width: thin;
+
   &::-webkit-scrollbar {
     height: 8px;
   }
