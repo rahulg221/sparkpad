@@ -38,7 +38,7 @@ export const darkTheme = {
     taskBackground: 'rgb(18, 18, 18)',
     eventBackground: 'rgb(18, 18, 18)',
     taskColor: 'rgb(106, 146, 246)',   // slate blue
-    eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
+    eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
 
     cardBackground: 'rgb(18, 18, 18)',
     cardColor: '#444444',

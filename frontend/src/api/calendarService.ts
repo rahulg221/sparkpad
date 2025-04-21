@@ -34,7 +34,7 @@ export class CalendarService {
       if (!response.ok) {
         notificationMessage = 'Failed to create calendar event';
       } else {
-        notificationMessage = 'Calendar event created';
+        notificationMessage = `'${text.substring(3)}' has been added to your Google Calendar`;
       }
 
       return notificationMessage;
@@ -58,10 +58,16 @@ export class CalendarService {
         body: JSON.stringify({ note_content: text }),
       });
 
+      // Remove /e or /t from the beginning of the text if present
+      let newText = text;
+      if (text.startsWith('/e ') || text.startsWith('/t ')) {
+        newText = text.substring(3);
+      }
+
       if (!response.ok) {
         notificationMessage = 'Failed to create calendar task';
       } else {
-        notificationMessage = 'Calendar task created';
+        notificationMessage = `'${newText}' has been added to your Google Tasks`;
       }
 
       return notificationMessage;

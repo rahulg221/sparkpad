@@ -3,7 +3,7 @@ import { Column, Container, Row, Spacer, Stack } from '../../styles/shared/BaseL
 import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaSignOutAlt, FaPen, FaCalendar, FaThumbtack} from 'react-icons/fa';
 import { SecondaryButton, IconButton } from '../../styles/shared/Button.styles';
 import { IconWrapper, ToolBarContainer, SmallHeader } from './ToolBar.Styles';
-import { FaBook, FaClockRotateLeft, FaFolderTree, FaGear, FaTableColumns, FaTimeline, FaWandMagicSparkles, FaWindowMaximize, FaWindowMinimize, FaWindowRestore, FaWindows } from 'react-icons/fa6';
+import { FaBook, FaClock, FaClockRotateLeft, FaFolderTree, FaGear, FaTableColumns, FaTimeline, FaWandMagicSparkles, FaWindowMaximize, FaWindowMinimize, FaWindowRestore, FaWindows } from 'react-icons/fa6';
 import { useActions } from '../../context/ActionsContext';
 import { useSummary } from '../../context/SummaryProvider';
 import { SearchBar } from '../searchbar/SearchBar';
@@ -129,7 +129,7 @@ export const ToolBar = () => {
                         {isToolBarCollapsed ? null : 'Events'}
                     </SecondaryButton>
                     <SecondaryButton onClick={handleRecentNotesClick} title="View your recent sparks">
-                        <FaTableColumns size={14} />
+                        <FaClock size={14} />
                         {isToolBarCollapsed ? null : 'Recent'}
                     </SecondaryButton>
                 </Container>

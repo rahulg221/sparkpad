@@ -14,7 +14,7 @@ import {
     SuccessMessage
 } from './Auth.styles';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
-import { AuthService } from '../../api/authService';
+import { AuthService } from '../../api/userService';
 import { NoteService } from '../../api/noteService';
 
 export const SignUpForm = () => {

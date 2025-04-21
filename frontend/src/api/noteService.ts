@@ -26,7 +26,7 @@ export class NoteService {
     try {
       const { data, error } = await supabase
         .from('notes')
-        .select('*')
+        .select('id, content, category, created_at, user_id, cluster')
         .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(k);
@@ -83,9 +83,9 @@ export class NoteService {
           ])
           .select();
   
-        notificationMessage = 'Successfully added note!';
+        notificationMessage = 'Spark Captured!';
       } catch (error) {
-        notificationMessage = 'Failed to add note';
+        notificationMessage = 'Failed to capture Spark';
       }
     }
 
@@ -115,7 +115,7 @@ export class NoteService {
       if (!limit) {
         const { data } = await supabase
           .from('notes')
-          .select('*')
+          .select('id, content, category, created_at, user_id, cluster')
           .eq('user_id', userId)
           .order('created_at', { ascending: true });
 
@@ -123,7 +123,7 @@ export class NoteService {
       } else {
         const { data } = await supabase
           .from('notes')
-          .select('*')
+          .select('id, content, category, created_at, user_id, cluster')
           .eq('user_id', userId)
           .order('created_at', { ascending: true })
           .limit(limit);
@@ -229,6 +229,50 @@ export class NoteService {
     }
   }
 
+  static async getNotesForClustering(userId: string): Promise<Note[]> {
+    try {
+      // Fetch the user and get locked categories
+      const { data: user , error: userError } = await supabase
+        .from('users')
+        .select('locked_categories')
+        .eq('id', userId)
+        .single();
+  
+      if (userError) throw userError;
+  
+      const lockedCategories = user?.locked_categories || [];
+      console.log(lockedCategories);
+      // If no locked categories, fetch all notes
+      if (lockedCategories.length === 0) {
+        console.log("no locked categories");
+        const { data: notes, error: notesError } = await supabase
+          .from('notes')
+          .select('id, content, category, created_at, user_id, cluster')
+          .eq('user_id', userId)
+          .order('created_at', { ascending: true });
+  
+        if (notesError) throw notesError;
+
+        return notes || [];
+      }
+  
+      // If there are locked categories, exclude them
+      console.log("locked categories");
+      const { data: notes, error } = await supabase
+        .from('notes')
+        .select('id, content, category, created_at, user_id, cluster')
+        .eq('user_id', userId)
+        .not('category', 'in', `(${lockedCategories.map((cat: string) => `"${cat}"`).join(',')})`) // Converts to a string separated by commas for PostgreSQL
+        .order('created_at', { ascending: true });
+  
+      if (error) throw error;
+      return notes || [];
+    } catch (error) {
+      console.error('Failed to get notes for clustering:', error);
+      return [];
+    }
+  }  
+
   static async groupAndLabelNotes(notes: Note[]): Promise<void> {
     const token = await getToken();
     try {
@@ -311,7 +355,7 @@ export class NoteService {
     try {
       const { count, error } = await supabase
         .from('notes')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', userId);
 
     if (error) {
@@ -329,7 +373,7 @@ export class NoteService {
     try {
       const { count } = await supabase
         .from('notes')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('user_id', userId)
         .eq('category', category);
 

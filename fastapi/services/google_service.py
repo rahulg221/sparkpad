@@ -79,7 +79,7 @@ class GoogleService:
         # Set timezone (adjust to your user's time zone if needed)
         eastern = pytz.timezone("America/New_York")
         now = datetime.now(eastern)
-        limit = now + timedelta(days=3)
+        limit = now + timedelta(days=7)
 
         # Fetch events from now to 7 days from now
         events_result = self.calendar_service.events().list(

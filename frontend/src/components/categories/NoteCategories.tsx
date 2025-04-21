@@ -1,22 +1,22 @@
 import { useEffect } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle, Icon, IconContainer } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, PenIcon, PenIconContainer, LockIconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { Column, Row, Stack } from '../../styles/shared/BaseLayout';
-import { FaLightbulb, FaPlus, FaWandSparkles } from 'react-icons/fa6';
-import { FaCalendar } from 'react-icons/fa';
-import { IoPencilOutline } from 'react-icons/io5';
+import { Stack, Row } from '../../styles/shared/BaseLayout';
+import { IoPencilOutline, IoLockClosedOutline } from 'react-icons/io5';
 import { useNotes } from '../../context/NotesProvider';
+import { UserService } from '../../api/userService';
+import { FaLockOpen } from 'react-icons/fa6';
+import { FaLock } from 'react-icons/fa';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-import { Container } from '../../styles/shared/BaseLayout';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
 }
 
 export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => {
-  const { user } = useAuth();
+  const { user, lockedCategories, setLockedCategories } = useAuth();
   const { categories, setCategories, setIsInputVisible, isToolBarCollapsed, isInputVisible } = useActions();
   const { setWriteInCurrentCategory, isCategoriesLoading } = useNotes();
   const iconSize = window.innerWidth < 768 ? 22 : 16;
@@ -34,63 +34,58 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
     };
 
     fetchCategories();
-  }, [user?.id]);
+  }, [user?.id, isCategoriesLoading, lockedCategories]);
 
   const handlePenClick = () => {
     setIsInputVisible(true);
     setWriteInCurrentCategory(true);
   }
 
+  const handleAddLockedCategory = async (category: string) => {
+    if (!user?.id) return;
+    await UserService.updateLockedCategory(user.id, category);
+    setLockedCategories(lockedCategories.includes(category) ? lockedCategories.filter((c: string) => c !== category) : [...lockedCategories, category]);
+  }   
+
   return (
     <>
-      { categories.length === 0 ? (
-        <Column main='start' cross='start' gap='lg' padding='lg'>
-          <Row main='start' cross='start' gap='md'>
-            <FaPlus size={iconSize} /> 
-            <h2>Use the side bar to create your first note and view tasks, events, and summaries.</h2>
-          </Row>
-          <Row main='start' cross='start' gap='md'>
-            <FaCalendar size={iconSize} /> 
-            <h2>Start your note with /e or /t to create a new calendar event or task with natural language.</h2>
-          </Row>
-          <Row main='start' cross='start' gap='md'>
-            <FaWandSparkles size={iconSize} /> 
-            <h2>Click Organize after adding at least 15 notes to automatically organize them into notepads.</h2>
-          </Row>
-          <Row main='start' cross='start' gap='md'>
-            <FaLightbulb size={iconSize} /> 
-            <h2>Click Summarize to get insights from your last 50 notes.</h2>
-          </Row>
-        </Column>
-      ) : (
-        <CategoriesContainer isToolBarCollapsed={isToolBarCollapsed} isInputVisible={isInputVisible}>
-          {isCategoriesLoading ? (
-            <LoadingSpinner />
-          ) : (
+      <CategoriesContainer isToolBarCollapsed={isToolBarCollapsed} isInputVisible={isInputVisible}>
             <>
-              {categories.map((category) => (
+            {isCategoriesLoading ? (
+              <LoadingSpinner />
+            ) : (
+              categories.map((category) => (
                 <div key={category}>
-              <Stack onClick={() => handleCategoryClick(category)}>
-                  <CategoryBox></CategoryBox>
-                  <IconContainer>
-                    <Icon onClick={handlePenClick}>
-                      <IoPencilOutline size={45} />
-                    </Icon>
-                  </IconContainer>
-              </Stack>
-              {category === "Unsorted" ? (
-                <CategoryTitle>Miscellaneous</CategoryTitle>
-              ) : (
-                <CategoryTitle>
-                  {category}
-                </CategoryTitle>
-                )}
-              </div>
-            ))}
+                <Stack onClick={() => handleCategoryClick(category)}>
+                    <CategoryBox></CategoryBox>
+                    <PenIconContainer>
+                      <PenIcon onClick={handlePenClick}>
+                        <IoPencilOutline size={45} />
+                      </PenIcon>
+                    </PenIconContainer>
+                </Stack>
+                  {category === "Unsorted" ? (
+                    <CategoryTitle>Void</CategoryTitle>
+                  ) : (
+                    <CategoryTitle >
+                        {category}
+                        {lockedCategories.includes(category) ?   (
+                          <LockIconContainer title="Lock a category to prevent it from being moved during organizing" onClick={() => handleAddLockedCategory(category)}>
+                            <FaLock size={14} />
+                          </LockIconContainer>
+                        ) : (
+                          <LockIconContainer title="Unlock a category to allow it to be moved during organizing" onClick={() => handleAddLockedCategory(category)}>
+                            <FaLockOpen size={14} />
+                          </LockIconContainer>
+                        )}
+                    </CategoryTitle>
+                    )}
+              </div>  
+            ))
+            )}
             </>
-          )}
-        </CategoriesContainer>
-      )}
-    </>
+      </CategoriesContainer>    
+          
+    </> 
   );
 };

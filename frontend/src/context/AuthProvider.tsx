@@ -1,5 +1,5 @@
 import { createContext, useContext, ReactNode, useState, useEffect } from 'react';
-import { AuthService } from '../api/authService';
+import { UserService } from '../api/userService';
 import { User } from '../models/userModel';
 import CalendarService from '../api/calendarService';
 
@@ -7,6 +7,8 @@ interface AuthContextType {
     user: User | null;
     isLoading: boolean;
     isGoogleConnected: boolean;
+    lockedCategories: string[];
+    setLockedCategories: (lockedCategories: string[]) => void;
     setIsGoogleConnected: (isGoogleConnected: boolean) => void;
     signIn: (email: string, password: string) => Promise<any>;
     signUp: (email: string, password: string) => Promise<any>;
@@ -19,11 +21,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
     const [isGoogleConnected, setIsGoogleConnected] = useState(false);
+    const [lockedCategories, setLockedCategories] = useState<string[]>([]);
 
     useEffect(() => {
         const fetchUser = async () => {
             try {
-                const user = await AuthService.getCurrentUser();
+                const user = await UserService.getCurrentUser();
+                setLockedCategories(user?.locked_categories || []);
                 setUser(user);
 
                 if (user) {
@@ -40,20 +44,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }, []);
 
     const signIn = async (email: string, password: string) => {
-        await AuthService.signIn(email, password);
-        const user = await AuthService.getCurrentUser();
+        await UserService.signIn(email, password);
+        const user = await UserService.getCurrentUser();
         setUser(user);
     };
 
     const signUp = async (email: string, password: string) => {
-        const message = await AuthService.signUp(email, password);
-        const user = await AuthService.getCurrentUser();
+        const message = await UserService.signUp(email, password);
+        const user = await UserService.getCurrentUser();
         setUser(user);
         return message; 
     };
       
     const signOut = async () => {
-        await AuthService.signOut();
+        await UserService.signOut();
         setUser(null);
     };
 
@@ -62,7 +66,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
             user,
             isLoading,
             isGoogleConnected,
+            lockedCategories,
             setIsGoogleConnected,
+            setLockedCategories,
             signIn,
             signUp,
             signOut

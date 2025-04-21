@@ -71,12 +71,12 @@ export const CategoryBox = styled.div`
   }
 `;
 
-export const IconContainer = styled.div`
+export const PenIconContainer = styled.div`
   position: absolute;
   top: 20px;
   left: 30px;
   width: 100%;
-  height: 100%;
+  height: 75%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -85,7 +85,17 @@ export const IconContainer = styled.div`
   z-index: 3;
 `;
 
-export const Icon = styled.div`
+export const LockIconContainer = styled.div`
+  color: ${({ theme }) => theme.colors.textFaint};
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.primary};
+  }
+`;
+
+export const PenIcon = styled.div`
   cursor: pointer;
   transition: all 0.2s ease;
   &:hover {
@@ -95,6 +105,12 @@ export const Icon = styled.div`
 
 export const CategoryTitle = styled.h2`
   font-size: ${({ theme }) => theme.fontSize.xxs};
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.spacing.sm};
+
   @media (max-width: 768px) {
     min-height: 3.6em;
   }

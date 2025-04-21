@@ -97,7 +97,7 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       <Row main="spaceBetween" cross="center" gap="sm">
         <Row main='start' cross='center' gap='sm'>
-          { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
+          { category == "Unsorted" ? <h1>Void</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
         </Row>
         <Row main='end' cross='center' gap='sm'>
           <h2>{offset + 1} - {totalNotes > offset + limit ? offset + limit : totalNotes} of {totalNotes} sparks • Page {page}</h2>

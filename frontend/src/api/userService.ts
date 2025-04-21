@@ -2,7 +2,7 @@ import { supabase } from './supabaseClient';
 import { User } from '../models/userModel';
 import { NoteService } from './noteService';
 
-export class AuthService {
+export class UserService {
   static async signIn(email: string, password: string): Promise<void> {
     const { error } = await supabase.auth.signInWithPassword({
       email,
@@ -95,5 +95,48 @@ export class AuthService {
       throw error;
     }
   }
+  
+  static async updateLockedCategory(userId: string, category: string): Promise<void> {
+    // First fetch the current user data to get existing locked categories
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('locked_categories')
+      .eq('id', userId)
+      .single();
+    
+    if (userError) {
+      throw userError;
+    }
+
+    const lockedCategories = userData?.locked_categories || [];
+
+    if (lockedCategories.includes(category)) {
+      // Remove the category from the locked categories
+      const { error: removeError } = await supabase
+        .from('users')
+        .update({ 
+          locked_categories: lockedCategories.filter((c: string) => c !== category) 
+        })
+        .eq('id', userId);  
+
+      if (removeError) {
+        throw removeError;
+      }
+
+      return;
+    }
+    
+    // Then update with the new category added
+    const { error } = await supabase
+      .from('users')
+      .update({ 
+        locked_categories: [...(userData?.locked_categories || []), category] 
+      })
+      .eq('id', userId);
+
+    if (error) {
+      throw error;
+    }
+  } 
 }
 

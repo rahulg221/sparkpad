@@ -44,10 +44,12 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         try {
             setIsCategoriesLoading(true);
 
-            const notes = await NoteService.getNotes(user?.id || '');
+            const notes = await NoteService.getNotesForClustering(user?.id || '');
+            console.log(notes.length);
             if (notes.length < 15) {
                 setNotificationMessage('You need at least 15 notes to auto-organize');
                 setShowNotification(true);
+                setIsCategoriesLoading(false);  
                 return;
             }
 

@@ -20,24 +20,20 @@ import { MdArrowBack } from 'react-icons/md';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { TreeView } from '../tree/Tree';
 import { Summary } from '../summary/Summary';
-import { IoSparkles } from 'react-icons/io5';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
-import { Container } from '../../styles/shared/BaseLayout';
 import { FaPen, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
-import { CustomDropdown } from '../dropdown/Dropdown';
-import { ModalContent } from '../modal/Modal.Styles';
-import { SmallHeader } from '../toolbar/ToolBar.Styles';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { EventsRow } from '../calendar/EventsRow';
 import { TasksRow } from '../calendar/TasksRow';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible   } = useActions();
+    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible } = useActions();
+    const { isCategoriesLoading } = useNotes(); 
     const { isSummaryVisible, setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
@@ -158,7 +154,7 @@ export const Dashboard = () => {
                       </NoteContent>
                       <NoteInfo>
                         {note.category === "Unsorted"
-                          ? "Miscellaneous"
+                          ? "Void"
                           : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
                         <br />
                         {new Date(note.created_at!).toLocaleDateString("en-US", {
@@ -187,7 +183,6 @@ export const Dashboard = () => {
             </>
           );
         }
-      
         // Default dashboard view
         return (
           <>
@@ -226,14 +221,8 @@ export const Dashboard = () => {
               </>
             ) : (
               <>
-                {categories.length > 0 ? (
-                  <>
-                    <Spacer height="xl" />
-                    <h1>Sparkpads</h1>
-                  </>
-                ) : (
-                  <h1>Welcome to SparkPad!</h1>
-                )}
+                <Spacer height="xl" />
+                <h1>Sparkpads</h1>
                 <NoteCategories handleCategoryClick={handleCategoryClick} />
               </>
             )}
