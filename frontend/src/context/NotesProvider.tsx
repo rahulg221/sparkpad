@@ -69,6 +69,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
             setIsSearchLoading(false);
         } catch (err) {
             console.error('Error semantic searching:', err);    
+            setIsSearchLoading(false);
         }
     };
 

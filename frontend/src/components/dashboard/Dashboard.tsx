@@ -131,14 +131,11 @@ export const Dashboard = () => {
         if (showTree) {
           return <TreeView showTree={showTree} />;
         }
-      
-        // Search results mode
+    
         if (searchResults.length > 0) {
           return (
             <>
               <h1>Search Results</h1>
-              <ElevatedContainer width="100%" padding="lg">
-                {isSearchLoading ? <LoadingSpinner /> :
                 <Grid columns={1} $layoutMode="list">
                   {searchResults.map((note) => (
                     <NoteCard key={note.id} $layoutMode="list">
@@ -178,8 +175,6 @@ export const Dashboard = () => {
                     </NoteCard>
                   ))}
                 </Grid>
-                }
-              </ElevatedContainer>
             </>
           );
         }
