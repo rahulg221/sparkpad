@@ -43,14 +43,14 @@ export class NoteService {
     }
   }
 
-  static async addNote(note: Note): Promise<string> {
+  static async addNote(note: Note, dateTimeString?: string, content?: string): Promise<string> {
     const token = await getToken();
     // Initialize notification message and OpenAI client
     let notificationMessage = 'Include a date or time in your note to create a calendar event or task';
 
-    if (NoteService.containsDateTime(note.content) && note.content.startsWith('/e')) {
-      notificationMessage = await CalendarMethods.createCalendarEvent(note.content);
-
+    if (dateTimeString && note.content.startsWith('/e')) {
+      notificationMessage = await CalendarMethods.createCalendarEvent(content!, dateTimeString); // content is from dateParse.ts
+      console.log(notificationMessage);
       return notificationMessage;
     } else if (note.content.startsWith('/t')) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);

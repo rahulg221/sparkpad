@@ -17,23 +17,8 @@ export class CalendarService {
     return data?.google_connected === true;
   }  
 
-  static async createCalendarEvent(text: string): Promise<string> {
+  static async createCalendarEvent(content: string, dateTimeString: string): Promise<string> {
     const token = await getToken();
-    const { parse } = await import('chrono-node');
-    let notificationMessage = '';
-    let dateTimeString = '';
-    let cleanedText = text;
-
-    const results = parse(text);
-    if (results.length > 0) {
-      const parsed = results[0];
-      const dateTime = parsed.start.date();
-      dateTimeString = dateTime.toISOString();
-
-      // Remove matched date/time text from input
-      cleanedText = text.replace(parsed.text, '').trim();
-    }
-
     try { 
       const response = await fetch(`${API_URL}/event`, {
         method: 'POST',
@@ -41,16 +26,14 @@ export class CalendarService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ note_content: cleanedText, date_time: dateTimeString }),
+        body: JSON.stringify({ note_content: content, date_time: dateTimeString }),
       });
 
       if (!response.ok) {
-        notificationMessage = 'Failed to create calendar event';
+        return 'Failed to create calendar event';
       } else {
-        notificationMessage = `'${text.substring(3)}' has been added to your Google Calendar`;
+        return `'${content.substring(3)}' has been added to your Google Calendar`;
       }
-
-      return notificationMessage;
     } catch (error) {
       console.error('Failed to create calendar event:', error);
       throw error;

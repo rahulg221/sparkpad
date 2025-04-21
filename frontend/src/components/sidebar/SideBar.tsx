@@ -10,6 +10,7 @@ import { Icon, SidebarContainer, TextBarForm, TextInput, DateHint } from './Side
 import { FaTimes } from 'react-icons/fa';
 import { IconButton, PrimaryButton } from '../../styles/shared/Button.styles';
 import { useNotes } from '../../context/NotesProvider';
+import { extractDateAndText } from '../../utils/dateParse';
 
 // Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
@@ -19,7 +20,6 @@ export const SideBar = () => {
   // Fix this? Not sure if this is meant to be from a provider
   const [noteLoading, setNoteLoading] = useState(false);
   const { isInputVisible, setIsInputVisible } = useActions();
-  const [parsedDate, setParsedDate] = useState<Date | null>(null);
   const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
   const { user } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -30,58 +30,57 @@ export const SideBar = () => {
   
     // Clear all date info if the text was deleted
     if (input.trim() === '') {
-      setParsedDate(null);
       setParsedDateHint('');
       return;
     }
   
     // Only parse if it starts with /e
     if (input.startsWith('/e')) {
-      const { parseDate } = await import('chrono-node');
-      const parsedDate = parseDate(input);
-      
-      if (parsedDate) {
-        setParsedDate(parsedDate);
-  
-        const parsedDateHint = parsedDate.toLocaleString('en-US', {
-          month: 'short',
-          weekday: 'short',
-          day: 'numeric',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true,
-        });
-  
-        setParsedDateHint(parsedDateHint);
-      } else {
-        setParsedDate(null);
-        setParsedDateHint('');
-      }
+      const { hint } = await extractDateAndText(input);
+    
+      setParsedDateHint(hint);
     } else {
       // If not /e command, also clear date preview
-      setParsedDate(null);
       setParsedDateHint('');
     }
   };
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let notificationMessage = '';
 
     try {
       setNoteLoading(true);
 
-      const note: Note = {
-        content: text.trim(),
-        user_id: user?.id || '',
-        category: writeInCurrentCategory ? currentCategory : 'Unsorted',
-        cluster: -1,
-      };
+      // Only parse if it starts with /e
+      if (text.startsWith('/e')) {
+        const { dateTimeString, content } = await extractDateAndText(text);
 
-      const notificationMessage = await NoteService.addNote(note);
+        const note: Note = {
+          content: text.trim(),
+          user_id: user?.id || '',
+          category: writeInCurrentCategory ? currentCategory : 'Unsorted',
+          cluster: -1,
+        };
 
-      if (notificationMessage === 'Calendar task created') {
+        notificationMessage = await NoteService.addNote(note, dateTimeString, content);
+
+        setParsedDateHint('');
+      } else {
+        const note: Note = {
+          content: text.trim(),
+          user_id: user?.id || '',
+          category: writeInCurrentCategory ? currentCategory : 'Unsorted',
+          cluster: -1,
+        };
+  
+        notificationMessage = await NoteService.addNote(note);
+        setParsedDateHint('');
+      }
+
+      if (notificationMessage.includes("Task")) {
         updateTasks();
-      } else if (notificationMessage === 'Calendar event created') {
+      } else if (notificationMessage.includes("Calendar")) {
         updateEvents();
       }
 
