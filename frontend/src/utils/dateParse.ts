@@ -1,6 +1,6 @@
 // chronoUtils.ts
 export async function extractDateAndText(input: string): Promise<{ dateTimeString?: string, hint: string, content: string }> {
-    const { parse } = await import('chrono-node');
+    const { parse } = await import('https://cdn.skypack.dev/chrono-node'); // Fix later or swap to different package
     const results = parse(input);
   
     if (results.length === 0) return { content: input, hint: '' };
