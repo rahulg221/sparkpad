@@ -42,7 +42,7 @@ export const darkTheme = {
     eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
 
     notifBackground: 'rgb(18, 18, 18)',
-    notifColor: 'rgb(252, 132, 85)',
+    notifColor: 'rgb(153, 226, 110)',
 
     cardBackground: 'rgb(18, 18, 18)',
     cardColor: '#444444',
@@ -127,7 +127,7 @@ export const lightTheme = {
   eventBackground: 'rgba(224, 201, 255, 0.1)',
   eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
-  notifBackground: 'rgb(252, 132, 85, 0.1)',
+  notifBackground: 'rgba(153, 226, 110, 0.1)',
   notifColor: 'rgb(0, 0, 0)',
 
   primarySurface: 'rgba(255, 214, 10, 0.1)',

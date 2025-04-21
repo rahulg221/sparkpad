@@ -101,11 +101,16 @@ class GoogleService:
 
         return events_list
 
-    def create_google_event(self, text):
+    def create_google_event(self, text, date_time):
         """
         Creates a Google Calendar event based on the provided text.
         """
-        start_time = extract_datetime(text)
+
+        if date_time:
+            start_time = date_time
+        else:
+            print("Falling back to extract_datetime")
+            start_time = extract_datetime(text)
 
         text = text.lstrip().removeprefix("/e").strip()
 

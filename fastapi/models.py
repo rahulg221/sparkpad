@@ -4,7 +4,7 @@ from pydantic import BaseModel
 class Notes(BaseModel):
     notes_content: list[str]
     notes: list[dict]
-
+    
 class Note(BaseModel):
     id: str
     content: str
@@ -17,6 +17,7 @@ class SimpleNote(BaseModel):
 
 class Event(BaseModel):
     note_content: str
+    date_time: str
 
 class Task(BaseModel):
     note_content: str

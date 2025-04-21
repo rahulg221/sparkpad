@@ -40,6 +40,19 @@ export const Circle = styled.div`
   margin-right: ${({ theme }) => theme.spacing.sm};
 `;
 
+export const DateHint = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  color: ${({ theme }) => theme.colors.textFaint};
+  margin-top: ${({ theme }) => theme.spacing.sm};
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  position: absolute;
+  left: 10px;
+  bottom: 0px;
+  gap: ${({ theme }) => theme.spacing.sm};
+`;
+
 export const Divider = styled.div`
   width: 100%;
   height: 1px;
@@ -69,7 +82,7 @@ export const TextInput = styled.textarea`
   background-color: ${({ theme }) => theme.colors.bgLight};
   color: ${({ theme }) => theme.colors.textPrimary};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.xxs};
   resize: none;
   line-height: 1.5;
   font-family: inherit;

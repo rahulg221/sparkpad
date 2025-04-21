@@ -67,12 +67,13 @@ async def preflight_handler(full_path: str):
 @limiter.limit("100/day")
 async def create_new_event(request: Request, request_body: Event, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
+    date_time = request_body.date_time
     auth_id = user["sub"]
 
     try:
         # Create the calendar event
         google_service = GoogleService(auth_id)
-        event = google_service.create_google_event(note_content)
+        event = google_service.create_google_event(note_content, date_time)
 
         return {"event": event}
     except Exception as e:

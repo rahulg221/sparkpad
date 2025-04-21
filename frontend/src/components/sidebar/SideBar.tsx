@@ -1,16 +1,17 @@
 // components/sidebar/SidebarContent.tsx
 import React, { useEffect, useState } from 'react';
-import { NoteInput } from './components/NoteInput';
 import { useActions } from '../../context/ActionsContext';
 import { NoteService } from '../../api/noteService';
 import { Note } from '../../models/noteModel';
 import { useAuth } from '../../context/AuthProvider';
 import { Row, Spacer } from '../../styles/shared/BaseLayout';
-import { FaPen } from 'react-icons/fa6';
-import { Icon, SidebarContainer } from './SideBar.Styles';
+import { FaClock, FaPen } from 'react-icons/fa6';
+import { Icon, SidebarContainer, TextBarForm, TextInput, DateHint } from './SideBar.Styles';
 import { FaTimes } from 'react-icons/fa';
-import { IconButton } from '../../styles/shared/Button.styles';
+import { IconButton, PrimaryButton } from '../../styles/shared/Button.styles';
 import { useNotes } from '../../context/NotesProvider';
+import { parseDate } from 'chrono-node';
+
 // Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
   const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents } = useActions();
@@ -19,9 +20,50 @@ export const SideBar = () => {
   // Fix this? Not sure if this is meant to be from a provider
   const [noteLoading, setNoteLoading] = useState(false);
   const { isInputVisible, setIsInputVisible } = useActions();
+  const [parsedDate, setParsedDate] = useState<Date | null>(null);
+  const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
   const { user } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
+  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    setText(input);
+  
+    // Clear all date info if the text was deleted
+    if (input.trim() === '') {
+      setParsedDate(null);
+      setParsedDateHint('');
+      return;
+    }
+  
+    // Only parse if it starts with /e
+    if (input.startsWith('/e')) {
+      const parsedDate = parseDate(input);
+      
+      if (parsedDate) {
+        setParsedDate(parsedDate);
+  
+        const parsedDateHint = parsedDate.toLocaleString('en-US', {
+          month: 'short',
+          weekday: 'short',
+          day: 'numeric',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true,
+        });
+  
+        setParsedDateHint(parsedDateHint);
+      } else {
+        setParsedDate(null);
+        setParsedDateHint('');
+      }
+    } else {
+      // If not /e command, also clear date preview
+      setParsedDate(null);
+      setParsedDateHint('');
+    }
+  };
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -77,15 +119,48 @@ export const SideBar = () => {
           <FaTimes size={14}/>
         </IconButton>
       </Row>
-      <NoteInput
-        text={text}
-        isLoading={isLoading}
-        noteLoading={noteLoading}
-        writeInCurrentCategory={writeInCurrentCategory}
-        currentCategory={currentCategory}
-        setText={setText}
-        handleSubmit={handleSubmit}
-      />
-    </SidebarContainer>
+      <TextBarForm title="Type / to see commands" onSubmit={handleSubmit}>
+        <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <TextInput
+            as="textarea"
+            value={text}
+            onChange={handleTextChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey && text.trim() !== "") {
+                e.preventDefault();
+                handleSubmit(e);
+              }
+            }}
+            placeholder={
+              writeInCurrentCategory
+                ? 'Writing in ' + currentCategory + '...'
+                : 'Write to the void...'
+            }
+            disabled={isLoading}
+            rows={1}
+            style={{ paddingBottom: parsedDateHint ? '2.2em' : undefined }}
+          />
+          {!parsedDateHint && text[0] === '/' && (
+            <DateHint>
+              -- Commands --
+              <br />
+              /e Add to calendar
+              <br />
+              /t Add to tasks
+            </DateHint>
+          )}
+          {parsedDateHint && (
+            <DateHint>
+              <FaClock size={14} />
+              {parsedDateHint}
+            </DateHint>
+          )}
+        </div>
+        <Spacer height='sm' />
+        <PrimaryButton type="submit" disabled={isLoading || noteLoading}>
+          {noteLoading ? 'Capturing...' : 'Capture Spark'}
+        </PrimaryButton>
+      </TextBarForm>
+    </SidebarContainer> 
   );
-};
+};          

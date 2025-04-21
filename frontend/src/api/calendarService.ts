@@ -1,4 +1,5 @@
 import { getToken, supabase } from './supabaseClient';
+import { parse, parseDate } from 'chrono-node';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class CalendarService {
@@ -20,6 +21,18 @@ export class CalendarService {
   static async createCalendarEvent(text: string): Promise<string> {
     const token = await getToken();
     let notificationMessage = '';
+    let dateTimeString = '';
+    let cleanedText = text;
+
+    const results = parse(text);
+    if (results.length > 0) {
+      const parsed = results[0];
+      const dateTime = parsed.start.date();
+      dateTimeString = dateTime.toISOString();
+
+      // Remove matched date/time text from input
+      cleanedText = text.replace(parsed.text, '').trim();
+    }
 
     try { 
       const response = await fetch(`${API_URL}/event`, {
@@ -28,7 +41,7 @@ export class CalendarService {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({ note_content: text }),
+        body: JSON.stringify({ note_content: cleanedText, date_time: dateTimeString }),
       });
 
       if (!response.ok) {
