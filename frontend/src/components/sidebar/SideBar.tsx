@@ -10,7 +10,6 @@ import { Icon, SidebarContainer, TextBarForm, TextInput, DateHint } from './Side
 import { FaTimes } from 'react-icons/fa';
 import { IconButton, PrimaryButton } from '../../styles/shared/Button.styles';
 import { useNotes } from '../../context/NotesProvider';
-import { parseDate } from 'chrono-node';
 
 // Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
