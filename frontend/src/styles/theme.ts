@@ -36,9 +36,13 @@ export const darkTheme = {
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
     taskBackground: 'rgb(18, 18, 18)',
-    eventBackground: 'rgb(18, 18, 18)',
     taskColor: 'rgb(106, 146, 246)',   // slate blue
+
+    eventBackground: 'rgb(18, 18, 18)',
     eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
+
+    notifBackground: 'rgb(18, 18, 18)',
+    notifColor: 'rgb(252, 132, 85)',
 
     cardBackground: 'rgb(18, 18, 18)',
     cardColor: '#444444',
@@ -92,7 +96,7 @@ export const lightTheme = {
   textPrimary: '#0a0a0a',                // High-contrast black text
   textLight: '#444444',                  // Dark gray for secondary text
   textFaint: 'rgba(0, 0, 0, 0.5)',
-  textSecondary: 'rgb(0, 0, 0)',              // Replaces dark theme white secondary
+  textSecondary: 'rgb(255, 255, 255)',              // Replaces dark theme white secondary
 
   // Primary color
   primary: 'rgb(255, 214, 10)',            // Vibrant yellow (bright and energetic)
@@ -118,9 +122,13 @@ export const lightTheme = {
   colorFour: 'rgb(187, 187, 187)',
 
   taskBackground: 'rgba(201, 217, 255, 0.1)',
-  eventBackground: 'rgba(224, 201, 255, 0.1)',
   taskColor: 'rgb(106, 146, 246)',   // slate blue
+
+  eventBackground: 'rgba(224, 201, 255, 0.1)',
   eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
+
+  notifBackground: 'rgb(252, 132, 85, 0.1)',
+  notifColor: 'rgb(0, 0, 0)',
 
   primarySurface: 'rgba(255, 214, 10, 0.1)',
   cardBackground: 'rgba(255, 214, 10, 0.1)',

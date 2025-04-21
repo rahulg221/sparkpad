@@ -47,7 +47,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
             const notes = await NoteService.getNotesForClustering(user?.id || '');
             console.log(notes.length);
             if (notes.length < 15) {
-                setNotificationMessage('You need at least 15 notes to auto-organize');
+                setNotificationMessage('You need at least 15 notes in unlocked sparkpads to auto-organize');
                 setShowNotification(true);
                 setIsCategoriesLoading(false);  
                 return;

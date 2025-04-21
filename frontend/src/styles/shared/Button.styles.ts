@@ -5,7 +5,7 @@ export const PrimaryButton = styled.button`
   height: 6.5vh;
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.textSecondary};
+  color: black;
   border: none;
   border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
