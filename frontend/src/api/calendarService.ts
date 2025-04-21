@@ -1,5 +1,4 @@
 import { getToken, supabase } from './supabaseClient';
-import { parse, parseDate } from 'chrono-node';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class CalendarService {
@@ -20,6 +19,7 @@ export class CalendarService {
 
   static async createCalendarEvent(text: string): Promise<string> {
     const token = await getToken();
+    const { parse } = await import('chrono-node');
     let notificationMessage = '';
     let dateTimeString = '';
     let cleanedText = text;

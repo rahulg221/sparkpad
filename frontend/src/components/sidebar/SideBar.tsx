@@ -25,7 +25,7 @@ export const SideBar = () => {
   const { user } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
 
-  const handleTextChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+  const handleTextChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const input = e.target.value;
     setText(input);
   
@@ -38,6 +38,7 @@ export const SideBar = () => {
   
     // Only parse if it starts with /e
     if (input.startsWith('/e')) {
+      const { parseDate } = await import('chrono-node');
       const parsedDate = parseDate(input);
       
       if (parsedDate) {
