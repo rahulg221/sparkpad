@@ -5,9 +5,9 @@ export async function extractDateAndText(input: string): Promise<{ dateTimeStrin
   
     if (results.length === 0) return { content: input, hint: '' };
   
-    const parsed = results[0];
+    const parsedResults = results[0];
 
-    const date = parsed.start.date();
+    const date = parsedResults.start.date();
 
     const hint = date.toLocaleString('en-US', {
         month: 'short',
@@ -20,7 +20,7 @@ export async function extractDateAndText(input: string): Promise<{ dateTimeStrin
 
     const dateTimeString = date.toISOString();
 
-    const content = input.replace(parsed.text, '').trim();
+    const content = input.replace(parsedResults.text, '').trim();
 
     return { dateTimeString, hint, content };
   }
