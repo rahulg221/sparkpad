@@ -32,7 +32,7 @@ import { TasksRow } from '../calendar/TasksRow';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible } = useActions();
+    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible, notificationType } = useActions();
     const { isCategoriesLoading } = useNotes(); 
     const { isSummaryVisible, setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
@@ -270,7 +270,8 @@ export const Dashboard = () => {
             {showNotification && (
                 <Notification 
                     message={notificationMessage} 
-                    onClose={() => setShowNotification(false)} 
+                    onClose={() => setShowNotification(false)}
+                    type={notificationType}
                 />
             )}
         </DashboardWrapper>

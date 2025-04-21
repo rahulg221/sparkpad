@@ -14,7 +14,7 @@ import { extractDateAndText } from '../../utils/dateParse';
 
 // Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
-  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents } = useActions();
+  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, setNotificationType } = useActions();
   const [text, setText] = useState('');
   const { currentCategory, writeInCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
   // Fix this? Not sure if this is meant to be from a provider
@@ -64,9 +64,16 @@ export const SideBar = () => {
         };
 
         notificationMessage = await NoteService.addNote(note, dateTimeString, content);
+        setNotificationType('event');
 
         setParsedDateHint('');
       } else {
+        if (text.startsWith('/t')) {
+          setNotificationType('task');
+        } else {
+          setNotificationType('note');
+        }
+        
         const note: Note = {
           content: text.trim(),
           user_id: user?.id || '',

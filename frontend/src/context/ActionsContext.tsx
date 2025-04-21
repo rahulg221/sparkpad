@@ -7,6 +7,7 @@ import CalendarService from '../api/calendarService';
 type ActionsContextType = {
   setNotificationMessage: (message: string) => void;
   setShowNotification: (show: boolean) => void;
+  setNotificationType: (type: string) => void;  
   setCurrentNotes: (notes: Note[]) => void;
   updateTasks: () => void;
   updateEvents: () => void;
@@ -15,7 +16,8 @@ type ActionsContextType = {
   setIsTasksVisible: (visible: boolean) => void;
   setIsSettingsVisible: (visible: boolean) => void;   
   setIsInputVisible: (visible: boolean) => void;        
-  setIsToolBarCollapsed: (collapsed: boolean) => void;      
+  setIsToolBarCollapsed: (collapsed: boolean) => void;   
+  notificationType: string;
   isLoading: boolean;
   isInputVisible: boolean;
   isEventsVisible: boolean;                                             
@@ -36,6 +38,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const { user, isGoogleConnected } = useAuth();
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
+    const [notificationType, setNotificationType] = useState('');
     const [isLoading, setIsLoading] = useState(false);
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
     const [calendarEvents, setCalendarEvents] = useState<string[]>([]);
@@ -84,6 +87,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             setCategories, 
             setIsSettingsVisible,
             setIsEventsVisible,
+            setNotificationType,
+            notificationType,
             isLoading, 
             notificationMessage,                
             showNotification, 
