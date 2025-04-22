@@ -82,6 +82,8 @@ export class NoteService {
             },
           ])
           .select();
+
+        console.log('success');
   
         notificationMessage = 'Spark Captured!';
       } catch (error) {

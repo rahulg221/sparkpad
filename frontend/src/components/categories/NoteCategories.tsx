@@ -10,6 +10,7 @@ import { UserService } from '../../api/userService';
 import { FaLockOpen } from 'react-icons/fa6';
 import { FaLock } from 'react-icons/fa';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+import { Note } from '../../models/noteModel';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -26,7 +27,21 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
       if (!user?.id) return;
 
       try {
-        const categories = await NoteService.getDistinctCategories(user.id);
+        let categories = await NoteService.getDistinctCategories(user.id);
+
+        if (categories.length === 0) {
+          const welcomeNote: Note = {
+            content: 'Welcome to Sparkpad! Here are a few tips to get you started:\n\n- Use the Capture tool to capture at least 15 sparks\n\n- Use the Organize tool to auto-organize them into sparkpads\n\n- Sync your Google Calendar in Settings, then type / in the capture tool to view Google Calendar commands\n\n- Lock a sparkpad to prevent it from being auto-organized',
+            user_id: user?.id || '',
+            category: 'Unsorted',
+            cluster: -1,
+          };
+          
+          await NoteService.addNote(welcomeNote);
+
+          categories = await NoteService.getDistinctCategories(user.id);
+        }
+
         setCategories(categories);
       } catch (err) {
         console.error('Error fetching notes:', err);

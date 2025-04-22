@@ -43,26 +43,18 @@ export class UserService {
       return "Something went wrong. Please try again.";
     }
 
-    // Add user to users table if they don't exist yet
-    const { data: existingUser } = await supabase
+    // Add user to users table 
+    const { error: insertError } = await supabase
       .from('users')
-      .select()
-      .eq('auth_id', data.user?.id)
-      .maybeSingle();
+      .insert([
+        {
+          auth_id: data.user?.id,
+          email: data.user?.email,
+        },
+      ]).select();
 
-    if (!existingUser) {
-      const { error: insertError } = await supabase
-        .from('users')
-        .insert([
-          {
-            auth_id: data.user?.id,
-            email: data.user?.email,
-          },
-        ]).select();
-
-      if (insertError) {
-        console.error('Error creating user record:', insertError);
-      }
+    if (insertError) {
+      console.error('Error creating user record:', insertError);
     }
 
     return "Signup successful";

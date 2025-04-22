@@ -14,8 +14,8 @@ import {
     SuccessMessage
 } from './Auth.styles';
 import { PrimaryButton } from '../../styles/shared/Button.styles';
-import { AuthService } from '../../api/userService';
 import { NoteService } from '../../api/noteService';
+import { Note } from '../../models/noteModel';
 
 export const SignUpForm = () => {
     const [email, setEmail] = useState('');
@@ -42,7 +42,7 @@ export const SignUpForm = () => {
 
         if (message === 'Signup successful') {
             signIn(email, password);
-            
+
             navigate('/dashboard');
         } else {
             setError(message);
