@@ -36,10 +36,9 @@ export const NotesList = ({ category }: NotesListProps) => {
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
   const [totalNotes, setTotalNotes] = useState(0);
-  const [offset, setOffset] = useState(0);
   const { categories } = useActions();
   const { refreshNotes } = useNotes();
-  
+
   useEffect(() => {
     fetchNotes();
 
@@ -51,23 +50,24 @@ export const NotesList = ({ category }: NotesListProps) => {
   const fetchNotes = async () => {
     console.log('fetching notes');
     if (!user?.id) return;
-
+  
     const count = await NoteService.getNotesCountByCategory(user.id, category);
     setTotalNotes(count);
-    setOffset((page - 1) * limit);
-
+  
+    const computedOffset = (page - 1) * limit;
+  
     try {
       setIsLoading(true);
-      const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, offset);
-
+      const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, computedOffset);
+  
       setNotes(visibleNotes);
       setIsLoading(false);
     } catch (err) {
       setError('Failed to fetch notes');
       console.error('Error fetching notes:', err);
       setIsLoading(false);
-    } 
-  };
+    }
+  };  
 
   const handleDeleteNote = async (noteId: string) => {
     try {
@@ -97,10 +97,10 @@ export const NotesList = ({ category }: NotesListProps) => {
     <>
       <Row main="spaceBetween" cross="center" gap="sm">
         <Row main='start' cross='center' gap='sm'>
-          { category == "Unsorted" ? <h1>Void</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
+          { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
         </Row>
         <Row main='end' cross='center' gap='sm'>
-          <h2>{offset + 1} - {totalNotes > offset + limit ? offset + limit : totalNotes} of {totalNotes} sparks • Page {page}</h2>
+          <h2>Page {page} of {Math.ceil(totalNotes / limit)} • {totalNotes} sparks</h2>
           {$layoutMode === 'grid' ? <FaBars size={14} onClick={handleLayoutMode}/> : <FaBorderAll size={14} onClick={handleLayoutMode}/>}
         </Row>
       </Row>
@@ -147,18 +147,31 @@ export const NotesList = ({ category }: NotesListProps) => {
       </NoteContainer>
       <Spacer height='md' />
       <Row main='center' cross='center'>
-        <TextButton onClick={() => page > 1 ? setPage(page - 1) : null}>
-          <Row main='center' cross='center' gap='sm'> 
-            <MdArrowBack size={16} />
-            Previous
-          </Row>
-        </TextButton>
-        <TextButton onClick={() => setPage(page + 1)}>
-          <Row main='center' cross='center' gap='sm'> 
-            Next
-            <MdArrowForward size={16} />
-          </Row>
-        </TextButton>
+      <TextButton
+        onClick={() => {
+            if (page > 1) {
+              setPage(page - 1);
+            }
+          }}
+        >
+        <Row main="center" cross="center" gap="sm">
+          <MdArrowBack size={16} />
+          Previous
+        </Row>
+      </TextButton>
+      <TextButton
+        onClick={() => {
+          const maxPage = Math.ceil(totalNotes / limit);
+            if (page < maxPage) {
+              setPage(page + 1);
+            }
+          }}
+        >
+        <Row main="center" cross="center" gap="sm">
+          Next
+          <MdArrowForward size={16} />
+        </Row>
+      </TextButton>
       </Row>
       <Spacer height='md' />
       {isUpdateNoteOpen && (

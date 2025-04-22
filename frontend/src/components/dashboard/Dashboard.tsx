@@ -15,11 +15,9 @@ import { MdEventAvailable, MdLogout } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
-import { Grid, ElevatedContainer, Spacer, Row } from '../../styles/shared/BaseLayout';
+import { Grid, Spacer, Row } from '../../styles/shared/BaseLayout';
 import { MdArrowBack } from 'react-icons/md';
-import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { TreeView } from '../tree/Tree';
-import { Summary } from '../summary/Summary';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
@@ -29,7 +27,7 @@ import { Note } from '../../models/noteModel';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { EventsRow } from '../calendar/EventsRow';
 import { TasksRow } from '../calendar/TasksRow';
-
+import { SummaryModal } from '../modal/SummaryModal';
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
     const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible, notificationType } = useActions();
@@ -38,6 +36,7 @@ export const Dashboard = () => {
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
     const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
+    const { summary, isSummaryLoading } = useSummary();
     const { currentCategory, 
             showTree, 
             showRecentNotes, 
@@ -51,7 +50,6 @@ export const Dashboard = () => {
     } = useNotes();
 
     const navigate = useNavigate();
-
 
     useEffect(() => {
         const runOAuthCallback = async () => {
@@ -126,6 +124,16 @@ export const Dashboard = () => {
         }
     };
 
+    const downloadSummary = () => {
+        const summaryText = summary.replace(/\*\*/g, "").replace(/\n/g, " ");
+        const blob = new Blob([summaryText], { type: 'application/pdf' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'summary.pdf';
+        a.click();
+    }
+
     const renderDashboardContent = () => {
         // Tree View overrides everything
         if (showTree) {
@@ -151,7 +159,7 @@ export const Dashboard = () => {
                       </NoteContent>
                       <NoteInfo>
                         {note.category === "Unsorted"
-                          ? "Void"
+                          ? "Miscellaneous"
                           : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
                         <br />
                         {new Date(note.created_at!).toLocaleDateString("en-US", {
@@ -181,13 +189,6 @@ export const Dashboard = () => {
         // Default dashboard view
         return (
           <>
-            {isSummaryVisible && (
-              <>
-                <Spacer height="xl" />
-                <Summary />
-              </>
-            )}
-
             {isTasksVisible && (
               <>
                 <Spacer height="xl" />
@@ -266,6 +267,15 @@ export const Dashboard = () => {
                     Logout
                 </SecondaryButton>
             </Modal>
+            )}
+            {isSummaryVisible && (
+                <SummaryModal
+                    isOpen={isSummaryVisible}
+                    onClose={() => setIsSummaryVisible(false)}
+                    summary={summary} 
+                    isSummaryLoading={isSummaryLoading}
+                    onSave={() => setIsSummaryVisible(false)}
+                />
             )}
             {showNotification && (
                 <Notification 

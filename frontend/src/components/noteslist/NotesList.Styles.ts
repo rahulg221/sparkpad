@@ -39,7 +39,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
 
   &:hover {
     max-height: 80vh;
-    border: 1px solid ${({ theme }) => theme.colors.primary};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 
   @media (max-width: 768px) {

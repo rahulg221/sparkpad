@@ -24,15 +24,27 @@ class OpenAIService:
         input_string = "".join(notes)
         category_examples = "\n".join(get_category_examples())
         prompt = f"""
-        Generate a short, clear label that describes the core topic or purpose of the following notes.
+        Analyze the following notes and determine whether at least 3 of them share a clear, cohesive theme or subject.
+
+        If such a theme exists, generate a short, general label that captures the core topic or purpose of the group. Avoid overly specific or niche phrasing.
+
+        If no strong shared theme is found, choose the closest fitting label from this fallback list:
+
+        Ideas, Thoughts, Reminders, Tasks, Planning, Errands, Work, School
+
+        OR
+
+        If the notes seem to be random and spontaneous, choose the closest fitting label from this fallback list:
+
+        Random Thoughts, Random Ideas
 
         Formatting Rules:
 
         Use Title Case (capitalize each major word)
 
-        Use only letters and spaces (no special characters or punctuation)
+        Use only letters and spaces (no punctuation or special characters)
 
-        Use 2 to 3 words max (2 preferred if sufficient)
+        Use 2 to 3 words maximum (2 preferred if sufficient)
 
         Examples:
         {category_examples}
@@ -93,15 +105,17 @@ class OpenAIService:
         prompt = f"""
             You are a summarization assistant.
 
-            Your task is to summarize the notes provided using the following format and rules:
+            Your task is to provide a snapshot of the given notes. Be extremely concise. Focus on important ideas. Group together related ideas.
 
             Formatting Rules:
 
-            Format each point as a bolded header, followed by a 1–2 sentence explanation.
+            Provide 2 - 4 short sections (1 - 3 bullet points each)
 
-            Use valid Markdown syntax: **Header** followed by plain text.
+            Format each section with a bolded header, followed by a brief, concise bullet point list.
 
-            Add one blank line between each point.
+            Use valid Markdown syntax: **Header** followed by the bullet points.
+
+            Add one extra line between each section to visually separate them.
 
             Strict Constraints:
 
@@ -115,11 +129,7 @@ class OpenAIService:
 
             Do not include an introduction or closing statement.
 
-            Word Limit:
-
-            The total output must not exceed 150 words.
-
-            Begin only with the first point. Here are the notes:
+            Here are the notes:
             ---  
             {text }
             ---

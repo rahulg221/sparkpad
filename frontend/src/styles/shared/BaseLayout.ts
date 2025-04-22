@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import ReactMarkdown from 'react-markdown';
 
 const alignmentMap = {
     start: "flex-start",
@@ -66,7 +67,6 @@ export const Stack = styled.div<{
   position: relative;
   width: ${({ width }) => width || 'auto'};
 `;
-
 
 export const Grid = styled.div<{
   columns?: number;
@@ -165,4 +165,26 @@ export const List = styled.ul`
   list-style: none;
   padding: 0;
   margin: 0;
+`;
+
+export const MarkdownWrapper = styled.div`
+  font-size: 1rem;
+  line-height: 1.6;
+  font-family: 'Inter', sans-serif;
+
+  h1, h2, h3 {
+    font-weight: 600;
+    margin: 1rem 0;
+  }
+
+  ul {
+    padding-left: 1.25rem;
+  }
+
+  code {
+    background: #f4f4f4;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
 `;

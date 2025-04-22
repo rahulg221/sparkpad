@@ -113,12 +113,13 @@ export const ToolBar = () => {
                     </SecondaryButton>
                     <SecondaryButton onClick={handleSummaryClick} title="Summarize your sparks into a concise summary">
                         <FaLightbulb size={14} />
-                        {isToolBarCollapsed ? null : 'Summarize'}
+                        {isToolBarCollapsed ? null : 'Snapshot'}
                     </SecondaryButton>
+                    {/*
                     <SecondaryButton onClick={handleVisualizeClick} title="Visualize your sparks in a tree structure">
                         <FaFolderTree size={14} />
                         {isToolBarCollapsed ? null : 'Visualize'}
-                    </SecondaryButton>
+                    </SecondaryButton> */}
                     {!isToolBarCollapsed && <SmallHeader>Explore</SmallHeader>}
                     <SecondaryButton onClick={handleTasksClick} title="View your Google Tasks">
                         <FaThumbtack size={14} />

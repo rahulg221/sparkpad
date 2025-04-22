@@ -139,8 +139,8 @@ export const SideBar = () => {
             }}
             placeholder={
               writeInCurrentCategory
-                ? 'Writing in ' + currentCategory + '...'
-                : 'Write to the void...'
+                ? 'Capturing in ' + (currentCategory === 'Unsorted' ? 'Miscellaneous' : currentCategory) + '...'
+                : 'Capture now, organize later...'
             }
             disabled={isLoading}
             rows={1}

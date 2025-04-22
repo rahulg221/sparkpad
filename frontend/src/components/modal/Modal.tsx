@@ -8,7 +8,6 @@ import {
   ModalFooter
 } from './Modal.Styles';
 import { TextButton } from '../../styles/shared/Button.styles';
-import { Row } from '../../styles/shared/BaseLayout';
 
 interface ModalProps {
   isOpen: boolean;
@@ -69,7 +68,7 @@ export const Modal: React.FC<ModalProps> = ({
           {children}
         </ModalContent>
         <ModalFooter>
-          <TextButton onClick={onSave}>Save</TextButton>
+          {onSave && <TextButton onClick={onSave}>Save</TextButton>}
           <TextButton onClick={onClose}>Close</TextButton>
         </ModalFooter>
       </ModalContainer>

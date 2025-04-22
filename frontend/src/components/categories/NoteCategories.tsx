@@ -80,7 +80,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                     </PenIconContainer>
                 </Stack>
                   {category === "Unsorted" ? (
-                    <CategoryTitle>Void</CategoryTitle>
+                    <CategoryTitle>Miscellaneous</CategoryTitle>
                   ) : (
                     <CategoryTitle >
                         {category}
