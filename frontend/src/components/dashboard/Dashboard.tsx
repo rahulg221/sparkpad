@@ -15,13 +15,13 @@ import { MdEventAvailable, MdLogout } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
-import { Grid, Spacer, Row } from '../../styles/shared/BaseLayout';
+import { Grid, Spacer, Row, Container } from '../../styles/shared/BaseLayout';
 import { MdArrowBack } from 'react-icons/md';
 import { TreeView } from '../tree/Tree';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
-import { FaPen, FaTrash } from 'react-icons/fa';
+import { FaPen, FaPlus, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
@@ -123,16 +123,6 @@ export const Dashboard = () => {
             console.error("Failed to get Google auth URL", err);
         }
     };
-
-    const downloadSummary = () => {
-        const summaryText = summary.replace(/\*\*/g, "").replace(/\n/g, " ");
-        const blob = new Blob([summaryText], { type: 'application/pdf' });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = 'summary.pdf';
-        a.click();
-    }
 
     const renderDashboardContent = () => {
         // Tree View overrides everything

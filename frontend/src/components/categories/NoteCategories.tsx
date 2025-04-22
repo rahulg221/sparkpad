@@ -69,7 +69,8 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
             {isCategoriesLoading || isSearchLoading ? (
               <LoadingSpinner />
             ) : (
-              categories.map((category) => (
+              <>
+              {categories.map((category) => (
                 <div key={category}>
                 <Stack onClick={() => handleCategoryClick(category)}>
                     <CategoryBox></CategoryBox>
@@ -95,8 +96,9 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                         )}
                     </CategoryTitle>
                     )}
-              </div>  
-            ))
+                </div>  
+              ))}
+              </>
             )}
             </>
       </CategoriesContainer>    

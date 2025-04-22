@@ -11,10 +11,11 @@ import { FaTimes } from 'react-icons/fa';
 import { IconButton, PrimaryButton } from '../../styles/shared/Button.styles';
 import { useNotes } from '../../context/NotesProvider';
 import { extractDateAndText } from '../../utils/dateParse';
+import { UserService } from '../../api/userService';
 
 // Using window.matchMedia instead of react-responsive
 export const SideBar = () => {
-  const {isLoading, setNotificationMessage, setShowNotification, updateTasks, updateEvents, setNotificationType } = useActions();
+  const {isLoading, setCategories, setNotificationMessage, setShowNotification, updateTasks, updateEvents, setNotificationType } = useActions();
   const [text, setText] = useState('');
   const { currentCategory, writeInCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
   // Fix this? Not sure if this is meant to be from a provider
@@ -48,9 +49,32 @@ export const SideBar = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     let notificationMessage = '';
+    let categories: string[] = [];
 
     try {
       setNoteLoading(true);
+
+      if (text.startsWith('/c')) {
+        const category = text.substring(2).trim(); 
+
+        const anchorNote: Note = {
+          content: 'Custom Sparkpad created!\n- This sparkpad is locked by default, click the lock icon to unlock it.\n- Click the pen icon to write in this sparkpad.',
+          user_id: user?.id || '',
+          category: category,
+          cluster: -1,
+        };
+
+        await NoteService.addNote(anchorNote);
+        await UserService.updateLockedCategory(user?.id || '', category);
+
+        notificationMessage = 'Custom sparkpad created!';
+        
+        categories = await NoteService.getDistinctCategories(user?.id || '');
+
+        setNotificationMessage(notificationMessage);
+        setShowNotification(true);
+        setCategories(categories);
+      }
 
       // Only parse if it starts with /e
       if (text.startsWith('/e')) {
@@ -149,6 +173,8 @@ export const SideBar = () => {
           {!parsedDateHint && text[0] === '/' && (
             <DateHint>
               -- Commands --
+              <br />
+              /c Create a custom sparkpad
               <br />
               /e Add to calendar
               <br />
