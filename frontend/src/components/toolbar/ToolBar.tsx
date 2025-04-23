@@ -89,7 +89,7 @@ export const ToolBar = () => {
             <Column main="spaceBetween" cross="start">   
                 <Container width="100%" height="100%">
                     {!isToolBarCollapsed && <Spacer height='xl'/>}
-                    {!isToolBarCollapsed && <Row main="start" cross="center" gap="sm">
+                    {!isToolBarCollapsed && <Row main="start" cross="center" gap="md">
                         <IconWrapper>
                             <TbFileTextSpark size={14} />
                         </IconWrapper>

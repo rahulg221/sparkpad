@@ -11,6 +11,7 @@ import { FaLockOpen } from 'react-icons/fa6';
 import { FaLock } from 'react-icons/fa';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { Note } from '../../models/noteModel';
+import { FaPlus } from 'react-icons/fa';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -56,7 +57,11 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
     setWriteInCurrentCategory(true);
   }
 
-  const handleAddLockedCategory = async (category: string) => {
+  const handleNotepadClick = () => {
+    setWriteInCurrentCategory(true);
+  }
+
+  const handleUpdateLockedCategory = async (category: string) => {
     if (!user?.id) return;
     await UserService.updateLockedCategory(user.id, category);
     setLockedCategories(lockedCategories.includes(category) ? lockedCategories.filter((c: string) => c !== category) : [...lockedCategories, category]);
@@ -73,7 +78,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
               {categories.map((category) => (
                 <div key={category}>
                 <Stack onClick={() => handleCategoryClick(category)}>
-                    <CategoryBox></CategoryBox>
+                    <CategoryBox onClick={() => handleNotepadClick()} />
                     <PenIconContainer>
                       <PenIcon title={`Write in ${category}`} onClick={handlePenClick}>
                         <IoPencilOutline size={45} />
@@ -86,11 +91,11 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
                     <CategoryTitle >
                         {category}
                         {lockedCategories.includes(category) ?   (
-                          <LockIconContainer title="Unlock a category to allow it to be moved during organizing" onClick={() => handleAddLockedCategory(category)}>
+                          <LockIconContainer title="Unlock a category to allow it to be moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
                             <FaLock size={14} />
                           </LockIconContainer>
                         ) : (
-                          <LockIconContainer title="Lock a category to prevent it from being moved during organizing" onClick={() => handleAddLockedCategory(category)}>
+                          <LockIconContainer title="Lock a category to prevent it from being moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
                             <FaLockOpen size={14} />
                           </LockIconContainer>
                         )}

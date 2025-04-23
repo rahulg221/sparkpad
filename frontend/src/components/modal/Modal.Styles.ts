@@ -17,9 +17,8 @@ export const ModalOverlay = styled.div`
 export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60vw;
-  max-width: 900px;
-  height: 60vh;                 
+  width: 60vw;   
+  max-height: 80vh;       
   background: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.md};
@@ -42,10 +41,13 @@ export const ModalTitle = styled.h2`
 `;
 
 export const ModalContent = styled.div`
-  flex: 1 1 auto;
-  height: 50vh;              
+  flex: 1 1 auto;           
   overflow-y: auto;
-  padding: ${({ theme }) => theme.spacing.lg};
+  min-height: 20vh;
+  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.lg};
+  padding-bottom: ${({ theme }) => theme.spacing.md};
+  padding-top: ${({ theme }) => theme.spacing.md};
 
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgLight};
@@ -60,4 +62,26 @@ export const ModalFooter = styled.div`
   align-items: center;
   padding: ${({ theme }) => theme.spacing.md};
   gap: ${({ theme }) => theme.spacing.md};
+`;
+
+export const ModalInput = styled.input`
+  width: 100%;
+  padding: ${({ theme }) => theme.spacing.md};
+  margin-top: ${({ theme }) => theme.spacing.md};
+  margin-bottom: ${({ theme }) => theme.spacing.md};
+  height: 40px;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  color: ${({ theme }) => theme.colors.textSecondary};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+
+  &::placeholder {
+    color: ${({ theme }) => theme.colors.textFaint};
+  }
+
+  &:focus {
+    outline: none;
+    color: ${({ theme }) => theme.colors.textPrimary};
+    border: 1px solid ${({ theme }) => theme.colors.accent};
+  }
 `;

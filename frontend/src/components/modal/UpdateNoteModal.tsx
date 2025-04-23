@@ -26,6 +26,7 @@ export const UpdateNoteModal: React.FC<UpdateNoteModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Edit Spark">
       <ModalContent>
+        <SmallHeader>Content</SmallHeader>
         <h2>{noteContent}</h2>
         <SmallHeader>Move to</SmallHeader>
         <CustomDropdown

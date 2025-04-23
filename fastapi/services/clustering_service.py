@@ -148,69 +148,65 @@ class ClusteringService:
     def hdbscan_clustering(self, embeddings):
         """
         Perform HDBSCAN clustering on the given embeddings.
+        Returns the final labels after filtering by confidence.
         """
-        # Scale the embeddings
+        # Step 1: Scale embeddings
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
-        # Reduce dimensionality with UMAP
-        umap_reducer = umap.UMAP(n_neighbors=15, metric="cosine", min_dist=0.0, random_state=42)
+        # Step 2: Dimensionality reduction using UMAP (with fixed seed for reproducibility)
+        umap_reducer = umap.UMAP(
+            n_components=15,  # explicit for control
+            min_dist=0.0,
+            metric="cosine",
+            random_state=42
+        )
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
 
-        # Dynamically select min_cluster_size and min_samples
+        # Step 3: Get dynamic HDBSCAN hyperparameters
         min_cluster_size, min_samples = self.adaptive_hdbscan_params(len(embeddings))
 
-        # Run HDBSCAN
+        # Step 4: Cluster using HDBSCAN
         clusterer = hdbscan.HDBSCAN(
             min_cluster_size=min_cluster_size,
             min_samples=min_samples,
-            metric='euclidean',
+            metric='euclidean',  # use euclidean since UMAP was already cosine
             prediction_data=True
         )
         labels = clusterer.fit_predict(reduced_embeddings)
 
-        # Get the soft clustering confidence scores
-        probabilities = clusterer.probabilities_
+        if len(set(labels)) > 1:
+            silhouette = silhouette_score(reduced_embeddings, labels)
+            print(f"HDBSCAN Silhouette Score (excluding noise): {silhouette:.4f}")
 
-        # Threshold: mark as -1 if probability is too low
-        confidence_threshold = 0.95
-        final_labels = np.array([
-            label if prob >= confidence_threshold else -1
-            for label, prob in zip(labels, probabilities)
-        ])
-
-        # Evaluate clustering (excluding outliers)
-        clustered_indices = final_labels != -1
-        clustered_points = reduced_embeddings[clustered_indices]
-        clustered_labels = final_labels[clustered_indices]
-
-        # Only calculate silhouette if we have enough data
-        if len(clustered_points) > 1:
-            silhouette = silhouette_score(clustered_points, clustered_labels)
-            print(f"HDBSCAN Silhouette Score (excluding outliers): {silhouette:.4f}")
+            if silhouette < 0.25:
+                labels[:] = -1
+                print("Silhouette too low — treating all notes as unclustered.")
         else:
-            print("Warning: Too few clustered points to compute silhouette score.")
+            print("Warning: Not enough distinct clusters for silhouette score.")
 
-        # Identify outliers
-        outlier_indices = np.where(labels == -1)[0]
+        # Step 7: Outlier summary
+        outliers_count = np.sum(labels == -1)
+        clusters_count = len(set(labels)) - (1 if -1 in labels else 0)
 
-        print(f"Clusters found: {len(set(labels)) - (1 if -1 in labels else 0)}")
-        print(f"Outliers detected: {len(outlier_indices)}")
+        print(f"Clusters found: {clusters_count}")
+        print(f"Outliers detected: {outliers_count}")
 
         return labels
 
     def adaptive_hdbscan_params(self, n):
         """
         Dynamically select min_cluster_size and min_samples based on number of embeddings.
+        Stricter at higher volumes to ensure meaningful clusters.
         """
-        factor = 0 # Must be >0
-
         if n <= 20:
-            return 3,3
+            return 3, 1  # Very permissive for low volume
         elif n <= 50:
-            return 4+factor, 4+factor
+            return 5, 3
         elif n <= 100:
-            return 5+factor, 5+factor
+            return 8, 5
         elif n <= 300:
-            return 6+factor, 6+factor  
+            return 12, 8
+        elif n <= 600:
+            return 16, 10
         else:
-            return 10+factor, 10+factor  
+            return 20, 12  # Very strict — expect high-quality, large clusters only

@@ -34,7 +34,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   border: 1px solid ${({ theme }) => theme.colors.border};
   overflow: hidden;
 
-  min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '20vh' : '35vh'};
+  min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '15vh' : '35vh'};
   transition: max-height 0.5s ease, border 0.3s ease;
 
   &:hover {
@@ -66,7 +66,7 @@ export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
     ` :
     `
       display: -webkit-box;
-      -webkit-line-clamp: 3;
+      -webkit-line-clamp: 7;
       -webkit-box-orient: vertical;
       overflow: hidden;
       text-overflow: ellipsis;

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
 } from './Dashboard.Styles';
-import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton, TextButton, IconButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
@@ -28,15 +28,19 @@ import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { EventsRow } from '../calendar/EventsRow';
 import { TasksRow } from '../calendar/TasksRow';
 import { SummaryModal } from '../modal/SummaryModal';
+import { NewNotepadModal } from '../modal/NewNotepadModal';
+import { UserService } from '../../api/userService';
+
 export const Dashboard = () => {
-    const { signOut, isGoogleConnected, setIsGoogleConnected } = useAuth();
-    const { setIsSettingsVisible, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible, notificationType } = useActions();
+    const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
+    const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible, notificationType } = useActions();
     const { isCategoriesLoading } = useNotes(); 
     const { isSummaryVisible, setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
     const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
     const { summary, isSummaryLoading } = useSummary();
+    const [isNewNotepadVisible, setIsNewNotepadVisible] = useState(false);
     const { currentCategory, 
             showTree, 
             showRecentNotes, 
@@ -75,6 +79,38 @@ export const Dashboard = () => {
         runOAuthCallback();
     }, []);      
 
+    const handleNewNotepad = async (newCategory: string) => {
+        let notificationMessage = '';
+        let categories = [];
+
+        const anchorNote: Note = {
+          content: 'Custom Sparkpad created!\n- This sparkpad is locked by default, click the lock icon to unlock it.\n- Click the pen icon to write in this sparkpad.',
+          user_id: user?.id || '',
+          category: newCategory,
+          cluster: -1,
+        };
+
+        try {
+            await NoteService.addNote(anchorNote);
+            await UserService.updateLockedCategory(user?.id || '', newCategory);
+
+            notificationMessage = 'Custom sparkpad created!';
+        
+            categories = await NoteService.getDistinctCategories(user?.id || '');
+            setCategories(categories);
+            setLockedCategories([...lockedCategories, newCategory]);
+            setNotificationMessage(notificationMessage);
+            setShowNotification(true);
+            setIsNewNotepadVisible(false);
+        } catch (err) {
+            notificationMessage = 'Error creating new sparkpad';
+            setNotificationMessage(notificationMessage);
+            setShowNotification(true);
+            setIsNewNotepadVisible(false);
+            console.error('Error creating new sparkpad:', err);
+        }
+    }
+
     const handleLogout = async () => {{}
         try {
             handleBackClick();
@@ -99,7 +135,7 @@ export const Dashboard = () => {
 
     const handleDeleteNote = async (noteId: string) => {
         try {
-          await NoteService.deleteNote(noteId);
+          await NoteService.deleteNote(noteId, user?.id || '');
           setSearchResults(searchResults.filter(note => note.id !== noteId));
         } catch (err) {
           console.error('Error deleting note:', err);
@@ -208,7 +244,12 @@ export const Dashboard = () => {
             ) : (
               <>
                 <Spacer height="xl" />
-                <h1>Sparkpads</h1>
+                <Row main="spaceBetween" cross="center">
+                  <h1>Sparkpads</h1>
+                  <IconButton title="Create a new Sparkpad" onClick={() => setIsNewNotepadVisible(true)}>
+                    <FaPlus size={14} />
+                  </IconButton>
+                </Row>
                 <NoteCategories handleCategoryClick={handleCategoryClick} />
               </>
             )}
@@ -265,6 +306,13 @@ export const Dashboard = () => {
                     summary={summary} 
                     isSummaryLoading={isSummaryLoading}
                     onSave={() => setIsSummaryVisible(false)}
+                />
+            )}
+            {isNewNotepadVisible && (
+                <NewNotepadModal
+                    isOpen={isNewNotepadVisible}
+                    onClose={() => setIsNewNotepadVisible(false)}
+                    onSave={(newCategory: string) => handleNewNotepad(newCategory)}
                 />
             )}
             {showNotification && (

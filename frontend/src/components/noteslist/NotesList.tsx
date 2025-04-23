@@ -71,7 +71,7 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      await NoteService.deleteNote(noteId);
+      await NoteService.deleteNote(noteId, user?.id || '');
       setNotes(notes.filter(note => note.id !== noteId));
     } catch (err) {
       console.error('Error deleting note:', err);

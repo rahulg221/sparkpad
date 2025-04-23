@@ -143,7 +143,7 @@ export const SideBar = () => {
         <Icon>
           <FaPen size={14}/>
         </Icon>
-        <h2>New Spark</h2>
+        <h2>Capture</h2>
         <Spacer expand={true} />
         <IconButton onClick={() => setIsInputVisible(false)}>
           <FaTimes size={14}/>
@@ -163,8 +163,8 @@ export const SideBar = () => {
             }}
             placeholder={
               writeInCurrentCategory
-                ? 'Capturing in ' + (currentCategory === 'Unsorted' ? 'Miscellaneous' : currentCategory) + '...'
-                : 'Capture now, organize later...'
+                ? 'Writing in ' + (currentCategory === 'Unsorted' ? 'Miscellaneous' : currentCategory) + '...'
+                : 'Writing in Miscellaneous... Type / to see commands'
             }
             disabled={isLoading}
             rows={1}
@@ -172,13 +172,10 @@ export const SideBar = () => {
           />
           {!parsedDateHint && text[0] === '/' && (
             <DateHint>
-              -- Commands --
               <br />
-              /c Create a custom sparkpad
+              /e Add a new event
               <br />
-              /e Add to calendar
-              <br />
-              /t Add to tasks
+              /t Add a new task
             </DateHint>
           )}
           {parsedDateHint && (

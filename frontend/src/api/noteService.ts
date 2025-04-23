@@ -1,6 +1,7 @@
 import { supabase, getToken } from './supabaseClient';
 import { Note } from '../models/noteModel';
 import CalendarMethods from './calendarService';
+import { UserService } from './userService';
 const API_URL = import.meta.env.VITE_API_URL;
 
 export class NoteService {    
@@ -56,7 +57,7 @@ export class NoteService {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;
-    } else if (!((note.content.startsWith('/e') || note.content.startsWith('/t')))) {
+    } else if (!((note.content.startsWith('/e') || note.content.startsWith('/t')) || note.content.startsWith('/c'))) {
       try {
         const response = await fetch(`${API_URL}/embed`, {
           method: 'POST',
@@ -94,9 +95,33 @@ export class NoteService {
     return notificationMessage;
   }
 
-  static async deleteNote(noteId: string): Promise<string> {
+  static async deleteNote(noteId: string, userId: string): Promise<string> {
     try {
+      // Store the note category before deleting
+      const { data } = await supabase
+        .from('notes')
+        .select('category')
+        .eq('id', noteId)
+        .single();
+      
+      const noteCategory = data?.category;
+
       await supabase.from('notes').delete().eq('id', noteId);
+
+      // Check if the category has any remaining notes after deletion
+      const { count } = await supabase
+        .from('notes')
+        .select('id', { count: 'exact' })
+        .eq('user_id', userId)
+        .eq('category', noteCategory);
+      
+      // If this was the last note in the category, we might want to handle that
+      const isLastNoteInCategory = count === 0;
+
+      if (isLastNoteInCategory) {
+        await UserService.updateLockedCategory(userId, noteCategory);
+      }
+
       return 'Successfully deleted note!';
     } catch {
       return 'Failed to delete note';

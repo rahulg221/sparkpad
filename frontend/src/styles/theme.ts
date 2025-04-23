@@ -1,10 +1,10 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
-    bgPure: 'rgb(12, 12, 12)', // Pure black app background
-    bgDark: 'rgb(18, 18, 18)',           // Most surfaces
+    bgPure: 'rgb(0, 0, 0)', // Pure black app background
+    bgDark: 'rgb(8, 8, 8)',           // Most surfaces
     bgElevated: 'rgba(255, 255, 255, 0.03)', // Flexible surfaces
-    bgLight: 'rgb(24, 24, 24)',          // Dark gray for inputs, blocks
+    bgLight: 'rgb(18, 18, 18)',          // Dark gray for inputs, blocks
     
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
@@ -35,20 +35,20 @@ export const darkTheme = {
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
-    taskBackground: 'rgb(18, 18, 18)',
+    taskBackground: 'rgb(8, 8, 8)',
     taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-    eventBackground: 'rgb(18, 18, 18)',
+    eventBackground: 'rgb(8, 8, 8)',
     eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
 
-    notifBackground: 'rgb(18, 18, 18)',
+    notifBackground: 'rgb(8, 8, 8)',
     notifColor: 'rgb(255, 214, 10)',
 
-    cardBackground: 'rgb(18, 18, 18)',
+    cardBackground: 'rgb(8, 8, 8)',
     cardColor: '#444444',
 
     // Utility / Semantic
-    border: '#444444',           // Dark gray borders
+    border: 'rgb(29, 29, 29)',           // Dark gray borders
     error: '#ef9a9a',            // Soft pinkish-red error
     success: '#81c784',          // Green for success (kept same)
     warning: '#fbc02d',          // Vibrant yellow for warnings (kept same)
