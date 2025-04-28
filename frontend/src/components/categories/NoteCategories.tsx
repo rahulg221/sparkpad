@@ -1,19 +1,17 @@
 import { useEffect } from 'react';
 import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle, PenIcon, PenIconContainer, LockIconContainer } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, PenIcon, PenIconContainer, ThumbtackIconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { Stack, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { IoPencilOutline, IoLockClosedOutline } from 'react-icons/io5';
+import { Stack, Row } from '../../styles/shared/BaseLayout';
+import { IoPencilOutline } from 'react-icons/io5';
 import { useNotes } from '../../context/NotesProvider';
 import { UserService } from '../../api/userService';
-import { FaLockOpen } from 'react-icons/fa6';
-import { FaLock } from 'react-icons/fa';
+import { FaThumbtack } from 'react-icons/fa6';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { Note } from '../../models/noteModel';
 import { FaPlus } from 'react-icons/fa';
 import { IconButton } from '../../styles/shared/Button.styles';
-import { InputBar } from '../inputbar/InputBar';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
@@ -83,7 +81,12 @@ export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: 
               <LoadingSpinner />
             ) : (
               <>
-              {categories.map((category) => (
+              {categories.sort((a, b) => {
+                const aLocked = lockedCategories.includes(a);
+                const bLocked = lockedCategories.includes(b);
+                if (aLocked === bLocked) return 0;
+                return aLocked ? -1 : 1;  // locked categories first
+              }).map((category) => (
                 <div key={category}>
                 <Stack onClick={() => handleCategoryClick(category)}>
                     <CategoryBox onClick={() => handleNotepadClick()} />
@@ -99,13 +102,13 @@ export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: 
                     <CategoryTitle >
                         {category}
                         {lockedCategories.includes(category) ?   (
-                          <LockIconContainer title="Unlock a category to allow it to be moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
-                            <FaLock size={14} />
-                          </LockIconContainer>
+                          <ThumbtackIconContainer pinned={true} title="Unpin a category to allow it to be moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
+                            <FaThumbtack size={14}/>
+                          </ThumbtackIconContainer>
                         ) : (
-                          <LockIconContainer title="Lock a category to prevent it from being moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
-                            <FaLockOpen size={14} />
-                          </LockIconContainer>
+                          <ThumbtackIconContainer pinned={false} title="Pin a category to prevent it from being moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
+                            <FaThumbtack size={14}/>
+                          </ThumbtackIconContainer>
                         )}
                     </CategoryTitle>
                     )}

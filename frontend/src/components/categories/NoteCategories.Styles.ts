@@ -84,13 +84,13 @@ export const PenIconContainer = styled.div`
   z-index: 3;
 `;
 
-export const LockIconContainer = styled.div`
-  color: ${({ theme }) => theme.colors.textFaint};
+export const ThumbtackIconContainer = styled.div<{ pinned: boolean }>`
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.4s ease;
+  color: ${({ theme, pinned }) => pinned ? theme.colors.pinnedColor : theme.colors.textFaint};
 
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
+    transform: scale(1.2);
   }
 `;
 

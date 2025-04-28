@@ -25,6 +25,7 @@ export const darkTheme = {
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
+    pinnedColor: 'rgb(230, 66, 66)',
     topNotePad: 'rgb(255, 255, 255)',     
     treeNode: 'rgb(30, 30, 30)',
     overlay: 'rgba(0, 0, 0, 0.4)',
@@ -114,6 +115,7 @@ export const lightTheme = {
 
   // Dot color (reversed for light bg)
   dotColor: 'rgba(0, 0, 0, 0.3)', 
+  pinnedColor: 'rgb(250, 0, 0)',
   topNotePad: 'rgba(0, 0, 0, 0.9)',
   treeNode: 'rgb(235, 235, 235)',
   overlay: 'rgba(0, 0, 0, 0.4)',
