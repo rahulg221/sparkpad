@@ -13,7 +13,7 @@ export class CalendarService {
       console.error('Error checking calendar access:', error);
       return false;
     }
-    
+    console.log(data?.google_connected);
     return data?.google_connected === true;
   }  
 

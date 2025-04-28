@@ -10,7 +10,7 @@ export const ToolBarContainer = styled(Container)<{ isToolBarCollapsed: boolean}
     padding-left: ${({ theme }) => theme.spacing.md};
     padding-right: ${({ theme }) => theme.spacing.md};
     transition: all 0.3s ease;
-    width: ${({ isToolBarCollapsed }) => isToolBarCollapsed ? '60px' : '220px'};
+    width: ${({ isToolBarCollapsed }) => isToolBarCollapsed ? '65px' : '225px'};
     align-items: ${({ isToolBarCollapsed }) => isToolBarCollapsed ? 'center' : 'start'};
 
     @media (max-width: 768px) {
@@ -28,6 +28,8 @@ export const IconWrapper = styled.div`
   border-radius: 50%;        
   background-color: ${({ theme }) => theme.colors.primary}; 
   color: black;       
+
+  
 
   @media (max-width: 768px) {
     width: 20px;

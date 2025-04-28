@@ -1,7 +1,7 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
-    bgPure: 'rgb(0, 0, 0)', // Pure black app background
+    bgPure: 'rgb(4, 4, 4)', // Pure black app background
     bgDark: 'rgb(8, 8, 8)',           // Most surfaces
     bgElevated: 'rgba(255, 255, 255, 0.03)', // Flexible surfaces
     bgLight: 'rgb(18, 18, 18)',          // Dark gray for inputs, blocks
@@ -35,14 +35,17 @@ export const darkTheme = {
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
-    taskBackground: 'rgb(8, 8, 8)',
+    taskBackground: 'rgb(12, 12, 12)',
     taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-    eventBackground: 'rgb(8, 8, 8)',
+    eventBackground: 'rgb(12, 12, 12)',
     eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
 
-    notifBackground: 'rgb(8, 8, 8)',
+    notifBackground: 'rgb(12, 12, 12)',
     notifColor: 'rgb(255, 214, 10)',
+
+    recentBackground: 'rgb(8, 8, 8)',
+    recentColor: 'rgb(250, 98, 75)',
 
     cardBackground: 'rgb(8, 8, 8)',
     cardColor: '#444444',
@@ -121,18 +124,21 @@ export const lightTheme = {
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
 
-  taskBackground: 'rgba(201, 217, 255, 0.1)',
+  taskBackground: 'rgba(201, 217, 255, 0.3)',
   taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-  eventBackground: 'rgba(224, 201, 255, 0.1)',
+  eventBackground: 'rgba(224, 201, 255, 0.3)',
   eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
-  notifBackground: 'rgba(255, 214, 10, 0.1)',
+  notifBackground: 'rgba(255, 214, 10, 0.3)',
   notifColor: 'rgb(255, 214, 10)',
 
-  primarySurface: 'rgba(255, 214, 10, 0.1)',
-  cardBackground: 'rgba(255, 214, 10, 0.1)',
-  cardColor: 'rgb(255, 214, 10)',
+  recentBackground: 'rgba(250, 98, 75, 0.3)',
+  recentColor: 'rgb(250, 98, 75)',
+
+  primarySurface: 'rgba(255, 214, 10, 0.3)',
+  cardBackground: 'rgba(255, 238, 152, 0.3)',
+  cardColor: 'rgb(255, 238, 152)',
 
   // Utility / Semantic
   border: '#444444',           // Dark gray borders

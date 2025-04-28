@@ -1,4 +1,13 @@
+import { FaTrash } from 'react-icons/fa';
 import styled from 'styled-components';
+
+export const TrashIcon = styled(FaTrash)`
+  color: ${({ theme }) => theme.colors.textFaint};
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.recentColor};
+  }
+`;
 
 export const NoteInfo = styled.div`
   margin-top: ${({ theme }) => theme.spacing.sm};
@@ -15,7 +24,7 @@ export const NewNoteCard = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};
-  width: 200px;
+  width: 275px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -23,11 +32,11 @@ export const NewNoteCard = styled.div`
   cursor: pointer;
   overflow: hidden;
 
-  min-height: 20vh;
+  min-height: 25vh;
   transition: max-height 0.5s ease, border 0.3s ease;
 
   &:hover {
-    max-height: 80vh;
+    height: auto;
     border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 `;
@@ -40,7 +49,7 @@ export const NotePreview = styled.div`
   overflow-wrap: anywhere;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

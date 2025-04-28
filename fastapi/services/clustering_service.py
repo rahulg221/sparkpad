@@ -193,20 +193,11 @@ class ClusteringService:
 
         return labels
 
-    def adaptive_hdbscan_params(self, n):
+    def adaptive_hdbscan_params(self, n: int) -> tuple[int, int]:
         """
-        Dynamically select min_cluster_size and min_samples based on number of embeddings.
-        Stricter at higher volumes to ensure meaningful clusters.
+        Scale `min_cluster_size` and `min_samples` proportionally with n.
+        Avoids sudden jumps between buckets.
         """
-        if n <= 20:
-            return 3, 1  # Very permissive for low volume
-        elif n <= 50:
-            return 5, 3
-        elif n <= 100:
-            return 8, 5
-        elif n <= 300:
-            return 12, 8
-        elif n <= 600:
-            return 16, 10
-        else:
-            return 20, 12  # Very strict — expect high-quality, large clusters only
+        min_cluster_size = max(3, int(n ** 0.4))       # Square root is common in clustering
+        min_samples = max(1, int(min_cluster_size * 0.6))  # Slightly looser constraint
+        return min_cluster_size, min_samples

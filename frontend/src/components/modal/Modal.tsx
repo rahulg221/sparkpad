@@ -62,7 +62,7 @@ export const Modal: React.FC<ModalProps> = ({
     <ModalOverlay>
       <ModalContainer ref={modalRef}>
         <ModalHeader>
-          <h1>{title}</h1>
+          <h2>{title}</h2>
         </ModalHeader>
         <ModalContent>
           {children}

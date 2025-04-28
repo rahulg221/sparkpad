@@ -25,17 +25,9 @@ const MainContent = styled.div`
 `;
 
 export const DashboardPage = () => {
-  const { isInputVisible, setIsInputVisible } = useActions();
 
   return (  
     <>
-      {!isInputVisible ? (
-        <FloatingButton onClick={() => setIsInputVisible(true)}>
-          <FaPen size={16} color='white' />
-        </FloatingButton>
-      ) : (
-        null
-      )}
       <PageLayout>
         <ToolBar />
         <MainContent>

@@ -3,7 +3,7 @@ import { NoteService } from '../../api/noteService';
 import { useAuth } from '../../context/AuthProvider';
 import { CategoriesContainer, CategoryBox, CategoryTitle, PenIcon, PenIconContainer, LockIconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../context/ActionsContext';
-import { Stack, Row } from '../../styles/shared/BaseLayout';
+import { Stack, Row, Spacer } from '../../styles/shared/BaseLayout';
 import { IoPencilOutline, IoLockClosedOutline } from 'react-icons/io5';
 import { useNotes } from '../../context/NotesProvider';
 import { UserService } from '../../api/userService';
@@ -12,14 +12,17 @@ import { FaLock } from 'react-icons/fa';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { Note } from '../../models/noteModel';
 import { FaPlus } from 'react-icons/fa';
+import { IconButton } from '../../styles/shared/Button.styles';
+import { InputBar } from '../new_note/InputBar';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;
+  setIsNewNotepadVisible: (visible: boolean) => void;
 }
 
-export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => {
+export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: NoteCategoriesProps) => {
   const { user, lockedCategories, setLockedCategories } = useAuth();
-  const { categories, setCategories, setIsInputVisible, isToolBarCollapsed, isInputVisible } = useActions();
+  const { categories, setCategories, setIsInputVisible, isToolBarCollapsed, isInputVisible, isInputBarVisible, setIsInputBarVisible } = useActions();
   const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading } = useNotes();
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
@@ -53,7 +56,7 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
   }, [user?.id, isCategoriesLoading, lockedCategories]);
 
   const handlePenClick = () => {
-    setIsInputVisible(true);
+    setIsInputBarVisible(true);
     setWriteInCurrentCategory(true);
   }
 
@@ -69,8 +72,13 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
 
   return (
     <>
+      <Row main="spaceBetween" cross="start">
+        <h1>Sparkpads</h1>
+        <IconButton title="Create a new Sparkpad" onClick={() => setIsNewNotepadVisible(true)}>
+          <FaPlus size={14} />
+        </IconButton>
+      </Row>
       <CategoriesContainer isToolBarCollapsed={isToolBarCollapsed} isInputVisible={isInputVisible}>
-            <>
             {isCategoriesLoading || isSearchLoading ? (
               <LoadingSpinner />
             ) : (
@@ -105,9 +113,9 @@ export const NoteCategories = ({ handleCategoryClick }: NoteCategoriesProps) => 
               ))}
               </>
             )}
-            </>
+
       </CategoriesContainer>    
-          
+
     </> 
   );
 };

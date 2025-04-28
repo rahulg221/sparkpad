@@ -1,51 +1,15 @@
 import styled from 'styled-components';
 
-export const TaskContainer = styled.div`
+export const ItemContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
-  max-height: calc(2 * 10vh + ${({ theme }) => theme.spacing.md});
-
+  height: 100%;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  transition: all 0.3s ease-in-out;
   overflow-y: auto;
   scrollbar-width: thin;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.bgLight};
-    border-radius: 4px;
-  }
-  
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.bgDark};
-    border-radius: 4px;
-  }
-`;
-
-export const EventContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  gap: ${({ theme }) => theme.spacing.md};
-  overflow-x: auto;
-  overflow-y: hidden;
-
-  scrollbar-width: thin;
-
-  &::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: ${({ theme }) => theme.colors.bgDark};
-    border-radius: 4px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${({ theme }) => theme.colors.bgLight};
-    border-radius: 4px;
-  }
+  scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
 `;
 
 export const CardInfo = styled.div`
@@ -57,36 +21,51 @@ export const CardInfo = styled.div`
   align-items: center;
 `;
 
-export const Card = styled.div<{ type: 'event' | 'task' }>`
-  background-color: ${({ theme, type }) => type === 'event' ? theme.colors.eventBackground : theme.colors.taskBackground};  
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: ${({ theme }) => theme.spacing.lg};
-  width: ${({ type }) => type === 'event' ? '200px' : '100%'};
+export const SummaryContainer = styled.div`
   display: flex;
   flex-direction: column;
-  flex: 0 0 auto;
-  height: ${({ type }) => type === 'event' ? '20vh' : '10vh'};
-  justify-content: space-between;
-  cursor: pointer;
-  overflow: hidden;
-
-  max-height: 160px;
-  transition: max-height 0.5s ease, border 0.3s ease;
-
-  &:hover {
-    max-height: 220px;
-    border: 1px solid ${({ theme, type }) => type === 'event' ? theme.colors.eventColor : theme.colors.taskColor};
-  }
+  width: 100%;
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  background-color: ${({ theme }) => theme.colors.taskBackground};
+  transition: all 0.3s ease-in-out;
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  overflow-y: none;
 `;
 
-export const CardPreview = styled.div<{ type: 'event' | 'task' }>`
+export const TaskCard = styled.div`
+  background-color: ${({ theme }) => theme.colors.taskBackground};
   color: ${({ theme }) => theme.colors.textLight};
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  width: 100%;           
+  box-sizing: border-box;
+
+  display: flex;
+  flex-direction: column;
+`;
+
+export const EventCard = styled.div`
+  background-color: ${({ theme }) => theme.colors.eventBackground};
+  color: ${({ theme }) => theme.colors.textLight};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  padding: ${({ theme }) => theme.spacing.md};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  width: 100%;           
+  box-sizing: border-box;
+  height: 100px;
+
+  display: flex;
+  flex-direction: column;
+`;
+
+export const CardPreview = styled.div`
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-size: ${({ theme }) => theme.fontSize.xxs};
   word-break: break-word;
   overflow-wrap: anywhere;
+  flex: 1;
 
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -94,11 +73,19 @@ export const CardPreview = styled.div<{ type: 'event' | 'task' }>`
   text-overflow: ellipsis;
   opacity: 1;
 
-  -webkit-line-clamp: ${({ type }) => type === 'event' ? 3 : 1};
+  -webkit-line-clamp: 1;
 
   transition: all 0.4s ease-in-out;
 
-  ${Card}:hover & {
+  ${TaskCard}:hover & {
+    -webkit-line-clamp: unset;
+    display: block;
+    overflow: visible;
+    text-overflow: unset;
+    opacity: 1;
+  }
+
+  ${EventCard}:hover & {
     -webkit-line-clamp: unset;
     display: block;
     overflow: visible;
@@ -116,3 +103,14 @@ export const CardPreview = styled.div<{ type: 'event' | 'task' }>`
     margin-bottom: 0.25rem;
   }
 `;
+
+export const SmallTextButton = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.xxs};
+  font-family: inherit;
+  color: ${({ theme }) => theme.colors.textLight};
+  cursor: pointer;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.taskColor};
+  }
+`;  

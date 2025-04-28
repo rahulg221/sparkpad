@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { 
     DashboardWrapper,
 } from './Dashboard.Styles';
-import { SecondaryButton, TextButton, IconButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
 import { NoteCategories } from '../categories/NoteCategories';
 import { NotesList } from '../noteslist/NotesList';
 import { NoteService } from '../../api/noteService';
@@ -15,42 +15,38 @@ import { MdEventAvailable, MdLogout } from 'react-icons/md';
 import CalendarService from '../../api/calendarService';
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
 import { NotesRow } from '../notesrow/NotesRow';
-import { Grid, Spacer, Row, Container } from '../../styles/shared/BaseLayout';
+import { Grid, Spacer, Row } from '../../styles/shared/BaseLayout';
 import { MdArrowBack } from 'react-icons/md';
 import { TreeView } from '../tree/Tree';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
-import { FaPen, FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPen, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
-import { EventsRow } from '../calendar/EventsRow';
-import { TasksRow } from '../calendar/TasksRow';
 import { SummaryModal } from '../modal/SummaryModal';
 import { NewNotepadModal } from '../modal/NewNotepadModal';
 import { UserService } from '../../api/userService';
+import { InputBar } from '../new_note/InputBar';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
-    const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, isLoading, notificationMessage, categories, showNotification, isEventsVisible, setIsEventsVisible, isTasksVisible, setIsTasksVisible, notificationType } = useActions();
+    const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, notificationMessage, categories, showNotification, notificationType, isInputBarVisible, setIsInputBarVisible } = useActions();
     const { isCategoriesLoading } = useNotes(); 
-    const { isSummaryVisible, setIsSummaryVisible } = useSummary();
+    const { setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
     const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
-    const { summary, isSummaryLoading } = useSummary();
     const [isNewNotepadVisible, setIsNewNotepadVisible] = useState(false);
     const { currentCategory, 
             showTree, 
             showRecentNotes, 
             searchResults,
-            isSearchLoading,
             setCurrentCategory, 
             setShowTree, 
             setSearchResults,
             setWriteInCurrentCategory,
-            setShowRecentNotes,
     } = useNotes();
 
     const navigate = useNavigate();
@@ -131,6 +127,7 @@ export const Dashboard = () => {
         setIsSummaryVisible(false);
         setShowTree(false);
         setWriteInCurrentCategory(false);
+        setIsInputBarVisible(false);    
     };
 
     const handleDeleteNote = async (noteId: string) => {
@@ -215,42 +212,23 @@ export const Dashboard = () => {
         // Default dashboard view
         return (
           <>
-            {isTasksVisible && (
-              <>
-                <Spacer height="xl" />
-                <TasksRow />
-              </>
-            )}
+            <Spacer height="xl" />
 
-            {isEventsVisible && (
-              <>
-                <Spacer height="xl" />
-                <EventsRow />
-              </>
-            )}
-      
             {showRecentNotes && (
               <>
-                <Spacer height="xl" />
                 <NotesRow />
               </>
             )}
       
             {currentCategory ? (
               <>
-                <Spacer height="xl" />
+                
                 <NotesList category={currentCategory} />
               </>
             ) : (
               <>
-                <Spacer height="xl" />
-                <Row main="spaceBetween" cross="center">
-                  <h1>Sparkpads</h1>
-                  <IconButton title="Create a new Sparkpad" onClick={() => setIsNewNotepadVisible(true)}>
-                    <FaPlus size={14} />
-                  </IconButton>
-                </Row>
-                <NoteCategories handleCategoryClick={handleCategoryClick} />
+                
+                <NoteCategories handleCategoryClick={handleCategoryClick} setIsNewNotepadVisible={setIsNewNotepadVisible} />
               </>
             )}
           </>
@@ -270,6 +248,9 @@ export const Dashboard = () => {
               </TextButton>
             )}
             {renderDashboardContent()}
+            {isInputBarVisible && (
+                <InputBar />
+            )}
             {isUpdateNoteOpen && (
                 <UpdateNoteModal
                     isOpen={isUpdateNoteOpen}
@@ -298,15 +279,6 @@ export const Dashboard = () => {
                     Logout
                 </SecondaryButton>
             </Modal>
-            )}
-            {isSummaryVisible && (
-                <SummaryModal
-                    isOpen={isSummaryVisible}
-                    onClose={() => setIsSummaryVisible(false)}
-                    summary={summary} 
-                    isSummaryLoading={isSummaryLoading}
-                    onSave={() => setIsSummaryVisible(false)}
-                />
             )}
             {isNewNotepadVisible && (
                 <NewNotepadModal

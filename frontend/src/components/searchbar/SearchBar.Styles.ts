@@ -7,9 +7,10 @@ export const SearchInput = styled.input`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: none;
   color: ${({ theme }) => theme.colors.textPrimary};
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.xxs};
   font-family: inherit;
   height: 6.5vh;
+  max-height: 40px;
   padding-left: ${({ theme }) => theme.spacing.xxl};
 
   &:focus {

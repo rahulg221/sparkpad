@@ -4,17 +4,42 @@ import { Container } from "../../styles/shared/BaseLayout";
 export const SidebarContainer = styled.div<{ isInputVisible: boolean }>`
   height: 100dvh;
   background-color: ${({ theme }) => theme.colors.bgDark};
-  border-left: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: 0;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding-bottom: ${({ theme }) => theme.spacing.xl};
-  padding-top: ${({ theme }) => theme.spacing.md};
+  border-left: 1px solid ${({ theme }) => theme.colors.border};
   padding-left: ${({ theme }) => theme.spacing.md};
-  padding-right: ${({ isInputVisible, theme }) => isInputVisible ? theme.spacing.md : '0px'};
+  padding-right: ${({ theme, isInputVisible }) => isInputVisible ? theme.spacing.md : '0px'};
   transition: all 0.3s ease;
-  width: ${({ isInputVisible }) => isInputVisible ? '220px' : '0px'};
+  width: ${({ isInputVisible }) => isInputVisible ? '225px' : '0px'};
   align-items: ${({ isInputVisible }) => isInputVisible ? 'start' : 'center'};
+  overflow-y: auto;
+  
+  /* Hide scrollbar in Webkit browsers (Chrome, Safari, Edge) */
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 
+  /* Now when scrolling, show a custom thin scrollbar */
+  &:hover,
+  &:active,
+  &:focus-within {
+    scrollbar-width: thin;
+    scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: ${({ theme }) => theme.colors.border};
+      border-radius: 4px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: ${({ theme }) => theme.colors.bgDark};
+      }
+  }
   @media (max-width: 768px) {
       width: ${({ isInputVisible }) => isInputVisible ? '100%' : '0px'};
   }

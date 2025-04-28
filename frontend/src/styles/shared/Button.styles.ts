@@ -3,6 +3,7 @@ import styled from 'styled-components';
 export const PrimaryButton = styled.button`
   width: 100%;
   height: 6.5vh;
+  max-height: 40px;
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
   color: black;
@@ -59,8 +60,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
 export const TextButton = styled.button<{ width?: string }>`
   background-color: transparent;
   border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
-  height: 7.5vh;  
+  border-radius: ${({ theme }) => theme.borderRadius.sm};  
   width: ${({ width }) => width || '100%'};    
   font-size: ${({ theme }) => theme.fontSize.sm};
   color: ${({ theme }) => theme.colors.textLight};

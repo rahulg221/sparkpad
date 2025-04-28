@@ -10,7 +10,7 @@ import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-i
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { FaBars, FaBorderAll, FaTrash } from 'react-icons/fa';
-import { FaPen } from 'react-icons/fa6';
+import { FaPen, FaTable, FaTableList } from 'react-icons/fa6';
 import { Modal } from '../modal/Modal';
 import { ModalContent } from '../modal/Modal.Styles'; 
 import { ThemeToggle } from '../themetoggle/ThemeToggle';
@@ -19,6 +19,7 @@ import { useActions } from '../../context/ActionsContext';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { useNotes } from '../../context/NotesProvider';
 import remarkGfm from 'remark-gfm';
+import { IconButton } from '../../styles/shared/Button.styles';
 
 interface NotesListProps {
   category: string;
@@ -100,8 +101,10 @@ export const NotesList = ({ category }: NotesListProps) => {
           { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
         </Row>
         <Row main='end' cross='center' gap='sm'>
-          <h2>Page {page} of {Math.ceil(totalNotes / limit)} • {totalNotes} sparks</h2>
-          {$layoutMode === 'grid' ? <FaBars size={14} onClick={handleLayoutMode}/> : <FaBorderAll size={14} onClick={handleLayoutMode}/>}
+          <p>Page {page} of {Math.ceil(totalNotes / limit)}</p>
+          <IconButton title="Toggle layout" onClick={handleLayoutMode}>
+            {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
+          </IconButton>
         </Row>
       </Row>
       <NoteContainer>
@@ -173,7 +176,8 @@ export const NotesList = ({ category }: NotesListProps) => {
         </Row>
       </TextButton>
       </Row>
-      <Spacer height='md' />
+      <Spacer height='xl' />
+      <Spacer height='xl' />
       {isUpdateNoteOpen && (
           <UpdateNoteModal
               isOpen={isUpdateNoteOpen}

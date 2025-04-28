@@ -48,8 +48,9 @@ export const Row = styled.div<{
 export const Column = styled.div<{
     main: keyof typeof alignmentMap;
     cross: keyof typeof alignmentMap; 
-    gap?: 'sm' | 'md' | 'lg';
+    gap?: 'sm' | 'md' | 'lg' | 'xl';
     padding?: 'sm' | 'md' | 'lg';
+    width?: string;
 }>` 
   display: flex;
   flex-direction: column;
@@ -59,6 +60,7 @@ export const Column = styled.div<{
   align-items: ${({ cross }) => alignmentMap[cross] || 'stretch'};
   padding: ${({ padding, theme }) => padding ? theme.spacing[padding] : '0'};
   gap: ${({ gap, theme }) => gap ? theme.spacing[gap] : '0'};
+  width: ${({ width }) => width || 'auto'};
 `;
 
 export const Stack = styled.div<{
@@ -91,11 +93,13 @@ export const ScrollView = styled.div<{
     maxHeight?: string;
     maxWidth?: string;
     direction?: 'vertical' | 'horizontal';
+    width?: string;
   }>`
     overflow-y: ${({ direction }) => direction === 'vertical' ? 'auto' : 'hidden'};
     overflow-x: ${({ direction }) => direction === 'horizontal' ? 'auto' : 'hidden'};
     max-height: ${({ maxHeight }) => maxHeight || '100%'};
     max-width: ${({ maxWidth }) => maxWidth || '100%'};
+    width: 100%;
     scrollbar-width: thin;
     scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 

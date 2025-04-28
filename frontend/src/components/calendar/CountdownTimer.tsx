@@ -1,14 +1,9 @@
 import { useState, useEffect } from 'react';
-import { Item, Icon, Circle } from '../sidebar/SideBar.Styles';
-import { ItemCard } from '../../styles/shared/Notes.styles';
-import { Column, Row } from '../../styles/shared/BaseLayout';
-import { FaCalendar, FaClock, FaTrash } from 'react-icons/fa';
+import { FaClock } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
-import { Card, CardInfo, CardPreview } from './Calendar.Styles';
-import { NoteInfo } from '../notesrow/NotesRow.Styles';
-import { NotePreview } from '../notesrow/NotesRow.Styles';
-import { SmallIconButton } from '../noteslist/NotesList.Styles';
 import { useTheme } from 'styled-components';
+import { Row, Spacer } from '../../styles/shared/BaseLayout';
+import { EventCard, CardPreview } from './Calendar.Styles';
 
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const theme = useTheme();
@@ -68,20 +63,21 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   }, [start_time]);
 
   return (
-    <Card type="event">
-      <CardPreview type="event">
-          <ReactMarkdown>
-            {eventInfo}
-          </ReactMarkdown>
+    <EventCard>
+      <CardPreview>
+        {eventInfo}
       </CardPreview>
-      <CardInfo>
-          {new Date(start_time).toLocaleDateString('en-US', {
-          weekday: 'long',
-          hour: '2-digit',
-          minute: '2-digit',
-          })}
+      <Row main="start" cross="center" gap="md">
+          <p>
+            {new Date(start_time).toLocaleDateString('en-US', {
+              weekday: 'short',
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </p>
+          <Spacer expand={true} />
           <FaClock size={14} color={theme.colors.eventColor} />
-      </CardInfo>
-    </Card>
+      </Row>
+    </EventCard>
   );
 };

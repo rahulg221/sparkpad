@@ -23,11 +23,14 @@ export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isI
 
 export const CategoryBox = styled.div`
   position: relative;
+  border-left: 1px solid ${({ theme }) => theme.colors.border};
   background-color: ${({ theme }) => theme.colors.bgLight};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding: ${({ theme }) => theme.spacing.sm};
   height: 15vh;
+  max-height: 100px;
   width: 12vh;
+  max-width: 80px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -43,27 +46,23 @@ export const CategoryBox = styled.div`
     position: absolute;
     top: 0;
     left: 0;
-    width: 4px;
+    width: 3px;
     height: 100%;
     background-color: black;
     z-index: 2;
-    border-top-left-radius: ${({ theme }) => theme.borderRadius.md};
-    border-bottom-left-radius: ${({ theme }) => theme.borderRadius.md};
   }
 
   /* Right paper edge (white strip) */
   &::after {
     content: '';
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 1px;
-    height: 100%;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2px;
     background-color: white;
     z-index: 1;
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
+  } 
 
   &:hover {
     transform: translateY(-2px) scale(1.02);

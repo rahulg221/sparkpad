@@ -30,8 +30,8 @@ export const ModalHeader = styled.div`
   justify-content: space-between;
   align-items: center;
   padding-left: ${({ theme }) => theme.spacing.lg};
-  padding-top: ${({ theme }) => theme.spacing.lg};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
+  height: 6.5vh;
 `;
 
 export const ModalTitle = styled.h2`
@@ -56,11 +56,10 @@ export const ModalContent = styled.div`
 export const ModalFooter = styled.div`
   margin-top: auto;
   border-top: 1px solid ${({ theme }) => theme.colors.border};
-  height: 8vh;
   display: flex;
+  height: 6.5vh;
   justify-content: flex-end;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.md};
   gap: ${({ theme }) => theme.spacing.md};
 `;
 
