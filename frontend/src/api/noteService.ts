@@ -256,10 +256,9 @@ export class NoteService {
     }
   }
 
-  static async getNotesForClustering(userId: string): Promise<Note[]> {
+  static async getRollbackNotes(userId: string): Promise<Note[]> {
     try {
-      // Fetch the user and get locked categories
-      const { data: user , error: userError } = await supabase
+      const { data: user, error: userError } = await supabase
         .from('users')
         .select('locked_categories')
         .eq('id', userId)
@@ -268,35 +267,34 @@ export class NoteService {
       if (userError) throw userError;
   
       const lockedCategories = user?.locked_categories || [];
-      console.log(lockedCategories);
-      // If no locked categories, fetch all notes
-      if (lockedCategories.length === 0) {
-        console.log("no locked categories");
-        const { data: notes, error: notesError } = await supabase
-          .from('notes')
-          .select('id, content, category, created_at, user_id, cluster')
-          .eq('user_id', userId)
-          .order('created_at', { ascending: true });
   
-        if (notesError) throw notesError;
-
-        return notes || [];
-      }
-  
-      // If there are locked categories, exclude them
-      console.log("locked categories");
-      const { data: notes, error } = await supabase
+      const noteQuery = supabase
         .from('notes')
         .select('id, content, category, created_at, user_id, cluster')
         .eq('user_id', userId)
-        .not('category', 'in', `(${lockedCategories.map((cat: string) => `"${cat}"`).join(',')})`) // Converts to a string separated by commas for PostgreSQL
         .order('created_at', { ascending: true });
   
-      if (error) throw error;
+      if (lockedCategories.length > 0) {
+        noteQuery.not('category', 'in', `(${lockedCategories.map((cat: string) => `"${cat}"`).join(',')})`);
+      }
+  
+      const { data: notes, error: notesError } = await noteQuery;
+      if (notesError) throw notesError;
+  
       return notes || [];
     } catch (error) {
-      console.error('Failed to get notes for clustering:', error);
+      console.error('Failed to get notes for rollback:', error);
       return [];
+    }
+  }
+  
+  static async revertChanges(notes: Note[]): Promise<void> {
+    try {
+      if (!notes.length) return;  // no rollback needed
+      const { error } = await supabase.from('notes').upsert(notes);
+      if (error) throw error;
+    } catch (error) {
+      console.error('Failed to revert changes:', error);
     }
   }  
 

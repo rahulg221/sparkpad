@@ -17,9 +17,11 @@ type NotesContextType = {
     writeInCurrentCategory: boolean;
     refreshNotes: boolean;
     clusteredUpdates: string[];
+    rollbackNotes: Note[];
     autoOrganizeNotes: () => void;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
+    setIsCategoriesLoading: (loading: boolean) => void;
     semanticSearch: (query: string) => void;
     setSearchResults: (results: Note[]) => void;
     setShowTree: (show: boolean) => void;
@@ -29,6 +31,7 @@ type NotesContextType = {
     setIsSortingUpdatesVisible: (visible: boolean) => void;
     setSortingUpdates: (updates: string[]) => void;
     setClusteredUpdates: (updates: string[]) => void;
+    setRollbackNotes: (notes: Note[]) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
@@ -47,12 +50,15 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [refreshNotes, setRefreshNotes] = useState<boolean>(false);
     const [isSortingUpdatesLoading, setIsSortingUpdatesLoading] = useState<boolean>(false);     
     const [clusteredUpdates, setClusteredUpdates] = useState<string[]>([]);
+    const [rollbackNotes, setRollbackNotes] = useState<Note[]>([]);
     const { user } = useAuth();
     useActions();
 
     const autoOrganizeNotes = async () => {
         try {
             setIsCategoriesLoading(true);
+            const rollbackNotes = await NoteService.getRollbackNotes(user?.id ?? '');
+            setRollbackNotes(rollbackNotes);
 
             const response = await NoteService.groupAndLabelNotes();
             setIsCategoriesLoading(false);
@@ -80,7 +86,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, isSortingUpdatesVisible, sortingUpdates, clusteredUpdates, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes, setIsSortingUpdatesVisible, setSortingUpdates, setClusteredUpdates }}>{children}</NotesContext.Provider>;
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, isSortingUpdatesVisible, sortingUpdates, clusteredUpdates, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes, setIsSortingUpdatesVisible, setSortingUpdates, setClusteredUpdates, setRollbackNotes, rollbackNotes, setIsCategoriesLoading }}>{children}</NotesContext.Provider>;
 };  
 
 export const useNotes = () => {

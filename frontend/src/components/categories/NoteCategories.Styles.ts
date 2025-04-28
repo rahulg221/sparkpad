@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isInputVisible: boolean }>`
   display: grid;
-  grid-template-columns: ${({ isToolBarCollapsed, isInputVisible }) => isToolBarCollapsed && !isInputVisible ? 'repeat(6, 1fr)' : 'repeat(4, 1fr)'};
+  grid-template-columns: ${({ isToolBarCollapsed, isInputVisible }) => isToolBarCollapsed && !isInputVisible ? 'repeat(5, 1fr)' : 'repeat(3, 1fr)'};
   align-items: center;
   justify-content: start;
   gap: ${({ theme }) => theme.spacing.xl};

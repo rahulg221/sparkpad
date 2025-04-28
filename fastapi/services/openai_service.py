@@ -25,7 +25,7 @@ class OpenAIService:
         category_examples = "\n".join(get_category_examples())
         prompt = f"""
         Analyze the following notes.
-        
+
         Generate a short, general label that captures the core topic or purpose of the group. Avoid overly specific or niche phrasing.
 
         Formatting Rules:
@@ -51,7 +51,8 @@ class OpenAIService:
             temperature=0.0,
         )
 
-        return res.choices[0].message.content.strip()
+        category = res.choices[0].message.content.strip()
+        return category
     
     def generate_embeddings(self, note_content: str) -> list[float]:
         """

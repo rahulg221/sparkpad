@@ -32,7 +32,7 @@ export const SortingUpdatesModal: React.FC<SortingUpdatesModalProps> = ({
         ) : (
             <h2>No notes moved to existing sparkpads</h2>
         )}
-        <SmallHeader>Moved to new sparkpad</SmallHeader>
+        <SmallHeader>Moved to suggested sparkpad</SmallHeader>
         {clusteredUpdates.length > 0 ? (
             clusteredUpdates.map((update, index) => (
                 <h2 key={index}>{update}</h2>

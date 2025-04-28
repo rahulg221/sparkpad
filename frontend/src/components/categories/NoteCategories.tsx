@@ -33,7 +33,7 @@ export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: 
 
         if (categories.length === 0 || !categories.includes('Unsorted')) {
           const welcomeNote: Note = {
-            content: 'This is your default category for uncategorized notes.\n\n- Use + to create a new sparkpad.\n\n- If you become attached to a sparkpad, you can lock it to only allow notes to be added to it.\n\n- Use Organize to sort notes into locked sparkpads and generate new dynamic ones.\n\n- Notes in unlocked sparkpads or Miscellaneous can be moved to other unlocked sparkpads during organizing.',
+            content: '---',
             user_id: user?.id || '',
             category: 'Unsorted',
             cluster: -1,
@@ -100,15 +100,23 @@ export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: 
                     <CategoryTitle>Miscellaneous</CategoryTitle>
                   ) : (
                     <CategoryTitle >
-                        {category}
                         {lockedCategories.includes(category) ?   (
-                          <ThumbtackIconContainer pinned={true} title="Unpin a category to allow it to be moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
-                            <FaThumbtack size={14}/>
-                          </ThumbtackIconContainer>
+                          <>
+                            {category}
+                            <ThumbtackIconContainer pinned={true} title="Unpin a category to allow it to be moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
+                              <FaThumbtack size={14}/>
+                            </ThumbtackIconContainer>
+                          </>
                         ) : (
-                          <ThumbtackIconContainer pinned={false} title="Pin a category to prevent it from being moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
-                            <FaThumbtack size={14}/>
-                          </ThumbtackIconContainer>
+      
+                            <>
+                              <span>Suggested: </span>
+                              {category}
+                              <ThumbtackIconContainer pinned={false} title="Pin a suggested category to turn it into your sparkpad and prevent it from being moved during organizing" onClick={() => handleUpdateLockedCategory(category)}>
+                                <FaThumbtack size={14}/>
+                              </ThumbtackIconContainer>
+                            </>
+              
                         )}
                     </CategoryTitle>
                     )}

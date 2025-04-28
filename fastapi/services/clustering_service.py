@@ -70,7 +70,7 @@ class ClusteringService:
 
         user = user_response.data
 
-        locked_categories = user.get("locked_categories", [])\
+        locked_categories = user.get("locked_categories", [])
         
         locked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).in_("category", locked_categories).execute()
 
@@ -132,7 +132,7 @@ class ClusteringService:
                     raise Exception(f"Note {note.id} not found in database.")
                 
                 note_preview = ' '.join(note.content.split()[:10])
-                sorting_updates.append(f"Spark moved to existing sparkpad: {best_category} ({note_preview})\n")
+                sorting_updates.append(f"{best_category} - {note_preview}\n")
 
                 # Mark note for removal after loop
                 notes_to_remove.append(note)
@@ -181,7 +181,7 @@ class ClusteringService:
         # Find the number of unique categories in the dataframe
         new_categories_count = df["Category"].nunique()
 
-        clustered_updates.append(f"Created {new_categories_count} new sparkpads\n")
+        clustered_updates.append(f"Suggested {new_categories_count} new sparkpads\n")
         # Count how many notes are in each category
         # category_counts = df["Category"].value_counts().to_dict()
         # for category, count in category_counts.items():
@@ -189,7 +189,7 @@ class ClusteringService:
 
         for note in json_result:
             note_preview = ' '.join(note["Note"].split()[:10])
-            clustered_updates.append(f"Spark moved to new sparkpad: {note['Category']} ({note_preview})\n")
+            clustered_updates.append(f"{note['Category']} - {note_preview}\n")
 
         self.update_database(json_result, notes_to_cluster)
 

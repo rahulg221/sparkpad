@@ -62,14 +62,14 @@ export const Modal: React.FC<ModalProps> = ({
     <ModalOverlay>
       <ModalContainer ref={modalRef}>
         <ModalHeader>
-          <h2>{title}</h2>
+          {title}
         </ModalHeader>
         <ModalContent>
           {children}
         </ModalContent>
         <ModalFooter>
+          <TextButton onClick={onClose}>Cancel</TextButton>
           {onSave && <TextButton onClick={onSave}>Save</TextButton>}
-          <TextButton onClick={onClose}>Close</TextButton>
         </ModalFooter>
       </ModalContainer>
     </ModalOverlay>,

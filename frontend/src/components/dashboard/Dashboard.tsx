@@ -32,8 +32,7 @@ import { SortingUpdatesModal } from '../modal/SortingUpdates';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
-    const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, notificationMessage, categories, showNotification, notificationType, isInputBarVisible, setIsInputBarVisible } = useActions();
-    const { isCategoriesLoading } = useNotes(); 
+    const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, notificationMessage, categories, showNotification, notificationType, isInputBarVisible, setIsInputBarVisible, } = useActions();
     const { setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
     const [newCategory, setNewCategory] = useState('');
@@ -50,7 +49,9 @@ export const Dashboard = () => {
             isSortingUpdatesVisible,
             sortingUpdates, 
             clusteredUpdates,
+            rollbackNotes,
             setIsSortingUpdatesVisible,
+            setIsCategoriesLoading,
     } = useNotes();
 
     const navigate = useNavigate();
@@ -161,6 +162,20 @@ export const Dashboard = () => {
         }
     };
 
+    const handleRevertChanges = async () => {
+        try {
+            setIsCategoriesLoading(true);
+            await NoteService.revertChanges(rollbackNotes);
+            console.log('Reverted changes');
+            setIsSortingUpdatesVisible(false);
+            console.log('Sorting updates visible set to false');
+            setIsCategoriesLoading(false);
+            console.log('Categories loading set to false');
+        } catch (err) {
+            console.error('Error reverting changes:', err);
+        }
+    }
+
     const renderDashboardContent = () => {
         // Tree View overrides everything
         if (showTree) {
@@ -256,7 +271,7 @@ export const Dashboard = () => {
             {isSortingUpdatesVisible && (
                 <SortingUpdatesModal
                     isOpen={isSortingUpdatesVisible}
-                    onClose={() => setIsSortingUpdatesVisible(false)}
+                    onClose={() => handleRevertChanges()}
                     sortingUpdates={sortingUpdates}
                     clusteredUpdates={clusteredUpdates}
                     onSave={() => setIsSortingUpdatesVisible(false)} // Fix later to save/revert changes

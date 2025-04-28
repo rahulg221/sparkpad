@@ -29,7 +29,9 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding: ${({ theme }) => theme.spacing.lg};
+  font-weight: 500;
+  font-size: ${({ theme }) => theme.fontSize.md};
   border-bottom: 1px solid ${({ theme }) => theme.colors.border};
   height: 6.5vh;
 `;
