@@ -55,7 +55,7 @@ export const TasksRow = () => {
   };
 
   return (
-      <Column main="start" cross="start" gap="xl">
+      <Column main="start" cross="start" gap="lg">
         <Container width="100%">
           <Row main="spaceBetween" cross="start">
             <h2 style={{ fontWeight: 'bold' }}>Tasks</h2>

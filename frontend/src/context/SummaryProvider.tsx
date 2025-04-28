@@ -31,7 +31,7 @@ export const SummaryProvider = ({ children }: { children: ReactNode }) => {
 
       notesToSummarize =
         currentCategory === ''
-          ? await NoteService.getNotes(user.id!, 25)
+          ? await NoteService.getMostRecentNotes(user.id!, 25) 
           : await NoteService.getNotesByCategory(user.id!, currentCategory, 25, 0);
 
       const result = await NoteService.summarizeNotes(notesToSummarize);

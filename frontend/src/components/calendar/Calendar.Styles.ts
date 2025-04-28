@@ -26,7 +26,7 @@ export const SummaryContainer = styled.div`
   flex-direction: column;
   width: 100%;
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background-color: ${({ theme }) => theme.colors.taskBackground};
+  background-color: ${({ theme }) => theme.colors.cardBackground};
   transition: all 0.3s ease-in-out;
   padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};

@@ -42,10 +42,6 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   useEffect(() => {
     fetchNotes();
-
-    if (window.innerWidth < 768) {
-      setLayoutMode('list');
-    }
   }, [user?.id, page, refreshNotes, limit]);
 
   const fetchNotes = async () => {
@@ -102,9 +98,11 @@ export const NotesList = ({ category }: NotesListProps) => {
         </Row>
         <Row main='end' cross='center' gap='sm'>
           <p>Page {page} of {Math.ceil(totalNotes / limit)}</p>
-          <IconButton title="Toggle layout" onClick={handleLayoutMode}>
-            {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
-          </IconButton>
+          {window.innerWidth > 768 && (
+            <IconButton title="Toggle layout" onClick={handleLayoutMode}>
+              {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
+            </IconButton>
+          )}
         </Row>
       </Row>
       <NoteContainer>

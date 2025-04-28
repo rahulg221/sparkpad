@@ -72,13 +72,13 @@ export const SubmitButton = styled.button`
 
 // Hint for dates (you already had this)
 export const DateHint = styled.p`
-  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-size: ${({ theme }) => theme.fontSize.sm};
   color: ${({ theme }) => theme.colors.textFaint};
   display: flex;
   align-items: center;
   flex-direction: row;
   position: absolute;
-  right: 20px;
-  bottom: -25px;
+  right: 75px;
+  bottom: 16px;
   gap: ${({ theme }) => theme.spacing.sm};
 `;

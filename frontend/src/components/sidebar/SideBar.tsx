@@ -12,7 +12,7 @@ export const SideBar = () => {
 
   return (
     <SidebarContainer isInputVisible={isInputVisible}>
-      <Spacer height="xl" />
+      <Spacer height="lg" />
       {isSummaryVisible ? <Snapshot /> : <TasksRow />}
     </SidebarContainer> 
   );
