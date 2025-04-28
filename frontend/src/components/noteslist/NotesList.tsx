@@ -108,7 +108,7 @@ export const NotesList = ({ category }: NotesListProps) => {
       <NoteContainer>
       {notes.length === 0 && <h2>No notes found</h2>}
         { isLoading ? <LoadingSpinner /> :
-        <Grid columns={3} $layoutMode={$layoutMode}>
+        <Grid $columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} $layoutMode={$layoutMode}>
               <NotePreview $layoutMode={$layoutMode}>

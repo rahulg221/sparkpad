@@ -25,10 +25,10 @@ import { FaPen, FaTrash } from 'react-icons/fa';
 import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from '../noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
-import { SummaryModal } from '../modal/SummaryModal';
 import { NewNotepadModal } from '../modal/NewNotepadModal';
 import { UserService } from '../../api/userService';
 import { InputBar } from '../inputbar/InputBar';
+import { SortingUpdatesModal } from '../modal/SortingUpdates';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
@@ -47,6 +47,10 @@ export const Dashboard = () => {
             setShowTree, 
             setSearchResults,
             setWriteInCurrentCategory,
+            isSortingUpdatesVisible,
+            sortingUpdates, 
+            clusteredUpdates,
+            setIsSortingUpdatesVisible,
     } = useNotes();
 
     const navigate = useNavigate();
@@ -167,7 +171,7 @@ export const Dashboard = () => {
           return (
             <>
               <h1>Search Results</h1>
-                <Grid columns={1} $layoutMode="list">
+                <Grid $columns={1} $layoutMode="list">
                   {searchResults.map((note) => (
                     <NoteCard key={note.id} $layoutMode="list">
                       <NoteContent>
@@ -249,6 +253,15 @@ export const Dashboard = () => {
             )}
             {renderDashboardContent()}
             <InputBar />
+            {isSortingUpdatesVisible && (
+                <SortingUpdatesModal
+                    isOpen={isSortingUpdatesVisible}
+                    onClose={() => setIsSortingUpdatesVisible(false)}
+                    sortingUpdates={sortingUpdates}
+                    clusteredUpdates={clusteredUpdates}
+                    onSave={() => setIsSortingUpdatesVisible(false)} // Fix later to save/revert changes
+                />
+            )}
             {isUpdateNoteOpen && (
                 <UpdateNoteModal
                     isOpen={isUpdateNoteOpen}

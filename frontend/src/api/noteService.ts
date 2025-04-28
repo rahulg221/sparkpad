@@ -300,7 +300,7 @@ export class NoteService {
     }
   }  
 
-  static async groupAndLabelNotes(notes: Note[]): Promise<void> {
+  static async groupAndLabelNotes(): Promise<{ sorting_updates: string[], clustered_updates: string[] }> {
     const token = await getToken();
     try {
       const response = await fetch(`${API_URL}/label`, {
@@ -309,20 +309,24 @@ export class NoteService {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ notes_content: notes.map(note => note.content), notes: notes }),
       });
+
+      const data = await response.json();
 
       if (response.status === 429) {
         const errorData = await response.json();
         //alert(errorData.detail || "Rate limit for this action has been exceeded. Try again later.");
-        return;
+        return { sorting_updates: [], clustered_updates: [] };
       }
 
       if (!response.ok) {
           throw new Error('Clustering service request failed');
       }
+
+      return { sorting_updates: data.sorting_updates, clustered_updates: data.clustered_updates };
     } catch (error) {
       console.error('Failed to group and label notes:', error);
+      return { sorting_updates: [], clustered_updates: [] };
     }
   }
 

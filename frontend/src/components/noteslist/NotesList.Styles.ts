@@ -79,7 +79,7 @@ export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   }
 `;
 
-export const NoteInfo = styled.p`
+export const NoteInfo = styled.div`
   color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.xs};
   display: flex;

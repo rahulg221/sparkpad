@@ -9,11 +9,14 @@ type NotesContextType = {
     currentCategory: string;
     searchResults: Note[];
     isSearchLoading: boolean;
+    sortingUpdates: string[];
     isCategoriesLoading: boolean;
+    isSortingUpdatesVisible: boolean;
     showTree: boolean;
     showRecentNotes: boolean;
     writeInCurrentCategory: boolean;
     refreshNotes: boolean;
+    clusteredUpdates: string[];
     autoOrganizeNotes: () => void;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
@@ -23,6 +26,9 @@ type NotesContextType = {
     setShowRecentNotes: (show: boolean) => void;
     setWriteInCurrentCategory: (write: boolean) => void;
     setRefreshNotes: (refresh: boolean) => void;
+    setIsSortingUpdatesVisible: (visible: boolean) => void;
+    setSortingUpdates: (updates: string[]) => void;
+    setClusteredUpdates: (updates: string[]) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
@@ -33,28 +39,29 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [searchResults, setSearchResults] = useState<Note[]>([]);  
     const [isSearchLoading, setIsSearchLoading] = useState(false);
     const [isCategoriesLoading, setIsCategoriesLoading] = useState(false);
+    const [isSortingUpdatesVisible, setIsSortingUpdatesVisible] = useState(false);
+    const [sortingUpdates, setSortingUpdates] = useState<string[]>([]);
     const [showTree, setShowTree] = useState<boolean>(false);
     const [showRecentNotes, setShowRecentNotes] = useState<boolean>(false);
     const [writeInCurrentCategory, setWriteInCurrentCategory] = useState<boolean>(false);
     const [refreshNotes, setRefreshNotes] = useState<boolean>(false);
+    const [isSortingUpdatesLoading, setIsSortingUpdatesLoading] = useState<boolean>(false);     
+    const [clusteredUpdates, setClusteredUpdates] = useState<string[]>([]);
     const { user } = useAuth();
-    const { setNotificationMessage, setShowNotification } = useActions();
+    useActions();
 
     const autoOrganizeNotes = async () => {
         try {
             setIsCategoriesLoading(true);
 
-            const notes = await NoteService.getNotesForClustering(user?.id || '');
-            console.log(notes.length);
-            if (notes.length < 15) {
-                setNotificationMessage('You need at least 15 notes in unlocked sparkpads to auto-organize');
-                setShowNotification(true);
-                setIsCategoriesLoading(false);  
-                return;
-            }
-
-            await NoteService.groupAndLabelNotes(notes);
+            const response = await NoteService.groupAndLabelNotes();
             setIsCategoriesLoading(false);
+
+            if (response.sorting_updates.length > 0 || response.clustered_updates.length > 0) {
+                setIsSortingUpdatesVisible(true);
+                setSortingUpdates(response.sorting_updates);
+                setClusteredUpdates(response.clustered_updates);
+            }
         } catch (err) {
             setIsCategoriesLoading(false);
             console.error('Error testing clustering:', err);
@@ -73,7 +80,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes }}>{children}</NotesContext.Provider>;
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, isSortingUpdatesVisible, sortingUpdates, clusteredUpdates, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes, setIsSortingUpdatesVisible, setSortingUpdates, setClusteredUpdates }}>{children}</NotesContext.Provider>;
 };  
 
 export const useNotes = () => {

@@ -71,15 +71,15 @@ export const Stack = styled.div<{
 `;
 
 export const Grid = styled.div<{
-  columns?: number;
+  $columns?: number;
   gap?: 'sm' | 'md' | 'lg' | 'xl';
   $layoutMode?: 'grid' | 'list';
 }>`
   display: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'flex' : 'grid')};
   flex-direction: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'column' : 'initial')};
-  ${({ $layoutMode, columns }) =>
+  ${({ $layoutMode, $columns }) =>
     $layoutMode === 'grid' &&
-    `grid-template-columns: repeat(${columns || 2}, 1fr);`}
+    `grid-template-columns: repeat(${$columns || 2}, 1fr);`}
   gap: ${({ theme, gap }) => gap ? theme.spacing[gap] : theme.spacing.md};
 
   @media (max-width: 768px) {

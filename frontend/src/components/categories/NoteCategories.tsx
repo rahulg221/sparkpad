@@ -33,9 +33,9 @@ export const NoteCategories = ({ handleCategoryClick, setIsNewNotepadVisible }: 
       try {
         let categories = await NoteService.getDistinctCategories(user.id);
 
-        if (categories.length === 0) {
+        if (categories.length === 0 || !categories.includes('Unsorted')) {
           const welcomeNote: Note = {
-            content: 'Welcome to Sparkpad! Here are a few tips to get you started:\n\n- Use the Capture tool to capture at least 15 sparks\n\n- Use the Organize tool to auto-organize them into sparkpads\n\n- Sync your Google Calendar in Settings, then type / in the capture tool to view Google Calendar commands\n\n- Lock a sparkpad to prevent it from being auto-organized',
+            content: 'This is your default category for uncategorized notes.\n\n- Use + to create a new sparkpad.\n\n- If you become attached to a sparkpad, you can lock it to only allow notes to be added to it.\n\n- Use Organize to sort notes into locked sparkpads and generate new dynamic ones.\n\n- Notes in unlocked sparkpads or Miscellaneous can be moved to other unlocked sparkpads during organizing.',
             user_id: user?.id || '',
             category: 'Unsorted',
             cluster: -1,

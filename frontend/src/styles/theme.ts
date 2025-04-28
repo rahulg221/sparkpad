@@ -124,10 +124,10 @@ export const lightTheme = {
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
 
-  taskBackground: 'rgba(201, 217, 255, 0.3)',
+  taskBackground: 'rgb(180, 199, 247)',
   taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-  eventBackground: 'rgba(224, 201, 255, 0.3)',
+  eventBackground: 'rgb(227, 192, 243)',
   eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
   notifBackground: 'rgba(255, 214, 10, 0.3)',

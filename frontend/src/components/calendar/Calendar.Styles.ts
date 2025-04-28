@@ -12,15 +12,6 @@ export const ItemContainer = styled.div`
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgDark};
 `;
 
-export const CardInfo = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textLight};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 export const SummaryContainer = styled.div`
   display: flex;
   flex-direction: column;
@@ -44,6 +35,12 @@ export const TaskCard = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.taskColor};
+  }
 `;
 
 export const EventCard = styled.div`
@@ -58,6 +55,12 @@ export const EventCard = styled.div`
 
   display: flex;
   flex-direction: column;
+
+  transition: all 0.3s ease-in-out;
+
+  &:hover {
+    border-color: ${({ theme }) => theme.colors.eventColor};
+  }
 `;
 
 export const CardPreview = styled.div`

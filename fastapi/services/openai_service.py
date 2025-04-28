@@ -24,19 +24,9 @@ class OpenAIService:
         input_string = "".join(notes)
         category_examples = "\n".join(get_category_examples())
         prompt = f"""
-        Analyze the following notes and determine whether at least 3 of them share a clear, cohesive theme or subject.
-
-        If such a theme exists, generate a short, general label that captures the core topic or purpose of the group. Avoid overly specific or niche phrasing.
-
-        If no strong shared theme is found, choose the closest fitting label from this fallback list:
-
-        Ideas, Thoughts, Reminders, Tasks, Planning, Errands, Work, School
-
-        OR
-
-        If the notes seem to be random and spontaneous, choose the closest fitting label from this fallback list:
-
-        Random Thoughts, Random Ideas
+        Analyze the following notes.
+        
+        Generate a short, general label that captures the core topic or purpose of the group. Avoid overly specific or niche phrasing.
 
         Formatting Rules:
 

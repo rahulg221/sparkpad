@@ -32,6 +32,14 @@ class ClusteringService:
         Updates the database with the new clusters and categories.
         """
 
+        # Query the users table to get the internal user ID
+        user_response = supabase_client.table("users").select("id, locked_categories").eq("auth_id", self.user["sub"]).single().execute()
+
+        if user_response.data is None:
+            raise Exception("User not found in database.")
+
+        user = user_response.data
+
         id_lookup = {note.content: note.id for note in notes}
         
         for note in clusterData:
@@ -48,71 +56,100 @@ class ClusteringService:
                 raise Exception("Note not found in database.")
             
         return {"success": "Database updated successfully"}
-    
-    def generate_type_centroids(self, examples: dict[str, list[str]]) -> dict[str, np.ndarray]:
-        """
-        Generates the centroids for the note types.
-        """
 
-        centroids = {}
-
-        for note_type, examples in examples.items():
-            # Get the embeddings for the examples
-            embeddings = [OpenAIService().generate_embeddings(example) for example in examples]
-
-            # Calculate the centroid of the embeddings
-            centroid = np.mean(embeddings, axis=0)
-            centroids[note_type] = centroid
-
-        return centroids
-
-    def generate_note_type(self, note_content: str, centroids: dict[str, np.ndarray]) -> str:
-        """
-        Generates a type for a note.
-        """
-
-        # Get the embeddings for the note
-        embedding = OpenAIService().generate_embeddings(note_content)
-
-        labels = list(centroids.keys())
-        centroid_matrix = np.array([centroids[label] for label in labels])
-
-        # Calculate the cosine similarity between the embedding and the centroids
-        similarities = cosine_similarity([embedding], centroid_matrix)[0]
-
-        # Get the label of the centroid with the highest similarity
-        note_type = labels[np.argmax(similarities)]
-
-        return note_type
-        
     def group_and_label_notes(self):
         """
         Groups notes into clusters and labels each cluster with a category.
         """
 
          # Query the users table to get the internal user ID
-        response = supabase_client.table("users").select("id").eq("auth_id", self.user["sub"]).single().execute()
+        user_response = supabase_client.table("users").select("id, locked_categories").eq("auth_id", self.user["sub"]).single().execute()
 
-        if response.data is None:
+        if user_response.data is None:
             raise Exception("User not found in database.")
 
-        user = response.data
+        user = user_response.data
 
-        response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).execute()
+        locked_categories = user.get("locked_categories", [])\
+        
+        locked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).in_("category", locked_categories).execute()
 
-        if response.data is None:
+        if locked_notes_response.data is None:
+            raise Exception("Locked notes not found in database.")
+
+        locked_notes_data = locked_notes_response.data
+
+        locked_notes = [Note(**parse_embedding(n)) for n in locked_notes_data if n.get("embedding")]
+
+        # Group embeddings by locked category
+        locked_category_embeddings = defaultdict(list)
+
+        for note in locked_notes:
+            if note.embedding and note.category:
+                locked_category_embeddings[note.category].append(np.array(note.embedding))
+
+        # Now average them
+        locked_category_centroids = {}
+
+        for category, embeddings in locked_category_embeddings.items():
+            centroid = np.mean(embeddings, axis=0)
+            locked_category_centroids[category] = centroid
+
+        unlocked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).not_.in_("category", locked_categories).execute()
+
+        if unlocked_notes_response.data is None:
             raise Exception("Notes not found in database.")
 
-        notes_data = response.data
+        unlocked_notes_data = unlocked_notes_response.data
 
-        notes = [Note(**parse_embedding(n)) for n in notes_data if n.get("embedding")]
+        notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding")]
+
+        notes_to_remove = []
+
+        sorting_updates = []
+
+        clustered_updates = []
+
+        for note in notes_to_cluster:
+            best_category = None
+            best_score = 0  # Reset per note
+
+            for category, centroid in locked_category_centroids.items():
+                score = cosine_similarity([note.embedding], [centroid])[0][0]
+                if score > best_score:
+                    best_score = score
+                    best_category = category
+
+            if best_score > 0.4:
+                note.category = best_category
+
+                print(f"Updating note {note.id} to category {best_category}")
+                response = supabase_client.table("notes").update({
+                    "category": best_category
+                }).eq("id", note.id).execute()
+
+                if response.data is None:
+                    raise Exception(f"Note {note.id} not found in database.")
+                
+                note_preview = ' '.join(note.content.split()[:10])
+                sorting_updates.append(f"Spark moved to existing sparkpad: {best_category} ({note_preview})\n")
+
+                # Mark note for removal after loop
+                notes_to_remove.append(note)
+
+        # After looping, remove notes that matched
+        for note in notes_to_remove:
+            notes_to_cluster.remove(note)
+
+        if len(notes_to_cluster) <= 3:
+            return sorting_updates, clustered_updates
 
         # Get embeddings for the notes
-        embeddings = [note.embedding for note in notes]
+        embeddings = [note.embedding for note in notes_to_cluster]
 
-        notes_content = [note.content for note in notes]
+        notes_content = [note.content for note in notes_to_cluster]
 
-        preprocessed_notes_content = [preprocess_text(note.content) for note in notes]
+        preprocessed_notes_content = [preprocess_text(note.content) for note in notes_to_cluster]
 
         # Cluster the notes using HDBSCAN           
         labels = self.hdbscan_clustering(embeddings)
@@ -141,9 +178,22 @@ class ClusteringService:
         # Convert DataFrame to JSON format
         json_result = df.to_dict(orient="records")
 
-        self.update_database(json_result, notes)
+        # Find the number of unique categories in the dataframe
+        new_categories_count = df["Category"].nunique()
 
-        return {"clusters": json_result}
+        clustered_updates.append(f"Created {new_categories_count} new sparkpads\n")
+        # Count how many notes are in each category
+        # category_counts = df["Category"].value_counts().to_dict()
+        # for category, count in category_counts.items():
+        #     print(f"Category '{category}': {count} notes")
+
+        for note in json_result:
+            note_preview = ' '.join(note["Note"].split()[:10])
+            clustered_updates.append(f"Spark moved to new sparkpad: {note['Category']} ({note_preview})\n")
+
+        self.update_database(json_result, notes_to_cluster)
+
+        return sorting_updates, clustered_updates
 
     def hdbscan_clustering(self, embeddings):
         """
@@ -153,17 +203,17 @@ class ClusteringService:
         # Step 1: Scale embeddings
         scaled_embeddings = StandardScaler().fit_transform(embeddings)
 
+        min_cluster_size, min_samples, n_neighbors, n_components = self.adaptive_hdbscan_params(len(embeddings))
+
         # Step 2: Dimensionality reduction using UMAP (with fixed seed for reproducibility)
         umap_reducer = umap.UMAP(
-            n_components=15,  # explicit for control
+            n_components=n_components,  # explicit for control
+            n_neighbors=n_neighbors,
             min_dist=0.0,
             metric="cosine",
             random_state=42
         )
         reduced_embeddings = umap_reducer.fit_transform(scaled_embeddings)
-
-        # Step 3: Get dynamic HDBSCAN hyperparameters
-        min_cluster_size, min_samples = self.adaptive_hdbscan_params(len(embeddings))
 
         # Step 4: Cluster using HDBSCAN
         clusterer = hdbscan.HDBSCAN(
@@ -193,11 +243,25 @@ class ClusteringService:
 
         return labels
 
-    def adaptive_hdbscan_params(self, n: int) -> tuple[int, int]:
+    def adaptive_hdbscan_params(self, n: int) -> tuple[int, int, int, int]:
         """
-        Scale `min_cluster_size` and `min_samples` proportionally with n.
-        Avoids sudden jumps between buckets.
+        Scale parameters proportionally with n.
+        HDBSCAN params: min_cluster_size and min_samples.
+        UMAP params: n_neighbors and n_components.
         """
-        min_cluster_size = max(3, int(n ** 0.4))       # Square root is common in clustering
-        min_samples = max(1, int(min_cluster_size * 0.6))  # Slightly looser constraint
-        return min_cluster_size, min_samples
+        # HDBSCAN parameters
+        min_cluster_size = max(3, int(n ** 0.45))
+        min_samples = max(2, int(min_cluster_size * 0.8))  # More conservative (tight clusters)
+
+        # UMAP parameters
+        if n <= 15:
+            n_neighbors = 3
+            n_components = 2
+        elif n <= 50:
+            n_neighbors = 5
+            n_components = 2
+        else:  # 51–100
+            n_neighbors = 10
+            n_components = 3
+
+        return min_cluster_size, min_samples, n_neighbors, n_components

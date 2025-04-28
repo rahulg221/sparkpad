@@ -102,9 +102,9 @@ async def cluster_notes(request: Request, user=Depends(AuthService.get_current_u
     try:
         # Cluster the notes
         clustering_service = ClusteringService(user)
-        clusterData = clustering_service.group_and_label_notes()
+        sorting_updates, clustered_updates = clustering_service.group_and_label_notes()
 
-        return {"success": "Notes successfully clustered and labeled"}
+        return {"sorting_updates": sorting_updates, "clustered_updates": clustered_updates}
     except Exception as e:
         print("Error clustering notes:", e)
         raise HTTPException(status_code=500, detail="Failed to cluster notes")
