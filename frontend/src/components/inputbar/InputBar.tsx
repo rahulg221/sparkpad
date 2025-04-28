@@ -22,13 +22,13 @@ export const InputBar = () => {
     updateTasks,
     updateEvents,
     setNotificationType,
-    isInputVisible,
     setIsInputVisible,
-  } = useActions(); // <- ✅ only call once
+    isInputBarVisible,
+  } = useActions(); // 
   
   const [text, setText] = useState('');
   const { currentCategory, writeInCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
-  const [noteLoading, setNoteLoading] = useState(false); // ✅ fine to be local
+  const [noteLoading, setNoteLoading] = useState(false); 
   const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const { user } = useAuth();
@@ -138,7 +138,7 @@ export const InputBar = () => {
 
   return (
     <TextBarForm onSubmit={handleSubmit}>
-      <InputBarContainer>
+      <InputBarContainer isInputBarVisible={isInputBarVisible}>
         <TextInput
           value={text}
           onChange={handleTextChange}

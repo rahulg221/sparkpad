@@ -18,10 +18,12 @@ export const TextBarForm = styled.form`
   }
 `;
 
-export const InputBarContainer = styled.div`
+export const InputBarContainer = styled.div<{ isInputBarVisible: boolean }>`
   position: relative;
   width: 600px;
   max-width: 90%;
+  transform: ${({ isInputBarVisible }) => (isInputBarVisible ? 'translateY(0)' : 'translateY(100px)')};
+  transition: transform 0.4s ease;
 `;
 
 export const TextInput = styled.textarea`

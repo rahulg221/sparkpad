@@ -13,7 +13,7 @@ import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
 import { Note } from '../../models/noteModel';
 import { FaPlus } from 'react-icons/fa';
 import { IconButton } from '../../styles/shared/Button.styles';
-import { InputBar } from '../new_note/InputBar';
+import { InputBar } from '../inputbar/InputBar';
 
 interface NoteCategoriesProps {
   handleCategoryClick: (category: string) => void;

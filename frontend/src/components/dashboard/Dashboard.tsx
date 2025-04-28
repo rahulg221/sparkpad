@@ -28,7 +28,7 @@ import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { SummaryModal } from '../modal/SummaryModal';
 import { NewNotepadModal } from '../modal/NewNotepadModal';
 import { UserService } from '../../api/userService';
-import { InputBar } from '../new_note/InputBar';
+import { InputBar } from '../inputbar/InputBar';
 
 export const Dashboard = () => {
     const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
@@ -248,9 +248,7 @@ export const Dashboard = () => {
               </TextButton>
             )}
             {renderDashboardContent()}
-            {isInputBarVisible && (
-                <InputBar />
-            )}
+            <InputBar />
             {isUpdateNoteOpen && (
                 <UpdateNoteModal
                     isOpen={isUpdateNoteOpen}
