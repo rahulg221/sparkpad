@@ -2,8 +2,8 @@ import { useState, useEffect } from 'react';
 import { FaClock } from 'react-icons/fa';
 import ReactMarkdown from 'react-markdown';
 import { useTheme } from 'styled-components';
-import { Row, Spacer } from '../../styles/shared/BaseLayout';
-import { EventCard, CardPreview } from './Calendar.Styles';
+import { Row, Spacer } from '../../../styles/shared/BaseLayout';
+import { EventCard, CardPreview, DateContainer } from './Calendar.Styles';
 
 export const CountdownTimer = ({ eventString }: { eventString: string }) => {
   const theme = useTheme();
@@ -68,13 +68,13 @@ export const CountdownTimer = ({ eventString }: { eventString: string }) => {
         {eventInfo}
       </CardPreview>
       <Row main="start" cross="center" gap="md">
-          <p>
+          <DateContainer>
             {new Date(start_time).toLocaleDateString('en-US', {
               weekday: 'short',
               hour: '2-digit',
               minute: '2-digit',
             })}
-          </p>
+          </DateContainer>
           <Spacer expand={true} />
           <FaClock size={14} color={theme.colors.eventColor} />
       </Row>

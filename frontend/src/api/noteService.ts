@@ -95,7 +95,7 @@ export class NoteService {
     return notificationMessage;
   }
 
-  static async deleteNote(noteId: string, userId: string): Promise<string> {
+  static async deleteNote(noteId: string, userId: string, lockedCategories: string[]): Promise<string> {
     try {
       // Store the note category before deleting
       const { data } = await supabase
@@ -119,7 +119,7 @@ export class NoteService {
       const isLastNoteInCategory = count === 0;
 
       if (isLastNoteInCategory) {
-        await UserService.updateLockedCategory(userId, noteCategory);
+        await UserService.updateLockedCategory(userId, noteCategory, lockedCategories);
       }
 
       return 'Successfully deleted note!';
@@ -256,23 +256,13 @@ export class NoteService {
     }
   }
 
-  static async getRollbackNotes(userId: string): Promise<Note[]> {
+  static async getUnlockedNotes(userId: string, lockedCategories: string[]): Promise<Note[]> {
     try {
-      const { data: user, error: userError } = await supabase
-        .from('users')
-        .select('locked_categories')
-        .eq('id', userId)
-        .single();
-  
-      if (userError) throw userError;
-  
-      const lockedCategories = user?.locked_categories || [];
-  
       const noteQuery = supabase
         .from('notes')
         .select('id, content, category, created_at, user_id, cluster')
         .eq('user_id', userId)
-        .order('created_at', { ascending: true });
+        .order('created_at', { ascending: false });
   
       if (lockedCategories.length > 0) {
         noteQuery.not('category', 'in', `(${lockedCategories.map((cat: string) => `"${cat}"`).join(',')})`);
@@ -283,7 +273,7 @@ export class NoteService {
   
       return notes || [];
     } catch (error) {
-      console.error('Failed to get notes for rollback:', error);
+      console.error('Failed to get unlocked notes:', error);
       return [];
     }
   }

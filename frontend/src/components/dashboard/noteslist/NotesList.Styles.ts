@@ -1,6 +1,11 @@
 import { MdDeleteOutline } from "react-icons/md";
 import styled from "styled-components";
-import { Container } from "../../styles/shared/BaseLayout";
+import { Container } from "../../../styles/shared/BaseLayout";
+
+export const NoteListContainer = styled.div`
+  width: 100%;
+  height: 92vh;
+`;
 
 export const SmallIconButton = styled.div`
   width: 20px;
@@ -10,7 +15,7 @@ export const SmallIconButton = styled.div`
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.textLight};
   }
 `;
 
@@ -20,9 +25,40 @@ export const NoteContainer = styled(Container)`
   justify-content: space-between;
   height: auto;
   background-color: transparent;
+  width: 100%;
+  padding-top: ${({ theme }) => theme.spacing.md};
+  overflow-y: auto;
+  
+  scrollbar-width: thin;
+  scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
+
+  /* Hide scrollbar by default */
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    border-radius: 4px;
+  }
+
+  /* Show scrollbar on hover */
+  &:hover::-webkit-scrollbar-thumb {
+    background-color: ${({ theme }) => theme.colors.border};
+  }
+
+  /* For Firefox */
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+
+  &:hover {
+    scrollbar-color: ${({ theme }) => theme.colors.border} transparent;
+  }
 `;  
 
-export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
+export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list'}>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -31,9 +67,8 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   background-color: ${({ theme }) => theme.colors.cardBackground};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
-
   min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '15vh' : '30vh'};
-  transition: max-height 0.5s ease, border 0.3s ease;
+  transition: max-height 0.4s ease, border 0.3s ease;
 
   &:hover {
     max-height: 80vh;

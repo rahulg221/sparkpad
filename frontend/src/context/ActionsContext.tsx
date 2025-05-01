@@ -9,18 +9,18 @@ type ActionsContextType = {
   setShowNotification: (show: boolean) => void;
   setNotificationType: (type: string) => void;  
   setCurrentNotes: (notes: Note[]) => void;
-  updateTasks: () => void;
-  updateEvents: () => void;
+  updateTasks: (newTask: boolean) => void;
+  updateEvents: (newEvent: boolean) => void;
   setCategories: (categories: string[]) => void;    
   setIsEventsVisible: (visible: boolean) => void;
   setIsTasksVisible: (visible: boolean) => void;
   setIsSettingsVisible: (visible: boolean) => void;   
-  setIsInputVisible: (visible: boolean) => void;        
+  setIsSidebarVisible: (visible: boolean) => void;        
   setIsToolBarCollapsed: (collapsed: boolean) => void;   
   setIsInputBarVisible: (visible: boolean) => void;
   notificationType: string;
   isLoading: boolean;
-  isInputVisible: boolean;
+  isSidebarVisible: boolean;
   isEventsVisible: boolean;                                             
   isToolBarCollapsed: boolean;
   isTasksVisible: boolean;
@@ -47,35 +47,49 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [tasks, setTasks] = useState<string[]>([]);
     const [categories, setCategories] = useState<string[]>([]);
     const [isSettingsVisible, setIsSettingsVisible] = useState(false);
-    const [isInputVisible, setIsInputVisible] = useState(false);
+    const [isSidebarVisible, setIsSidebarVisible] = useState(false);
     const [isToolBarCollapsed, setIsToolBarCollapsed] = useState(false);
     const [isEventsVisible, setIsEventsVisible] = useState(false);
     const [isTasksVisible, setIsTasksVisible] = useState(false);
     const [isInputBarVisible, setIsInputBarVisible] = useState(false);
-    const updateTasks = async () => {
+    
+    const updateTasks = async (newTask: boolean = false) => {
         if (!isGoogleConnected) return;
 
-        try {
-            if (localStorage.getItem('last_tasks') && localStorage.getItem('last_tasks_timestamp') && new Date().getTime() - parseInt(localStorage.getItem('last_tasks_timestamp') || '0') < 1000 * 60 * 15) {
-                const tasks = JSON.parse(localStorage.getItem('last_tasks') || '[]');
-                setTasks(tasks);
-            } else {
-                const tasks = await CalendarService.getTasks(); 
-                localStorage.setItem('last_tasks', JSON.stringify(tasks));
-                localStorage.setItem('last_tasks_timestamp', new Date().getTime().toString());
-                console.log(tasks);
-                setTasks(tasks);
+        if (newTask) {
+            const tasks = await CalendarService.getTasks(); 
+            localStorage.setItem('last_tasks', JSON.stringify(tasks));
+            localStorage.setItem('last_tasks_timestamp', new Date().getTime().toString());
+            setTasks(tasks);
+        } else {
+            try {
+                if (localStorage.getItem('last_tasks') && localStorage.getItem('last_tasks_timestamp') && new Date().getTime() - parseInt(localStorage.getItem('last_tasks_timestamp') || '0') < 1000 * 60 * 45) {
+                    const tasks = JSON.parse(localStorage.getItem('last_tasks') || '[]');
+                    setTasks(tasks);
+                } else {
+                    const tasks = await CalendarService.getTasks(); 
+                    localStorage.setItem('last_tasks', JSON.stringify(tasks));
+                    localStorage.setItem('last_tasks_timestamp', new Date().getTime().toString());
+                    console.log(tasks);
+                    setTasks(tasks);
+                }
+            } catch (err) {
+                console.error("Failed to update tasks:", err);
             }
-        } catch (err) {
-            console.error("Failed to update tasks:", err);
         }
     };
         
-    const updateEvents = async () => {
+    const updateEvents = async (newEvent: boolean) => {
         if (!isGoogleConnected) return;
         
-        try {
-            if (localStorage.getItem('last_events') && localStorage.getItem('last_events_timestamp') && new Date().getTime() - parseInt(localStorage.getItem('last_events_timestamp') || '0') < 1000 * 60 * 15) {
+        if (newEvent) {
+            const events = await CalendarService.getCalendarEvents(); 
+            localStorage.setItem('last_events', JSON.stringify(events));
+            localStorage.setItem('last_events_timestamp', new Date().getTime().toString());
+            setCalendarEvents(events);
+        } else {
+            try {
+                if (localStorage.getItem('last_events') && localStorage.getItem('last_events_timestamp') && new Date().getTime() - parseInt(localStorage.getItem('last_events_timestamp') || '0') < 1000 * 60 * 45) {
                 const events = JSON.parse(localStorage.getItem('last_events') || '[]');
                 setCalendarEvents(events);
             } else {
@@ -86,7 +100,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
                 setCalendarEvents(events); 
             }
         } catch (err) {
-            console.error("Failed to update events:", err);
+                console.error("Failed to update events:", err);
+            }
         }
     };     
 
@@ -110,8 +125,8 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
             updateTasks,
             updateEvents,
             isSettingsVisible,
-            isInputVisible,
-            setIsInputVisible,
+            isSidebarVisible,
+            setIsSidebarVisible,
             isToolBarCollapsed,
             setIsToolBarCollapsed,
             isEventsVisible,

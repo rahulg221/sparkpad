@@ -1,10 +1,6 @@
 import React from 'react';
 import { Modal } from './Modal';
-import { ModalContent } from './Modal.Styles';
-import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-import ReactMarkdown from 'react-markdown';
-import remarkGfm from 'remark-gfm';
-import { MarkdownWrapper } from '../../styles/shared/BaseLayout';
+import { ModalText } from './Modal.Styles';
 import { SmallHeader } from '../toolbar/ToolBar.Styles';
 
 interface SortingUpdatesModalProps {
@@ -23,22 +19,22 @@ export const SortingUpdatesModal: React.FC<SortingUpdatesModalProps> = ({
   onSave
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Sorting Updates">
-        <SmallHeader>Moved to existing sparkpad</SmallHeader>
+    <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Results">
+        <SmallHeader>Sorted into my Sparkpads</SmallHeader>
         {sortingUpdates.length > 0 ? (
             sortingUpdates.map((update, index) => (
-                <h2 key={index}>{update}</h2>
+                <ModalText key={index}>{update}</ModalText>
             ))
         ) : (
-            <h2>No notes moved to existing sparkpads</h2>
+            <ModalText>No sparks sorted into my sparkpads</ModalText>
         )}
-        <SmallHeader>Moved to suggested sparkpad</SmallHeader>
+        <SmallHeader>Grouped into suggested Sparkpads</SmallHeader>
         {clusteredUpdates.length > 0 ? (
             clusteredUpdates.map((update, index) => (
-                <h2 key={index}>{update}</h2>
+                <ModalText key={index}>{update}</ModalText>
             ))
         ) : (
-            <h2>No new sparkpads created</h2>
+            <ModalText>No sparks grouped into suggested sparkpads</ModalText>
         )}
       </Modal>
     );

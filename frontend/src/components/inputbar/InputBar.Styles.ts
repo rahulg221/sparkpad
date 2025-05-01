@@ -4,12 +4,8 @@ import styled from "styled-components";
 export const TextBarForm = styled.form`
   position: fixed;
   bottom: 20px;
-  left: 0;
-  right: 0;
-  width: 100%;
+  right: 20px;
   display: flex;
-  justify-content: center;
-  padding: 0 ${({ theme }) => theme.spacing.lg};
   z-index: 100;
   pointer-events: none;
 
@@ -18,10 +14,9 @@ export const TextBarForm = styled.form`
   }
 `;
 
-export const InputBarContainer = styled.div<{ isInputBarVisible: boolean }>`
+export const InputBarContainer = styled.div<{ isInputBarVisible: boolean, isToolBarCollapsed: boolean}>`
   position: relative;
   width: 600px;
-  max-width: 90%;
   transform: ${({ isInputBarVisible }) => (isInputBarVisible ? 'translateY(0)' : 'translateY(100px)')};
   transition: transform 0.4s ease;
 `;
@@ -42,6 +37,8 @@ export const TextInput = styled.textarea`
   line-height: 1.5;
   font-family: inherit;
   transition: all 0.2s ease-in-out;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
 
   &:focus {
     outline: none;

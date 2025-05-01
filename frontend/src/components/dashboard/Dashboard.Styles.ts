@@ -20,14 +20,13 @@ export const DashboardWrapper = styled.div`
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 100%;
-  height: auto;
+  height: 100%;
   padding-bottom: ${({ theme }) => theme.spacing.xl};
   padding-right: ${({ theme }) => theme.spacing.lg};
   padding-left: ${({ theme }) => theme.spacing.lg};
+  background-color: transparent;
+  overflow-x: hidden;
   width: 100%;
-  background-color: ${({ theme }) => theme.colors.bgPure};
-  
   h1 {
     color: ${({ theme }) => theme.colors.textPrimary};
   }

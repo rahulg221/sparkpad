@@ -2,7 +2,7 @@ from typing import List
 from services.openai_service import OpenAIService
 from models import Note
 from services.utils import parse_embedding, preprocess_text, supabase_client
-from sklearn.preprocessing import StandardScaler
+from sklearn.preprocessing import StandardScaler, normalize
 from sklearn.metrics.pairwise import cosine_similarity
 from collections import defaultdict
 from sklearn.metrics import silhouette_score
@@ -71,78 +71,95 @@ class ClusteringService:
         user = user_response.data
 
         locked_categories = user.get("locked_categories", [])
-        
-        locked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).in_("category", locked_categories).execute()
-
-        if locked_notes_response.data is None:
-            raise Exception("Locked notes not found in database.")
-
-        locked_notes_data = locked_notes_response.data
-
-        locked_notes = [Note(**parse_embedding(n)) for n in locked_notes_data if n.get("embedding")]
-
-        # Group embeddings by locked category
-        locked_category_embeddings = defaultdict(list)
-
-        for note in locked_notes:
-            if note.embedding and note.category:
-                locked_category_embeddings[note.category].append(np.array(note.embedding))
-
-        # Now average them
-        locked_category_centroids = {}
-
-        for category, embeddings in locked_category_embeddings.items():
-            centroid = np.mean(embeddings, axis=0)
-            locked_category_centroids[category] = centroid
-
-        unlocked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).not_.in_("category", locked_categories).execute()
-
-        if unlocked_notes_response.data is None:
-            raise Exception("Notes not found in database.")
-
-        unlocked_notes_data = unlocked_notes_response.data
-
-        notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding")]
-
-        notes_to_remove = []
 
         sorting_updates = []
 
         clustered_updates = []
 
-        for note in notes_to_cluster:
-            best_category = None
-            best_score = 0  # Reset per note
+        if locked_categories:
+            locked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).in_("category", locked_categories).execute()
 
-            for category, centroid in locked_category_centroids.items():
-                score = cosine_similarity([note.embedding], [centroid])[0][0]
-                if score > best_score:
-                    best_score = score
-                    best_category = category
+            if locked_notes_response.data is None:
+                print("No locked notes found in database.")
+            else:
+                locked_notes_data = locked_notes_response.data
 
-            if best_score > 0.4:
-                note.category = best_category
+                locked_notes = [Note(**parse_embedding(n)) for n in locked_notes_data if n.get("embedding")]
 
-                print(f"Updating note {note.id} to category {best_category}")
-                response = supabase_client.table("notes").update({
-                    "category": best_category
-                }).eq("id", note.id).execute()
+                # Group embeddings by locked category
+                locked_category_embeddings = defaultdict(list)
 
-                if response.data is None:
-                    raise Exception(f"Note {note.id} not found in database.")
-                
-                note_preview = ' '.join(note.content.split()[:10])
-                sorting_updates.append(f"{best_category} - {note_preview}\n")
+                for note in locked_notes:
+                    if note.embedding and note.category:
+                        locked_category_embeddings[note.category].append(np.array(note.embedding))
 
-                # Mark note for removal after loop
-                notes_to_remove.append(note)
+                # Now average them
+                locked_category_centroids = {}
 
-        # After looping, remove notes that matched
-        for note in notes_to_remove:
-            notes_to_cluster.remove(note)
+                for category, embeddings in locked_category_embeddings.items():
+                    centroid = np.mean(embeddings, axis=0)
+                    locked_category_centroids[category] = centroid
 
-        if len(notes_to_cluster) <= 3:
-            return sorting_updates, clustered_updates
+                for category in locked_category_centroids:
+                    locked_category_centroids[category] = normalize([locked_category_centroids[category]])[0]
+
+                unlocked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).not_.in_("category", locked_categories).execute()
+
+                if unlocked_notes_response.data is None:
+                    raise Exception("Notes not found in database.")
+
+                unlocked_notes_data = unlocked_notes_response.data
+
+                notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding")]
+
+                notes_to_remove = []
+
+                for note in notes_to_cluster:
+                    best_category = None
+                    best_score = 0  # Reset per note
+
+                    note.embedding = normalize([note.embedding])[0]  # normalize once
+
+                    for category, centroid in locked_category_centroids.items():
+                        score = cosine_similarity([note.embedding], [centroid])[0][0]
+                        if score > best_score:
+                            best_score = score
+                            best_category = category
+
+                    if best_score > 0.4:
+                        print(f"Best score: {best_score}")
+                        note.category = best_category
+
+                        print(f"Updating note {note.id} to category {best_category}")
+                        response = supabase_client.table("notes").update({
+                            "category": best_category
+                        }).eq("id", note.id).execute()
+
+                        if response.data is None:
+                            print(f"Note {note.id} not found in database.")
+                            continue
+                        
+                        note_preview = ' '.join(note.content.split()[:10])
+                        sorting_updates.append(f"{best_category} - {note_preview}\n")
+
+                        # Mark note for removal after loop
+                        notes_to_remove.append(note)
+
+                # After looping, remove notes that matched
+                for note in notes_to_remove:
+                    notes_to_cluster.remove(note)
+
+                if len(notes_to_cluster) <= 3:
+                    return sorting_updates, clustered_updates
+        else:
+            unlocked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).execute()
+
+            if unlocked_notes_response.data is None:
+                raise Exception("Notes not found in database.")
+
+            unlocked_notes_data = unlocked_notes_response.data
+
+            notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding")]
 
         # Get embeddings for the notes
         embeddings = [note.embedding for note in notes_to_cluster]
@@ -181,15 +198,13 @@ class ClusteringService:
         # Find the number of unique categories in the dataframe
         new_categories_count = df["Category"].nunique()
 
-        clustered_updates.append(f"Suggested {new_categories_count} new sparkpads\n")
-        # Count how many notes are in each category
-        # category_counts = df["Category"].value_counts().to_dict()
-        # for category, count in category_counts.items():
-        #     print(f"Category '{category}': {count} notes")
+        if new_categories_count > 1:
+            clustered_updates.append(f"{new_categories_count} suggested sparkpads\n")
 
-        for note in json_result:
-            note_preview = ' '.join(note["Note"].split()[:10])
-            clustered_updates.append(f"{note['Category']} - {note_preview}\n")
+            for note in json_result:
+                note_preview = ' '.join(note["Note"].split()[:10])
+                if note["Category"] != "Unsorted":
+                    clustered_updates.append(f"{note['Category']} - {note_preview}\n")
 
         self.update_database(json_result, notes_to_cluster)
 
@@ -228,7 +243,7 @@ class ClusteringService:
             silhouette = silhouette_score(reduced_embeddings, labels)
             print(f"HDBSCAN Silhouette Score (excluding noise): {silhouette:.4f}")
 
-            if silhouette < 0.25:
+            if silhouette < 0.2:
                 labels[:] = -1
                 print("Silhouette too low — treating all notes as unclustered.")
         else:
@@ -259,9 +274,9 @@ class ClusteringService:
             n_components = 2
         elif n <= 50:
             n_neighbors = 5
-            n_components = 2
+            n_components = 5
         else:  # 51–100
             n_neighbors = 10
-            n_components = 3
+            n_components = 5
 
         return min_cluster_size, min_samples, n_neighbors, n_components

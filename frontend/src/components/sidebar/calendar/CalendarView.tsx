@@ -1,40 +1,40 @@
 import { useEffect, useState } from 'react';
-import { Column, Row, ScrollView, Container, Spacer } from '../../styles/shared/BaseLayout';
-import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+import { Column, Row, ScrollView, Container, Spacer } from '../../../styles/shared/BaseLayout';
+import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { useTheme } from 'styled-components';
-import { useActions } from '../../context/ActionsContext';
+import { useActions } from '../../../context/ActionsContext';
 import { CardPreview, SmallTextButton, EventCard, ItemContainer, TaskCard, SummaryContainer  } from './Calendar.Styles';
 import { FaThumbtack, FaFireFlameCurved, FaClock, FaPen } from 'react-icons/fa6';
 import { CountdownTimer } from './CountdownTimer';
-import { NoteService } from '../../api/noteService';
-import { useAuth } from '../../context/AuthProvider';
-import { useNotes } from '../../context/NotesProvider';
-import { Note } from '../../models/noteModel';
+import { NoteService } from '../../../api/noteService';
+import { useAuth } from '../../../context/AuthProvider';
+import { useNotes } from '../../../context/NotesProvider';
+import { Note } from '../../../models/noteModel';
 import ReactMarkdown from 'react-markdown';
 import { Snapshot } from './Snapshot';
-import { IconButton, TextButton } from '../../styles/shared/Button.styles';
+import { IconButton, TextButton } from '../../../styles/shared/Button.styles';
 import { FaTimes } from 'react-icons/fa';
 
 export const TasksRow = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const { setIsTasksVisible, updateTasks, tasks, updateEvents, calendarEvents, isInputVisible, setIsInputVisible } = useActions();
+  const { setIsTasksVisible, updateTasks, tasks, updateEvents, calendarEvents, isSidebarVisible, setIsSidebarVisible } = useActions();
   const { isGoogleConnected } = useAuth();
   const theme = useTheme();
   const [showAllTasks, setShowAllTasks] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
 
   useEffect(() => {
-    if (isInputVisible) {
+    if (isSidebarVisible) {
       fetchTasks();
       fetchEvents();
     }
-  }, [isInputVisible]);
+  }, [isSidebarVisible]);
 
   const fetchTasks = async () => {
     setIsLoading(true);
 
     try {
-      await updateTasks();
+      await updateTasks(false);
     } catch (err) {
       console.error('Error fetching recent notes:', err);
     } finally {
@@ -46,7 +46,7 @@ export const TasksRow = () => {
     setIsLoading(true);
 
     try {
-      await updateEvents();
+      await updateEvents(false);
     } catch (err) {
       console.error('Error fetching recent notes:', err);
     } finally {
@@ -56,18 +56,20 @@ export const TasksRow = () => {
 
   return (
       <Column main="start" cross="start" gap="lg">
-        <Container width="100%">
-          <Row main="spaceBetween" cross="start">
-            <h2 style={{ fontWeight: 'bold' }}>Tasks</h2>
-            <IconButton onClick={() => setIsInputVisible(false)}>
+        {isLoading ? (
+          <LoadingSpinner />
+        ) : (
+          <>
+            <Container width="100%">
+              <Row main="spaceBetween" cross="start">
+                <h2>Tasks</h2>
+            <IconButton onClick={() => setIsSidebarVisible(false)}>
               <FaTimes size={14}/>
             </IconButton>
           </Row>
           <Spacer height="sm" />
           <ItemContainer>
-            {isLoading ? (
-              <LoadingSpinner />
-            ) : (
+            {
               isGoogleConnected ? (
                 <Column main="start" cross="start" gap="md">
                   {tasks.slice(0, showAllTasks ? tasks.length :  4).map(task => (
@@ -88,17 +90,14 @@ export const TasksRow = () => {
               </Column>
             ) : (
               <h2>Connect your Google Calendar in Settings to see your tasks</h2>
-            )
-        )}  
-      </ItemContainer>
-      </Container>
-      <Container width="100%">
-        <h2 style={{ fontWeight: 'bold' }}>Events</h2>
+            )}
+          </ItemContainer>
+        </Container>
+        <Container width="100%">
+        <h2>Events</h2>
         <Spacer height="sm" />
         <ItemContainer>
-          {isLoading ? (
-            <LoadingSpinner />
-          ) : isGoogleConnected ? (
+          {isGoogleConnected ? (
             <Column main="start" cross="start" gap="md">
               {calendarEvents.slice(0, showAllEvents ? calendarEvents.length : 4).map(event => (
                   <CountdownTimer eventString={event} />
@@ -114,6 +113,8 @@ export const TasksRow = () => {
           )}  
         </ItemContainer>
       </Container>
+      </>
+      )}
       </Column>
   );
 };

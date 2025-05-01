@@ -1,26 +1,26 @@
 import { Column, Container, Row, Spacer } from '../../styles/shared/BaseLayout';
 import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaCalendar, FaThumbtack} from 'react-icons/fa';
-import { SecondaryButton, IconButton } from '../../styles/shared/Button.styles';
+import { SecondaryButton, IconButton, TextButton } from '../../styles/shared/Button.styles';
 import { IconWrapper, ToolBarContainer, SmallHeader } from './ToolBar.Styles';
 import { FaClock, FaGear, FaPen, FaPlus, FaWandMagicSparkles } from 'react-icons/fa6';
 import { useActions } from '../../context/ActionsContext';
 import { useSummary } from '../../context/SummaryProvider';
-import { SearchBar } from '../searchbar/SearchBar';
+import { SearchBar } from './searchbar/SearchBar';
 import { useNotes } from '../../context/NotesProvider';
 import { TbFileTextSpark } from 'react-icons/tb';
-
+import { IoSparkles } from 'react-icons/io5';
 export const ToolBar = () => {
-    const { setIsSettingsVisible, setIsInputVisible, setIsToolBarCollapsed, isToolBarCollapsed, setIsEventsVisible, isEventsVisible, setIsTasksVisible, isTasksVisible, isInputVisible, setIsInputBarVisible, isInputBarVisible  } = useActions();
+    const { setIsSettingsVisible, setIsSidebarVisible, setIsToolBarCollapsed, isToolBarCollapsed, setIsEventsVisible, isEventsVisible, setIsTasksVisible, isTasksVisible, isSidebarVisible, setIsInputBarVisible, isInputBarVisible  } = useActions();
     const { createSummary, isSummaryVisible, setIsSummaryVisible } = useSummary();
     const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes } = useNotes();
 
     const handleSummaryClick = () => {
         if (isSummaryVisible) {
             setIsSummaryVisible(false);
-            setIsInputVisible(false);
+            setIsSidebarVisible(false);
         } else {
             setIsSummaryVisible(true);
-            setIsInputVisible(true);
+            setIsSidebarVisible(true);
         }
 
         createSummary();
@@ -55,20 +55,20 @@ export const ToolBar = () => {
     };
 
     const handleNewSparkClick = () => {
-        if (isInputVisible) {
-            setIsInputVisible(false);
+        if (isSidebarVisible) {
+            setIsSidebarVisible(false);
         } else {
-            setIsInputVisible(true);
+            setIsSidebarVisible(true);
         }
     };  
 
     const handleEventsClick = () => {
         if (isEventsVisible) {
-            setIsInputVisible(false);
+            setIsSidebarVisible(false);
             setIsEventsVisible(false);
             setIsSummaryVisible(false);
         } else {
-            setIsInputVisible(true);
+            setIsSidebarVisible(true);
             setIsEventsVisible(true);
             setIsSummaryVisible(false);
         }
@@ -114,41 +114,41 @@ export const ToolBar = () => {
                         </IconButton>
                     </Row>}
                     {!isToolBarCollapsed && <Spacer height='lg'/>}
-                    {isToolBarCollapsed && <SecondaryButton onClick={handleToolBarClick}><FaChevronRight size={14} /></SecondaryButton>}
-                    {isToolBarCollapsed ? <SecondaryButton onClick={handleToolBarClick}><FaSearch size={14} /></SecondaryButton> : <SearchBar onSearch={handleSearch} />}
-                    {!isToolBarCollapsed && <SmallHeader>Tools</SmallHeader>}
-                    <SecondaryButton onClick={handleInputBarClick} title="Create a new spark">
+                    {isToolBarCollapsed && <TextButton onClick={handleToolBarClick} title="Collapse the toolbar"><FaChevronRight size={14} /></TextButton>}
+                    {isToolBarCollapsed ? <TextButton onClick={handleToolBarClick} title="Search for a spark"><FaSearch size={14} /></TextButton> : <SearchBar onSearch={handleSearch} />}
+                    {!isToolBarCollapsed && <SmallHeader>TOOLS</SmallHeader>}
+                    <TextButton onClick={handleInputBarClick} title="Create a new spark">
                         <FaPen size={14} />
                         {isToolBarCollapsed ? null : 'Capture'}
-                    </SecondaryButton>
-                    <SecondaryButton onClick={handleOrganizeClick} title="Automatically organize your sparks into sparkpads">
+                    </TextButton>
+                    <TextButton onClick={handleOrganizeClick} title="Automatically organize your sparks into sparkpads">
                         <FaWandMagicSparkles size={14} />
                         {isToolBarCollapsed ? null : 'Organize'}
-                    </SecondaryButton>
-                    <SecondaryButton onClick={handleSummaryClick} title="Summarize your sparks into a concise summary">
+                    </TextButton>
+                    <TextButton onClick={handleSummaryClick} title="Summarize your sparks into a concise summary">
                         <FaLightbulb size={14} />
-                        {isToolBarCollapsed ? null : 'Snapshot'}
-                    </SecondaryButton>
+                        {isToolBarCollapsed ? null : 'Summarize'}
+                    </TextButton>
                     {/*
                     <SecondaryButton onClick={handleVisualizeClick} title="Visualize your sparks in a tree structure">
                         <FaFolderTree size={14} />
                         {isToolBarCollapsed ? null : 'Visualize'}
                     </SecondaryButton> */}
-                    {!isToolBarCollapsed && <SmallHeader>Explore</SmallHeader>}
-                    <SecondaryButton onClick={handleEventsClick} title="View your Google Calendar events">
-                        <FaCalendar size={14} />
-                        {isToolBarCollapsed ? null : 'Google'}
-                    </SecondaryButton>
-                    <SecondaryButton onClick={handleRecentNotesClick} title="View your recent sparks">
+                    {!isToolBarCollapsed && <SmallHeader>WORKSPACE</SmallHeader>}
+                    <TextButton onClick={handleEventsClick} title="View your Google Calendar events">
                         <FaClock size={14} />
-                        {isToolBarCollapsed ? null : 'Recent'}
-                    </SecondaryButton>
+                        {isToolBarCollapsed ? null : 'Upcoming'}
+                    </TextButton>
+                    <TextButton onClick={handleRecentNotesClick} title="View your recent sparks">
+                        <FaThumbtack size={14} />
+                        {isToolBarCollapsed ? null : 'Sparkboard'}
+                    </TextButton>
                 </Container>
                 <Container width="100%">
-                    <SecondaryButton onClick={handleSettingsClick} title="Configure your Sparkpad settings">
+                    <TextButton onClick={handleSettingsClick} title="Configure your Sparkpad settings">
                         <FaGear size={14} />
                         {isToolBarCollapsed ? null : 'Settings'}
-                    </SecondaryButton>
+                    </TextButton>
                 </Container>
             </Column>
         </ToolBarContainer>

@@ -88,19 +88,10 @@ export class UserService {
     }
   }
   
-  static async updateLockedCategory(userId: string, category: string): Promise<void> {
-    // First fetch the current user data to get existing locked categories
-    const { data: userData, error: userError } = await supabase
-      .from('users')
-      .select('locked_categories')
-      .eq('id', userId)
-      .single();
-    
-    if (userError) {
-      throw userError;
+  static async updateLockedCategory(userId: string, category: string, lockedCategories: string[]): Promise<void> {
+    if (category === 'Unsorted') {
+      return;
     }
-
-    const lockedCategories = userData?.locked_categories || [];
 
     if (lockedCategories.includes(category)) {
       // Remove the category from the locked categories
@@ -122,7 +113,7 @@ export class UserService {
     const { error } = await supabase
       .from('users')
       .update({ 
-        locked_categories: [...(userData?.locked_categories || []), category] 
+        locked_categories: [...lockedCategories, category] 
       })
       .eq('id', userId);
 

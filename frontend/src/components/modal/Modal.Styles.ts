@@ -14,10 +14,16 @@ export const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+export const ModalText = styled.p`
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  color: ${({ theme }) => theme.colors.textPrimary};
+`;
+
 export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 60vw;   
+  padding: ${({ theme }) => theme.spacing.lg};
+  width: auto;   
   max-height: 80vh;       
   background: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -29,11 +35,8 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: ${({ theme }) => theme.spacing.lg};
-  font-weight: 500;
-  font-size: ${({ theme }) => theme.fontSize.md};
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border};
-  height: 6.5vh;
+  font-weight: 600;
+  font-size: ${({ theme }) => theme.fontSize.lg};
 `;
 
 export const ModalTitle = styled.h2`
@@ -42,23 +45,21 @@ export const ModalTitle = styled.h2`
   color: ${({ theme }) => theme.colors.textPrimary};
 `;
 
-export const ModalContent = styled.div`
-  flex: 1 1 auto;           
+export const ModalContent = styled.div`      
   overflow-y: auto;
   min-height: 20vh;
-  padding-left: ${({ theme }) => theme.spacing.lg};
-  padding-right: ${({ theme }) => theme.spacing.lg};
-  padding-bottom: ${({ theme }) => theme.spacing.md};
-  padding-top: ${({ theme }) => theme.spacing.md};
-
+  min-width: 30vw;
+  padding-top: ${({ theme }) => theme.spacing.sm};
+  padding-bottom: ${({ theme }) => theme.spacing.sm};
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgLight};
 `;
 
 export const ModalFooter = styled.div`
-  margin-top: auto;
-  border-top: 1px solid ${({ theme }) => theme.colors.border};
+  margin-top: ${({ theme }) => theme.spacing.md};
   display: flex;
+  align-self: flex-end;
+  width: 50%;
   height: 6.5vh;
   justify-content: flex-end;
   align-items: center;

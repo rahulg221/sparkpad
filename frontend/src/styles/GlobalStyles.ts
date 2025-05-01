@@ -26,10 +26,9 @@ export const GlobalStyles = createGlobalStyle`
   }
 
   h1 {
-    font-size: ${({ theme }) => theme.fontSize.xl};
+    font-size: ${({ theme }) => theme.fontSize.lg};
     color: ${({ theme }) => theme.colors.textPrimary};
     font-weight: 500;
-    margin-bottom: ${({ theme }) => theme.spacing.lg};
   }
 
   h2 {

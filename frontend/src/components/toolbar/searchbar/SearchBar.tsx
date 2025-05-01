@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { SearchInput, SearchIcon } from './SearchBar.Styles';
-import { Stack } from '../../styles/shared/BaseLayout';
+import { Stack } from '../../../styles/shared/BaseLayout';
 
 interface SearchBarProps {
   onSearch: (query: string) => void;

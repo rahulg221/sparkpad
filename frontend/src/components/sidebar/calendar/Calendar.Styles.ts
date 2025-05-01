@@ -17,7 +17,7 @@ export const SummaryContainer = styled.div`
   flex-direction: column;
   width: 100%;
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  background-color: ${({ theme }) => theme.colors.cardBackground};
+  background-color: ${({ theme }) => theme.colors.taskBackground};
   transition: all 0.3s ease-in-out;
   padding: ${({ theme }) => theme.spacing.md};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -28,7 +28,7 @@ export const TaskCard = styled.div`
   background-color: ${({ theme }) => theme.colors.taskBackground};
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   width: 100%;           
   box-sizing: border-box;
@@ -47,7 +47,7 @@ export const EventCard = styled.div`
   background-color: ${({ theme }) => theme.colors.eventBackground};
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  padding: ${({ theme }) => theme.spacing.md};
+  padding: ${({ theme }) => theme.spacing.lg};
   border: 1px solid ${({ theme }) => theme.colors.border};
   width: 100%;           
   box-sizing: border-box;
@@ -64,7 +64,7 @@ export const EventCard = styled.div`
 `;
 
 export const CardPreview = styled.div`
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors.textLight};
   font-size: ${({ theme }) => theme.fontSize.xxs};
   word-break: break-word;
   overflow-wrap: anywhere;
@@ -86,6 +86,7 @@ export const CardPreview = styled.div`
     overflow: visible;
     text-overflow: unset;
     opacity: 1;
+    transition: all 0.4s ease-in-out;
   }
 
   ${EventCard}:hover & {
@@ -94,6 +95,7 @@ export const CardPreview = styled.div`
     overflow: visible;
     text-overflow: unset;
     opacity: 1;
+    transition: all 0.4s ease-in-out;
   }
 
   .markdown-ul {
@@ -117,3 +119,9 @@ export const SmallTextButton = styled.p`
     color: ${({ theme }) => theme.colors.taskColor};
   }
 `;  
+
+export const DateContainer = styled.p`
+  color: ${({ theme }) => theme.colors.textFaint};
+  font-size: ${({ theme }) => theme.fontSize.xxs};
+`;
+

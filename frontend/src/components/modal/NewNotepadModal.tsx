@@ -31,7 +31,7 @@ export const NewNotepadModal: React.FC<NewNotepadModalProps> = ({
                     <SmallHeader>Pick a name</SmallHeader>
                     <ModalInput 
                         type="text" 
-                        placeholder="10 reasons I love Sparkpad..." 
+                        placeholder="Favorite quotes... Project ideas... etc." 
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onKeyDown={async (e) => { 

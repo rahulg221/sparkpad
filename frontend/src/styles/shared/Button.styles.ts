@@ -29,7 +29,33 @@ export const PrimaryButton = styled.button`
 
 export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.bgDark};
+  background-color: ${({ theme }) => theme.colors.bgElevated};
+  border: 1px solid ${({ theme }) => theme.colors.border};
+  color: ${({ theme }) => theme.colors.textLight};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  height: 6.5vh;
+  width: ${({ width }) => width || '100%'};
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  color: ${({ theme }) => theme.colors.textLight};
+
+  &:hover:not(:disabled) {
+    background-color: ${({ theme }) => theme.colors.bgLight};
+  }
+
+  &:focus {
+    outline: none;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+export const TextButton = styled.button<{ width?: string }>`
+  padding: ${({ theme }) => theme.spacing.md};
+  background-color: transparent;
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   height: 6.5vh;
@@ -46,27 +72,6 @@ export const SecondaryButton = styled.button<{ width?: string }>`
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.bgLight};
-  }
-
-  &:focus {
-    outline: none;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-  }
-`;
-
-export const TextButton = styled.button<{ width?: string }>`
-  background-color: transparent;
-  border: none;
-  border-radius: ${({ theme }) => theme.borderRadius.sm};  
-  width: ${({ width }) => width || '100%'};    
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  color: ${({ theme }) => theme.colors.textLight};
-
-  &:hover:not(:disabled) {
-    color: ${({ theme }) => theme.colors.textPrimary};
   }
 
   &:focus {
@@ -112,10 +117,11 @@ export const FloatingButton = styled.button`
 export const IconButton = styled.button<{ width?: string }>`
     background-color: transparent;
     color: ${({ theme }) => theme.colors.textLight};
+    font-size: ${({ theme }) => theme.fontSize.sm};
     border: none;
     cursor: pointer; 
-    padding: 0;
     margin: 0;
+    padding: 0;
     width: ${({ width }) => width || 'fit-content'};
 
     &:focus {

@@ -35,6 +35,7 @@ export const Row = styled.div<{
     cross: keyof typeof alignmentMap;
     gap?: 'sm' | 'md' | 'lg';
     padding?: 'sm' | 'md' | 'lg';
+    width?: string;
   }>`
     display: flex;
     flex-direction: row;
@@ -43,6 +44,7 @@ export const Row = styled.div<{
     width: 100%;
     padding: ${({ padding, theme }) => padding ? theme.spacing[padding] : '0'};
     gap: ${({ gap, theme }) => gap ? theme.spacing[gap] : '0'};
+    width: ${({ width }) => width || '100%'};
 `;    
 
 export const Column = styled.div<{

@@ -7,7 +7,7 @@ import {
   ModalContent,
   ModalFooter
 } from './Modal.Styles';
-import { TextButton } from '../../styles/shared/Button.styles';
+import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
 
 interface ModalProps {
   isOpen: boolean;
@@ -68,8 +68,8 @@ export const Modal: React.FC<ModalProps> = ({
           {children}
         </ModalContent>
         <ModalFooter>
-          <TextButton onClick={onClose}>Cancel</TextButton>
-          {onSave && <TextButton onClick={onSave}>Save</TextButton>}
+          <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
+          {onSave && <PrimaryButton onClick={onSave}>Save</PrimaryButton>}
         </ModalFooter>
       </ModalContainer>
     </ModalOverlay>,

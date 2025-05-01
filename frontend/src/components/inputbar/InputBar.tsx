@@ -1,7 +1,7 @@
 import { useNotes } from "../../context/NotesProvider";
-    import { TextInput, TextBarForm, DateHint, SubmitButton, InputBarContainer } from "./InputBar.Styles";
+import { TextInput, TextBarForm, DateHint, SubmitButton, InputBarContainer } from "./InputBar.Styles";
 import { FaClock, FaArrowUp } from "react-icons/fa"; 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { extractDateAndText } from "../../utils/dateParse";
 import { NoteService } from "../../api/noteService";
 import { UserService } from "../../api/userService";
@@ -22,8 +22,9 @@ export const InputBar = () => {
     updateTasks,
     updateEvents,
     setNotificationType,
-    setIsInputVisible,
+    setIsSidebarVisible,
     isInputBarVisible,
+    isToolBarCollapsed,
   } = useActions(); // 
   
   const [text, setText] = useState('');
@@ -31,8 +32,15 @@ export const InputBar = () => {
   const [noteLoading, setNoteLoading] = useState(false); 
   const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
-  const { user } = useAuth();
+  const { user, lockedCategories } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (isInputBarVisible && textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  }, [isInputBarVisible]);
 
   const handleTextChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     const input = e.target.value;
@@ -72,7 +80,7 @@ export const InputBar = () => {
         };
 
         await NoteService.addNote(anchorNote);
-        await UserService.updateLockedCategory(user?.id || '', category);
+        await UserService.updateLockedCategory(user?.id || '', category, lockedCategories);
 
         notificationMessage = 'Custom sparkpad created!';
         categories = await NoteService.getDistinctCategories(user?.id || '');
@@ -114,17 +122,17 @@ export const InputBar = () => {
       }
 
       if (notificationMessage.includes('Task')) {
-        updateTasks();
+        updateTasks(true);
       } else if (notificationMessage.includes('Calendar')) {
-        updateEvents();
+        updateEvents(true);
       }
 
-      setNotificationMessage(notificationMessage);
-      setShowNotification(true);
+      //setNotificationMessage(notificationMessage);
+      //setShowNotification(true);
       setText('');
 
       if (isMobile) {
-        setIsInputVisible(false);
+        setIsSidebarVisible(false);
       }
 
       setRefreshNotes(!refreshNotes); // toggle it
@@ -138,8 +146,9 @@ export const InputBar = () => {
 
   return (
     <TextBarForm onSubmit={handleSubmit}>
-      <InputBarContainer isInputBarVisible={isInputBarVisible}>
+      <InputBarContainer isInputBarVisible={isInputBarVisible} isToolBarCollapsed={isToolBarCollapsed}>
         <TextInput
+          ref={textInputRef}
           value={text}
           onChange={handleTextChange}
           onFocus={() => setIsFocused(true)}

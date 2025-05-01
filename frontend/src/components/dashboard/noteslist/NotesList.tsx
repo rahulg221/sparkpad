@@ -1,48 +1,59 @@
 import { useEffect, useState } from 'react';
-import { useAuth } from '../../context/AuthProvider';
-import { Note } from '../../models/noteModel';
-import { NoteService } from '../../api/noteService';
-import { SmallHeader } from '../../components/toolbar/ToolBar.Styles';
-import { Grid, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { NoteCard, NoteInfo, NotePreview, SmallIconButton, NoteContainer } from './NotesList.Styles';
-import { SecondaryButton, TextButton } from '../../styles/shared/Button.styles';
+import { useAuth } from '../../../context/AuthProvider';
+import { Note } from '../../../models/noteModel';
+import { NoteService } from '../../../api/noteService';
+import { SmallHeader } from '../../toolbar/ToolBar.Styles';
+import { Column, Grid, Row, Spacer } from '../../../styles/shared/BaseLayout';
+import { NoteCard, NoteInfo, NotePreview, SmallIconButton, NoteContainer, NoteListContainer } from './NotesList.Styles';
+import { SecondaryButton, TextButton } from '../../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
-import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
+import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { FaBars, FaBorderAll, FaTrash } from 'react-icons/fa';
 import { FaPen, FaTable, FaTableList } from 'react-icons/fa6';
-import { Modal } from '../modal/Modal';
-import { ModalContent } from '../modal/Modal.Styles'; 
-import { ThemeToggle } from '../themetoggle/ThemeToggle';
-import { CustomDropdown } from '../dropdown/Dropdown';
-import { useActions } from '../../context/ActionsContext';
-import { UpdateNoteModal } from '../modal/UpdateNoteModal';
-import { useNotes } from '../../context/NotesProvider';
+import { Modal } from '../../modal/Modal';
+import { ModalContent } from '../../modal/Modal.Styles'; 
+import { ThemeToggle } from '../../modal/themetoggle/ThemeToggle';
+import { CustomDropdown } from '../../dropdown/Dropdown';
+import { useActions } from '../../../context/ActionsContext';
+import { UpdateNoteModal } from '../../modal/UpdateNoteModal';
+import { useNotes } from '../../../context/NotesProvider';
 import remarkGfm from 'remark-gfm';
-import { IconButton } from '../../styles/shared/Button.styles';
+import { IconButton } from '../../../styles/shared/Button.styles';
+import styled from 'styled-components';
+import { InputBar } from '../../inputbar/InputBar';
+import { motion } from 'framer-motion';
 
 interface NotesListProps {
   category: string;
+  lockedCategories: string[];
 }
 
-export const NotesList = ({ category }: NotesListProps) => {
+export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const { user } = useAuth();
-  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('grid');
+  const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(15);
   const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
   const [totalNotes, setTotalNotes] = useState(0);
-  const { categories } = useActions();
-  const { refreshNotes } = useNotes();
+  const { categories, isSidebarVisible, isToolBarCollapsed } = useActions();
+  const { refreshNotes, isSearchLoading } = useNotes();
 
   useEffect(() => {
     fetchNotes();
-  }, [user?.id, page, refreshNotes, limit]);
+
+    if (isSidebarVisible && !isToolBarCollapsed) {
+      //setLayoutMode('list');
+    } else {
+      //setLayoutMode('grid');
+    }
+
+  }, [user?.id, page, refreshNotes, limit, category]);
 
   const fetchNotes = async () => {
     console.log('fetching notes');
@@ -54,7 +65,7 @@ export const NotesList = ({ category }: NotesListProps) => {
     const computedOffset = (page - 1) * limit;
   
     try {
-      setIsLoading(true);
+      //setIsLoading(true);
       const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, computedOffset);
   
       setNotes(visibleNotes);
@@ -68,7 +79,7 @@ export const NotesList = ({ category }: NotesListProps) => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      await NoteService.deleteNote(noteId, user?.id || '');
+      await NoteService.deleteNote(noteId, user?.id || '', lockedCategories);
       setNotes(notes.filter(note => note.id !== noteId));
     } catch (err) {
       console.error('Error deleting note:', err);
@@ -91,23 +102,22 @@ export const NotesList = ({ category }: NotesListProps) => {
   }
   
   return (
-    <>
-      <Row main="spaceBetween" cross="center" gap="sm">
-        <Row main='start' cross='center' gap='sm'>
-          { category == "Unsorted" ? <h1>Miscellaneous</h1> : <h1>{category.replace(/\*\*/g, "").split(" ").slice(0, 3).join(" ")}</h1>}
-        </Row>
-        <Row main='end' cross='center' gap='sm'>
-          <p>Page {page} of {Math.ceil(totalNotes / limit)}</p>
-          {window.innerWidth > 768 && (
-            <IconButton title="Toggle layout" onClick={handleLayoutMode}>
-              {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
-            </IconButton>
-          )}
-        </Row>
+    <NoteListContainer>
+      <Column main="start" cross="start" width="100%">
+        <Row main="start" cross="start" gap="sm">    
+          <h1>
+          {category === 'Unsorted' ? 'Miscellaneous' : category}
+        </h1>
+        <Spacer expand={true} />
+        {window.innerWidth > 768 && (
+          <IconButton title="Toggle layout" onClick={handleLayoutMode}>
+            {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
+          </IconButton>
+        )}
       </Row>
       <NoteContainer>
       {notes.length === 0 && <h2>No notes found</h2>}
-        { isLoading ? <LoadingSpinner /> :
+        { isLoading || isSearchLoading ? <LoadingSpinner /> :
         <Grid $columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
             <NoteCard key={note.id} $layoutMode={$layoutMode}>
@@ -146,36 +156,35 @@ export const NotesList = ({ category }: NotesListProps) => {
         </Grid>
         }
       </NoteContainer>
-      <Spacer height='md' />
-      <Row main='center' cross='center'>
-      <TextButton
-        onClick={() => {
-            if (page > 1) {
-              setPage(page - 1);
-            }
-          }}
-        >
-        <Row main="center" cross="center" gap="sm">
-          <MdArrowBack size={16} />
-          Previous
-        </Row>
-      </TextButton>
-      <TextButton
-        onClick={() => {
-          const maxPage = Math.ceil(totalNotes / limit);
-            if (page < maxPage) {
-              setPage(page + 1);
-            }
-          }}
-        >
-        <Row main="center" cross="center" gap="sm">
-          Next
-          <MdArrowForward size={16} />
-        </Row>
-      </TextButton>
+      <Spacer height='sm' />
+      <Row main='end' cross='center'>
+        <TextButton
+          onClick={() => {
+              if (page > 1) {
+                setPage(page - 1);
+              }
+            }}
+          >
+          <Row main="center" cross="center" gap="sm">
+            <MdArrowBack size={16} />
+            Previous
+          </Row>
+        </TextButton>
+        <TextButton
+          onClick={() => {
+            const maxPage = Math.ceil(totalNotes / limit);
+              if (page < maxPage) {
+                setPage(page + 1);
+              }
+            }}
+          >
+          <Row main="center" cross="center" gap="sm">
+            Next
+            <MdArrowForward size={16} />
+          </Row>
+        </TextButton>
       </Row>
-      <Spacer height='xl' />
-      <Spacer height='xl' />
+      <InputBar />
       {isUpdateNoteOpen && (
           <UpdateNoteModal
               isOpen={isUpdateNoteOpen}
@@ -187,6 +196,7 @@ export const NotesList = ({ category }: NotesListProps) => {
               categories={categories}
           />
       )}
-    </>
+    </Column>
+    </NoteListContainer>
   );
 }; 
