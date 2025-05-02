@@ -25,6 +25,7 @@ export const InputBar = () => {
     setIsSidebarVisible,
     isInputBarVisible,
     isToolBarCollapsed,
+    setIsInputBarVisible,
   } = useActions(); // 
   
   const [text, setText] = useState('');
@@ -136,7 +137,6 @@ export const InputBar = () => {
       }
 
       setRefreshNotes(!refreshNotes); // toggle it
-
     } catch (error) {
       console.error('Unexpected error in handleSubmit:', error);
     } finally {

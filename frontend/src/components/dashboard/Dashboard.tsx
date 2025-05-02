@@ -82,10 +82,29 @@ export const Dashboard = () => {
         if (currentCategory === '') {
             setCurrentCategory('Unsorted');
         }
-      
-        runOAuthCallback();
-    }, []);      
 
+        runOAuthCallback();
+    }, []);    
+
+    useEffect(() => {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        const isTyping = ['INPUT', 'TEXTAREA'].includes(
+          (e.target as HTMLElement).tagName
+        );
+    
+        if (isTyping) return; // don't trigger while typing
+    
+        // Trigger on 'Q' (for "Quick note")
+        if (e.key === 'q' || e.key === 'Q') {
+          e.preventDefault(); 
+          setIsInputBarVisible(true);
+        }
+      };
+    
+      window.addEventListener('keydown', handleKeyDown);
+      return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);    
+    
     const handleLogout = async () => {{}
         try {
             handleBackClick();
@@ -95,7 +114,6 @@ export const Dashboard = () => {
             console.error('Logout failed:', err);
         }
     };
-
 
     const handleBackClick = () => {
         setCurrentCategory('');

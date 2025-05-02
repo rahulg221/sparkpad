@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../context/AuthProvider';
 import { Note } from '../../../models/noteModel';
 import { NoteService } from '../../../api/noteService';
@@ -43,6 +43,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const [totalNotes, setTotalNotes] = useState(0);
   const { categories, isSidebarVisible, isToolBarCollapsed } = useActions();
   const { refreshNotes, isSearchLoading } = useNotes();
+  const notesContainerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     fetchNotes();
@@ -115,7 +116,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           </IconButton>
         )}
       </Row>
-      <NoteContainer>
+      <NoteContainer ref={notesContainerRef}>
       {notes.length === 0 && <h2>No notes found</h2>}
         { isLoading || isSearchLoading ? <LoadingSpinner /> :
         <Grid $columns={3} $layoutMode={$layoutMode}>
@@ -155,13 +156,12 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           ))}
         </Grid>
         }
-      </NoteContainer>
-      <Spacer height='sm' />
-      <Row main='end' cross='center'>
+        <Row main='end' cross='center'>
         <TextButton
           onClick={() => {
               if (page > 1) {
                 setPage(page - 1);
+                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
           >
@@ -175,6 +175,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
             const maxPage = Math.ceil(totalNotes / limit);
               if (page < maxPage) {
                 setPage(page + 1);
+                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
               }
             }}
           >
@@ -184,6 +185,8 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           </Row>
         </TextButton>
       </Row>
+      </NoteContainer>
+      <Spacer height='sm' />
       <InputBar />
       {isUpdateNoteOpen && (
           <UpdateNoteModal

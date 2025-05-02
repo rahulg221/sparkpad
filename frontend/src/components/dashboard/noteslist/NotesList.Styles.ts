@@ -4,7 +4,7 @@ import { Container } from "../../../styles/shared/BaseLayout";
 
 export const NoteListContainer = styled.div`
   width: 100%;
-  height: 92vh;
+  height: 95vh;
 `;
 
 export const SmallIconButton = styled.div`
