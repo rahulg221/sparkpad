@@ -95,6 +95,24 @@ export class NoteService {
     return notificationMessage;
   }
 
+  static async removeSuggestedCategory(userId: string, category: string): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('notes')
+        .update({ category: 'Unsorted' })
+        .eq('user_id', userId)
+        .eq('category', category);
+
+      if (error) {
+        throw error;
+      }
+
+      return;
+    } catch (error) {
+      console.error('Failed to remove suggested category:', error);
+    }
+  }
+
   static async deleteNote(noteId: string, userId: string, lockedCategories: string[]): Promise<string> {
     try {
       // Store the note category before deleting

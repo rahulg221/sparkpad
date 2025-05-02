@@ -93,14 +93,41 @@ export const PenIconContainer = styled.div<{ isPermanent: boolean }>`
   opacity: ${({ isPermanent }) => isPermanent ? 1 : 0.6};
 `;
 
-export const ThumbtackIconContainer = styled.div<{ isPermanent: boolean }>`
+export const RejectIconContainer = styled.div<{ isPermanent: boolean }>`
+  position: absolute;
+  top: 0px;
+  right: 15px;
+  width: 100%;
+  height: 75%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: ${({ theme }) => theme.colors.accent};
+  padding: ${({ theme }) => theme.spacing.sm};
+  z-index: 3;
+  opacity: ${({ isPermanent }) => isPermanent ? 1 : 0.6};
+`;
+
+export const ThumbsIconContainer = styled.div<{ isPermanent: boolean }>`
   cursor: pointer;
   transition: all 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: row;
+  gap: ${({ theme }) => theme.spacing.sm};
   color: ${({ theme, isPermanent }) => isPermanent ? theme.colors.accent : theme.colors.textFaint};
-  margin-top: 2px;
 
-  &:hover {
-    color: ${({ theme }) => theme.colors.accent};
+  .accept {
+    &:hover {
+      color: ${({ theme }) => theme.colors.success};
+    }
+  }
+
+  .reject {
+    &:hover {
+      color: ${({ theme }) => theme.colors.error};
+    }
   }
 `;
 

@@ -51,7 +51,7 @@ export const NotesRow = () => {
     <>
     <NotesRowContainer $isRecentNotesVisible={showRecentNotes}>            
         <Row main="spaceBetween" cross="start">
-            <h1>Loose Sparks</h1>
+            <h1>Wild Sparks</h1>
             <IconButton onClick={() => setShowRecentNotes(false)}>
                 <FaThumbtack size={14} />
             </IconButton>

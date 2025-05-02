@@ -1,6 +1,7 @@
 from typing import List
 from dotenv import load_dotenv
 import openai
+from models import Note
 from services.utils import preprocess_text, get_category_examples
 import os
 import json
@@ -16,6 +17,42 @@ class OpenAIService:
 
     def __init__(self):
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    def llm_classify_notes(self, notes: List[Note], categories: List[str]):
+        """
+        Classifies a note into a category.
+        """
+
+        note_texts = [note.content for note in notes]
+        note_ids = [note.id for note in notes]
+
+        notes_block = "\n".join(note_texts)
+
+        prompt = f"""
+        You are a note classification assistant.
+
+        Your task is to classify a note into one of the following categories:
+        {categories}
+
+        Here are the notes:
+        {notes_block}
+
+        Return only the category for each note, one per line, matching the order given above.
+        """
+
+        response = self.client.chat.completions.create(
+            model="gpt-3.5-turbo",
+            messages=[{"role": "user", "content": prompt}],
+            temperature=0.0,
+            max_tokens=1000,
+        )
+
+        result_lines = response.choices[0].message.content.strip().splitlines()
+
+        if len(result_lines) != len(note_ids):
+            raise ValueError("Mismatch between classified lines and note count.")
+
+        return [{"id": nid, "category": line.strip(), "content": text} for nid, text, line in zip(note_ids, note_texts, result_lines)]
 
     def generate_category(self, notes: List[str]):
         """

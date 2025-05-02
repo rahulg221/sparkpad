@@ -1,25 +1,26 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../../api/noteService';
 import { useAuth } from '../../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle, NoteCategoriesContainer, PenIcon, PenIconContainer, ThumbtackIconContainer } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, NoteCategoriesContainer, PenIcon, PenIconContainer, RejectIconContainer, ThumbsIconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../../context/ActionsContext';
 import { Stack, Row, Column, Spacer } from '../../../styles/shared/BaseLayout';
 import { IoPencilOutline, IoSparkles } from 'react-icons/io5';
 import { useNotes } from '../../../context/NotesProvider';
 import { UserService } from '../../../api/userService';
-import { FaArrowDown, FaArrowUp, FaCheck, FaCircle, FaCircleDot, FaCircleDown, FaCircleUp, FaFire, FaLightbulb, FaLock, FaLockOpen, FaRegCircle, FaRegStar, FaStar, FaThumbtack} from 'react-icons/fa6';
-import { FaCheckCircle, FaUndo } from 'react-icons/fa';
+import { FaArrowDown, FaArrowUp, FaCheck, FaCircle, FaCircleDot, FaCircleDown, FaCircleUp, FaEnvelopeOpen, FaEnvelopeOpenText, FaEnvelopesBulk, FaFire, FaHouse, FaHouseMedical, FaInbox, FaLightbulb, FaLock, FaLockOpen, FaRegCircle, FaRegEnvelope, FaRegStar, FaSpaceAwesome, FaStar, FaThumbsDown, FaThumbsUp, FaThumbtack, FaTrash, FaTurnDown} from 'react-icons/fa6';
+import { FaCheckCircle, FaHome, FaUndo, FaMailBulk, FaEnvelope, FaEnvelopeSquare, FaStickyNote, FaTimes } from 'react-icons/fa';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { Note } from '../../../models/noteModel';
 import { FaPlus } from 'react-icons/fa';
 import { IconButton, SecondaryButton, TextButton } from '../../../styles/shared/Button.styles';
 import { InputBar } from '../../inputbar/InputBar';
 import { NewNotepadModal } from '../../modal/NewNotepadModal';
+import { GiBlackHoleBolas } from 'react-icons/gi';
 
 export const NoteCategories = () => {
   const { user, lockedCategories, setLockedCategories } = useAuth();
   const { categories, setCategories, setIsSidebarVisible, isToolBarCollapsed, isSidebarVisible, isInputBarVisible, setIsInputBarVisible, setNotificationMessage, setShowNotification } = useActions();
-  const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory } = useNotes();
+  const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
   const [isNewNotepadVisible, setIsNewNotepadVisible] = useState(false);
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
@@ -84,6 +85,15 @@ export const NoteCategories = () => {
     setWriteInCurrentCategory(true);
   }
 
+  const handleRemoveSuggestedCategory = async (category: string) => {
+    if (!user?.id) return;
+    await NoteService.removeSuggestedCategory(user.id, category);
+    setCategories(categories.filter((c: string) => c !== category));
+    setNotificationMessage('Suggested sparkpad rejected');
+    setShowNotification(true);
+    setRefreshNotes(!refreshNotes);
+  }
+
   const handleUpdateLockedCategory = async (category: string) => {
     if (!user?.id) return;
     await UserService.updateLockedCategory(user.id, category, lockedCategories);
@@ -116,41 +126,48 @@ export const NoteCategories = () => {
                 return aLocked ? -1 : 1;  // locked categories first
               }).map((category) => (
                 <Row main="start" cross="center" key={category} gap="md">
-                <Stack onClick={() => handleCategoryClick(category)}>
-                  <CategoryBox onClick={() => handleNotepadClick()} isPermanent={lockedCategories.includes(category) && category !== "Unsorted"} />
-                  {lockedCategories.includes(category) && category !== "Unsorted" ? (
-                    <PenIconContainer isPermanent={true}>
-                      <PenIcon title={`Write in ${category}`} onClick={handlePenClick}>
-                        <IoPencilOutline size={25} />
-                      </PenIcon>
-                    </PenIconContainer>
-                  ) : (
-                    <PenIconContainer isPermanent={false}>
-                      <PenIcon title={`Suggested sparkpad`}>
-                        <IoSparkles size={14} />
-                      </PenIcon>
-                    </PenIconContainer>
-                  )}
-                </Stack>
+                  <Stack onClick={() => handleCategoryClick(category)}>
+                    <CategoryBox onClick={() => handleNotepadClick()} isPermanent={lockedCategories.includes(category) && category !== "Unsorted"} />
+                    {lockedCategories.includes(category) && category !== "Unsorted" ? (
+                      <PenIconContainer isPermanent={true}>
+                        <PenIcon title={`Write in ${category}`} onClick={handlePenClick}>
+                          <IoPencilOutline size={25} />
+                        </PenIcon>
+                      </PenIconContainer>
+                    ) : (
+                      <PenIconContainer isPermanent={false}>
+                        {category === "Unsorted" ? (
+                          <PenIcon title={`Sparks fall here by default`} onClick={handlePenClick}>
+                            <IoPencilOutline size={25} />
+                          </PenIcon>
+                        ) : (
+                          <PenIcon title={`Suggested sparkpad`}>
+                            <IoSparkles size={14} />
+                          </PenIcon>
+                        )}
+                      </PenIconContainer>
+                    )}
+                  </Stack>
                   {category === "Unsorted" ? (
                     <CategoryTitle isPermanent={false}>
-                      <h1 onClick={() => handleCategoryClick("Unsorted")}>Miscellaneous</h1>
+                      <h1 onClick={() => handleCategoryClick("Unsorted")}>Scratchpad</h1>
                     </CategoryTitle>
                   ) : (
                     <> 
                       {lockedCategories.includes(category) ?   (
                           <CategoryTitle isPermanent={true}>
                             <h1 onClick={() => handleCategoryClick(category)}>{category}</h1>
-                            <ThumbtackIconContainer isPermanent={true} title="Downgrade a sparkpad into a suggested sparkpad" onClick={() => handleUpdateLockedCategory(category)}>
-                              <FaCheckCircle size={12}/>
-                            </ThumbtackIconContainer>
+                            <ThumbsIconContainer isPermanent={true} title="Downgrade a sparkpad into a suggested sparkpad">
+                              <FaThumbtack size={12} className="reject" onClick={() => handleUpdateLockedCategory(category)}/>
+                            </ThumbsIconContainer>
                           </CategoryTitle>
                         ) : (
                           <CategoryTitle isPermanent={false}>
                             <h1 onClick={() => handleCategoryClick(category)}>{category}</h1>
-                            <ThumbtackIconContainer isPermanent={false} title="Upgrade a suggested sparkpad into a sparkpad" onClick={() => handleUpdateLockedCategory(category)}>
-                              <FaRegCircle size={12}/>
-                            </ThumbtackIconContainer>
+                            <ThumbsIconContainer isPermanent={false} title="Upgrade a suggested sparkpad into a sparkpad or reject it">
+                              <FaThumbsUp size={12} className="accept" onClick={() => handleUpdateLockedCategory(category)}/>
+                              <FaThumbsDown size={12} className="reject" onClick={() => handleRemoveSuggestedCategory(category)} />
+                            </ThumbsIconContainer>
                           </CategoryTitle>
                         )}
                     </>

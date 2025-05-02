@@ -106,7 +106,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
       <Column main="start" cross="start" width="100%">
         <Row main="start" cross="start" gap="sm">    
           <h1>
-          {category === 'Unsorted' ? 'Miscellaneous' : category}
+          {category === 'Unsorted' ? 'Scratchpad' : category}
         </h1>
         <Spacer expand={true} />
         {window.innerWidth > 768 && (

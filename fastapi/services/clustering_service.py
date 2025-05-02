@@ -76,6 +76,8 @@ class ClusteringService:
 
         clustered_updates = []
 
+        borderline_notes = []
+
         if locked_categories:
             locked_notes_response = supabase_client.table("notes").select("*").eq("user_id", user["id"]).in_("category", locked_categories).execute()
 
@@ -126,7 +128,7 @@ class ClusteringService:
                             best_score = score
                             best_category = category
 
-                    if best_score > 0.4:
+                    if best_score > 0.6:
                         print(f"Best score: {best_score}")
                         note.category = best_category
 
@@ -144,6 +146,24 @@ class ClusteringService:
 
                         # Mark note for removal after loop
                         notes_to_remove.append(note)
+                    elif best_score > 0.4:
+                        print(f"Borderline note {note.id} {note.content} with score {best_score}")
+                        note_preview = ' '.join(note.content.split()[:10])
+                        sorting_updates.append(f"{best_category} - {note_preview}\n")
+                        borderline_notes.append(note)
+                        notes_to_remove.append(note)
+
+                borderline_notes_categories = OpenAIService().llm_classify_notes(borderline_notes, locked_categories)
+
+                for note in borderline_notes_categories:
+                    print(f"note {note['id']} {note['category']} {note['content']}")
+
+                    response = supabase_client.table("notes").update({
+                        "category": note["category"]
+                    }).eq("id", note["id"]).execute()
+
+                    if response.data is None:
+                        print(f"Note {note['id']} not found in database.")
 
                 # After looping, remove notes that matched
                 for note in notes_to_remove:
