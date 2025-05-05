@@ -11,7 +11,6 @@ export const NotesRowContainer = styled.div<{ $isRecentNotesVisible: boolean }>`
   transition: max-height 0.4s ease, transform 0.4s ease;
   transform: ${({ $isRecentNotesVisible }) => $isRecentNotesVisible ? 'translateY(0)' : 'translateY(-100px)'};
   padding-left: ${({ theme }) => theme.spacing.lg};
-  padding-right: ${({ theme }) => theme.spacing.lg};
   display: flex;
   flex-direction: column;
   align-items: center;

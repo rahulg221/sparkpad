@@ -2,27 +2,21 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '../../../context/AuthProvider';
 import { Note } from '../../../models/noteModel';
 import { NoteService } from '../../../api/noteService';
-import { SmallHeader } from '../../toolbar/ToolBar.Styles';
 import { Column, Grid, Row, Spacer } from '../../../styles/shared/BaseLayout';
 import { NoteCard, NoteInfo, NotePreview, NoteContainer, NoteListContainer } from './NotesList.Styles';
-import { SecondaryButton, TextButton } from '../../../styles/shared/Button.styles';
-import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
-import { FaBars, FaBorderAll, FaTrash } from 'react-icons/fa';
-import { FaArrowLeft, FaArrowRight, FaPen, FaTable, FaTableList } from 'react-icons/fa6';
-import { Modal } from '../../modal/Modal';
-import { ModalContent } from '../../modal/Modal.Styles'; 
-import { ThemeToggle } from '../../modal/themetoggle/ThemeToggle';
-import { CustomDropdown } from '../../dropdown/Dropdown';
+import { FaInfoCircle, FaTimesCircle, FaTrash } from 'react-icons/fa';
+import { FaArrowLeft, FaArrowRight, FaArrowUpRightFromSquare, FaCircle } from 'react-icons/fa6';
 import { useActions } from '../../../context/ActionsContext';
 import { UpdateNoteModal } from '../../modal/UpdateNoteModal';
 import { useNotes } from '../../../context/NotesProvider';
 import remarkGfm from 'remark-gfm';
 import { IconButton, SmallIconButton } from '../../../styles/shared/Button.styles';
 import { InputBar } from '../../inputbar/InputBar';
-import { motion } from 'framer-motion';
-import { DateFilter } from './DateFilter';
+import { useTheme } from 'styled-components';
+import { extractDateAndText } from '../../../utils/dateParse';
+import { IoSparkles } from 'react-icons/io5';
 
 interface NotesListProps {
   category: string;
@@ -34,6 +28,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [date, setDate] = useState<string | null>(null);
+  const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
   const { user } = useAuth();
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
@@ -42,9 +37,19 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
   const [totalNotes, setTotalNotes] = useState(0);
-  const { categories, isSidebarVisible, isToolBarCollapsed } = useActions();
-  const { refreshNotes, isSearchLoading } = useNotes();
+  const { setNotificationType, updateTasks, updateEvents, categories, isSidebarVisible, isToolBarCollapsed, setNotificationMessage, setShowNotification } = useActions();
+  const { refreshNotes, isSearchLoading, draftNote, setDraftNote, setRefreshNotes, writeInCurrentCategory } = useNotes();
   const notesContainerRef = useRef<HTMLDivElement>(null);
+  const textInputRef = useRef<HTMLTextAreaElement>(null);
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState<string>('');
+  const theme = useTheme();
+
+  useEffect(() => {
+    if (writeInCurrentCategory && textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  }, [writeInCurrentCategory]);
 
   useEffect(() => {
     fetchNotes();
@@ -83,6 +88,79 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
     }
   };  
 
+  const handleTextChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const input = e.target.value;
+    setDraftNote(input);
+
+    if (input.trim() === '') {
+      setParsedDateHint('');
+      return;
+    }
+
+    if (input.startsWith('/e')) {
+      const { hint } = await extractDateAndText(input);
+      setParsedDateHint(hint);
+    } else {
+      setParsedDateHint('');
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (draftNote.trim() === '') return;
+
+    let notificationMessage = '';
+    let categories: string[] = [];
+
+    try {
+      if (draftNote.startsWith('/e')) {
+        const { dateTimeString, content } = await extractDateAndText(draftNote);
+
+        const note: Note = {
+          content: draftNote.trim(),
+          user_id: user?.id || '',
+          category: category, 
+          cluster: -1,
+        };
+
+        notificationMessage = await NoteService.addNote(note, dateTimeString, content);
+        setNotificationType('event');
+        setParsedDateHint('');
+      } 
+      else {
+        if (draftNote.startsWith('/t')) {
+          setNotificationType('task');
+        } else {
+          setNotificationType('note');
+        }
+
+        const note: Note = {
+          content: draftNote.trim(),
+          user_id: user?.id || '',
+          category: category,
+          cluster: -1,
+        };
+
+        notificationMessage = await NoteService.addNote(note);
+        setParsedDateHint('');
+      }
+
+      if (notificationMessage.includes('Task')) {
+        updateTasks(true);
+      } else if (notificationMessage.includes('Calendar')) {
+        updateEvents(true);
+      }
+
+      //setNotificationMessage(notificationMessage);
+      //setShowNotification(true);
+      setDraftNote('');
+
+      setRefreshNotes(!refreshNotes); // toggle it
+    } catch (error) {
+      console.error('Unexpected error in handleSubmit:', error);
+    } 
+  };
+
   const handleDeleteNote = async (noteId: string) => {
     try {
       await NoteService.deleteNote(noteId, user?.id || '', lockedCategories);
@@ -95,7 +173,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
 
   const handleUpdateNote = async (noteId: string) => {
     try {
-      await NoteService.updateNote(noteId, newCategory);
+      await NoteService.updateNote(noteId, draftNote, newCategory);
       setNotes(notes.filter(note => note.id !== noteId));
       setIsUpdateNoteOpen(false);
     } catch (err) {
@@ -139,22 +217,108 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
       </Row>
       <Spacer height='lg' />
       <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
+      {draftNote !== null && category !== 'Unsorted' && (
+        <NoteCard $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"}>
+          <NotePreview $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"}>
+            <textarea
+              value={draftNote}
+              ref={textInputRef}
+              onChange={(e) => setDraftNote(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                  e.preventDefault();
+                  e.currentTarget.blur(); // triggers save via onBlur
+                }
+              }}              
+              onBlur={async () => {
+                const note: Note = {
+                  id: '',
+                  content: draftNote,
+                  category: category,
+                  cluster: -1,
+                  user_id: user?.id || ''
+                };
+                
+                if (draftNote.trim()) {
+                  await NoteService.addNote(note);
+                  setRefreshNotes(!refreshNotes);
+                }
+                setDraftNote('');
+              }}
+              autoFocus
+              placeholder="Write here..."
+              style={{
+                width: '100%',
+                height: '100%',
+                resize: 'none',
+                background: 'transparent',
+                border: 'none',
+                fontSize: 'inherit',
+                fontFamily: 'inherit',
+                color: theme.colors.textPrimary,
+                outline: 'none',
+              }}
+            />
+          </NotePreview>
+        </NoteCard>
+      )}
       {notes.length === 0 && <h2>No notes found for {date}.</h2>}
         { isLoading || isSearchLoading ? <LoadingSpinner /> :
-        <Grid $columns={3} $layoutMode={$layoutMode}>
+        <Grid $columns={3} $layoutMode={$layoutMode} gap="md">
           {notes.map((note) => (
             <NoteCard key={note.id} $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
               <NotePreview $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
-                    ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                    li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                  }}
-                >
-                  {note.content}
-                </ReactMarkdown>
+                {editingNoteId === note.id ? (
+                  <textarea
+                    value={editedContent}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        e.currentTarget.blur(); // triggers save via onBlur
+                      }
+                    }}                    
+                    onChange={(e) => setEditedContent(e.target.value)}
+                    onBlur={async () => {
+                      const updatedContent = editedContent.trim();
+                      if (updatedContent && updatedContent !== note.content) {
+                        await NoteService.updateNote(note.id!, updatedContent, note.category!);
+                        setRefreshNotes(!refreshNotes);
+                      }
+                      setEditingNoteId(null);
+                    }}
+                    autoFocus
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      resize: 'none',
+                      background: 'transparent',
+                      border: 'none',
+                      fontSize: 'inherit',
+                      fontFamily: 'inherit',
+                      color: theme.colors.textPrimary,
+                      outline: 'none',
+                    }}
+                  />
+                ) : (
+                  <div
+                    onClick={() => {
+                      setEditingNoteId(note.id!);
+                      setEditedContent(note.content!);
+                    }}
+                    style={{ cursor: 'text' }}
+                  >
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
+                        ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                        li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                      }}
+                    >
+                      {note.content}
+                    </ReactMarkdown>
+                  </div>
+                )}
               </NotePreview>
               <NoteInfo $isUnsorted={note.category === "Unsorted"}>
                 {new Date(note.created_at!).toLocaleDateString('en-US', {
@@ -163,16 +327,21 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
                   hour: '2-digit',
                   minute: '2-digit',
                 })}
+                {note.recentlyMoved && ' - This note was auto-organized here. You can move it anytime.'}
+                {note.recentlyMoved && <FaTimesCircle size={12} style={{ cursor: 'pointer', marginTop: '3px', marginLeft: '5px' }} onClick={() => {
+                  NoteService.updateNote(note.id!, note.content!, note.category!, false);
+                  setRefreshNotes(!refreshNotes);
+                }}>Ignore</FaTimesCircle>}
                 <Spacer expand={true} />
                 <SmallIconButton onClick={() => {
-                  setNoteToUpdate(note);
-                  setIsUpdateNoteOpen(true);
-                }}>
-                  <FaPen size={14} />
+                      setNoteToUpdate(note);
+                      setIsUpdateNoteOpen(true);
+                  }}>
+                  <FaArrowUpRightFromSquare size={14} />
                 </SmallIconButton>
                 <Spacer width='sm' />
                 <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
-                  <FaTrash size={14} />
+                    <FaTrash size={14} />
                 </SmallIconButton>
               </NoteInfo>
             </NoteCard>

@@ -18,6 +18,7 @@ type NotesContextType = {
     refreshNotes: boolean;
     clusteredUpdates: string[];
     unlockedNotes: Note[];
+    draftNote: string;
     autoOrganizeNotes: () => void;
     setCurrentNotes: (notes: Note[]) => void;
     setCurrentCategory: (category: string) => void;
@@ -32,12 +33,14 @@ type NotesContextType = {
     setSortingUpdates: (updates: string[]) => void;
     setClusteredUpdates: (updates: string[]) => void;
     setUnlockedNotes: (notes: Note[]) => void;
+    setDraftNote: (note: string) => void;
 }
 
 export const NotesContext = createContext<NotesContextType | null>(null);
 
 export const NotesProvider = ({ children }: { children: ReactNode }) => {
     const [currentNotes, setCurrentNotes] = useState<Note[]>([]);
+    const [draftNote, setDraftNote] = useState<string>('');
     const [currentCategory, setCurrentCategory] = useState<string>(''); 
     const [searchResults, setSearchResults] = useState<Note[]>([]);  
     const [isSearchLoading, setIsSearchLoading] = useState(false);
@@ -84,7 +87,7 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
         }
     };
 
-    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, isSortingUpdatesVisible, sortingUpdates, clusteredUpdates, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes, setIsSortingUpdatesVisible, setSortingUpdates, setClusteredUpdates, setUnlockedNotes, unlockedNotes, setIsCategoriesLoading }}>{children}</NotesContext.Provider>;
+    return <NotesContext.Provider value={{ currentNotes, currentCategory, searchResults, isSearchLoading, isCategoriesLoading, isSortingUpdatesVisible, sortingUpdates, clusteredUpdates, showTree, showRecentNotes, writeInCurrentCategory, refreshNotes, autoOrganizeNotes, setCurrentNotes, setCurrentCategory, semanticSearch, setSearchResults, setShowTree, setShowRecentNotes, setWriteInCurrentCategory, setRefreshNotes, setIsSortingUpdatesVisible, setSortingUpdates, setClusteredUpdates, setUnlockedNotes, unlockedNotes, setIsCategoriesLoading, draftNote, setDraftNote }}>{children}</NotesContext.Provider>;
 };  
 
 export const useNotes = () => {

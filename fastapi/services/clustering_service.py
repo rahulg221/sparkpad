@@ -49,7 +49,8 @@ class ClusteringService:
 
             response = supabase_client.table("notes").update({
                 "category": category,
-                "cluster": cluster
+                "cluster": cluster,
+                "recentlyMoved": False
             }).eq("id", note_id).execute()
 
             if response.data is None:
@@ -134,7 +135,8 @@ class ClusteringService:
 
                         print(f"Updating note {note.id} to category {best_category}")
                         response = supabase_client.table("notes").update({
-                            "category": best_category
+                            "category": best_category,
+                            "recentlyMoved": True
                         }).eq("id", note.id).execute()
 
                         if response.data is None:
@@ -154,7 +156,7 @@ class ClusteringService:
                         notes_to_remove.append(note)
 
                 borderline_notes_categories = []
-                
+
                 if len(borderline_notes) > 0:
                     borderline_notes_categories = OpenAIService().llm_classify_notes(borderline_notes, locked_categories)
 
@@ -162,7 +164,8 @@ class ClusteringService:
                     print(f"note {note['id']} {note['category']} {note['content']}")
 
                     response = supabase_client.table("notes").update({
-                        "category": note["category"]
+                        "category": note["category"],
+                        "recentlyMoved": True
                     }).eq("id", note["id"]).execute()
 
                     if response.data is None:

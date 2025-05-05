@@ -12,7 +12,7 @@ import { IoSparkles } from 'react-icons/io5';
 export const ToolBar = () => {
     const { setIsSettingsVisible, setIsSidebarVisible, setIsToolBarCollapsed, isToolBarCollapsed, setIsEventsVisible, isEventsVisible, setIsTasksVisible, isTasksVisible, isSidebarVisible, setIsInputBarVisible, isInputBarVisible  } = useActions();
     const { createSummary, isSummaryVisible, setIsSummaryVisible } = useSummary();
-    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes, setWriteInCurrentCategory, writeInCurrentCategory } = useNotes();
+    const { setDraftNote, showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes, setWriteInCurrentCategory, writeInCurrentCategory } = useNotes();
 
     const handleSummaryClick = () => {
         if (isSummaryVisible) {

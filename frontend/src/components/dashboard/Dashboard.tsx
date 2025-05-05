@@ -135,9 +135,9 @@ export const Dashboard = () => {
         }
     };
 
-    const handleUpdateNote = async (noteId: string) => {
+    const handleUpdateNote = async (noteId: string, content: string) => {
         try {
-          await NoteService.updateNote(noteId, newCategory);
+          await NoteService.updateNote(noteId, content, newCategory);
           setIsUpdateNoteOpen(false);
         } catch (err) {
           console.error('Error updating note:', err);
@@ -293,7 +293,7 @@ export const Dashboard = () => {
                 <UpdateNoteModal
                     isOpen={isUpdateNoteOpen}
                     onClose={() => setIsUpdateNoteOpen(false)}
-                    onSave={() => handleUpdateNote(noteToUpdate!.id!)}
+                    onSave={() => handleUpdateNote(noteToUpdate!.id!, noteToUpdate!.content!)}
                     noteContent={noteToUpdate?.content || ''}   
                     newCategory={newCategory}
                     setNewCategory={setNewCategory}

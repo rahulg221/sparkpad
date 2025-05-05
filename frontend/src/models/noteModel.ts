@@ -6,4 +6,5 @@ export interface Note {
     user_id: string;
     created_at?: string;   
     updated_at?: string;   
+    recentlyMoved?: boolean;
 } 

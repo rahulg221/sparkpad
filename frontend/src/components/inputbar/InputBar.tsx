@@ -12,6 +12,8 @@ import { LoadingSpinner } from "../../styles/shared/LoadingSpinner";
 import { IoSparkles } from "react-icons/io5";
 import { Row, Stack } from "../../styles/shared/BaseLayout";
 import { FaSpinner, FaSquare } from "react-icons/fa6";
+import { useTheme } from "styled-components";
+import { NewStickyNoteModal } from "./NewStickyNoteModal";
 
 export const InputBar = () => {
   const {
@@ -36,6 +38,7 @@ export const InputBar = () => {
   const { user, lockedCategories } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
   const textInputRef = useRef<HTMLTextAreaElement>(null);
+  const theme = useTheme();
 
   useEffect(() => {
     if (isInputBarVisible && textInputRef.current) {
@@ -144,44 +147,41 @@ export const InputBar = () => {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit(e as React.FormEvent);
+      setIsInputBarVisible(false);
+    }
+  };
+
   return (
-    <TextBarForm onSubmit={handleSubmit}>
-      <InputBarContainer isInputBarVisible={isInputBarVisible} isToolBarCollapsed={isToolBarCollapsed}>
-        <TextInput
+      <NewStickyNoteModal
+        isOpen={isInputBarVisible}
+        onClose={() => setIsInputBarVisible(false)}
+        onSave={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
+        title="New Note"
+      >
+        <textarea
           ref={textInputRef}
           value={text}
-          onChange={handleTextChange}
-          onFocus={() => setIsFocused(true)}
-          onBlur={() => setIsFocused(false)}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" && !e.shiftKey && text.trim() !== "") {
-              e.preventDefault();
-              handleSubmit(e);
-            }
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Write your note here..."
+          onKeyDown={handleKeyDown}  
+          style={{
+            width: '100%',
+            height: '200px',
+            padding: theme.spacing.lg,
+            backgroundColor: 'transparent',
+            borderRadius: theme.borderRadius.md,
+            outline: 'none',
+            border: 'none',
+            color: theme.colors.textPrimary,
+            resize: 'vertical',
+            overflow: 'auto',
+            fontFamily: 'inherit',
           }}
-          placeholder={
-            writeInCurrentCategory
-              ? 'Capture a spark to ' + (currentCategory === 'Unsorted' ? 'your sticky notes' : currentCategory) + '...'
-              : 'Capture a spark to your sticky notes...'
-          }
-          disabled={isLoading}
-          rows={1}
-          style={{ paddingBottom: parsedDateHint ? '2.2em' : undefined }}
         />
-        {isFocused && (
-          <SubmitButton type="submit" disabled={isLoading || noteLoading}>
-            {noteLoading ? <FaSquare size={14}/> : <FaArrowUp size={14}/>}
-          </SubmitButton>
-        )}
-        
-        {/* Date hints */}
-        {parsedDateHint && (
-          <DateHint>
-            <FaClock size={14} />
-            {parsedDateHint}
-          </DateHint>
-        )}
-      </InputBarContainer>
-    </TextBarForm>
-  );
+      </NewStickyNoteModal>
+    );    
 };

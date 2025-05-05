@@ -49,7 +49,8 @@ export const darkTheme = {
     recentBackground: 'rgb(18, 18, 18)',
     recentColor: 'rgb(250, 98, 75)',
 
-    stickyNoteBackground: 'rgba(255, 255, 255, 0.05)',
+    stickyNoteBackground: 'rgba(36, 36, 36, 0.4)',
+    stickyNoteTextArea: 'rgba(36, 36, 36, 1)',
     stickyNoteColor: 'rgb(254, 249, 195)',
 
     cardBackground: 'rgb(18, 18, 18)',
@@ -147,6 +148,7 @@ export const lightTheme = {
   cardBackground: 'rgb(255, 255, 255)',
 
   stickyNoteBackground: 'rgb(254, 249, 195)',
+  stickyNoteTextArea: 'rgb(254, 249, 195)',
   stickyNoteColor: 'rgb(0, 0, 0)',
 
   cardColor: 'rgb(255, 238, 152)',

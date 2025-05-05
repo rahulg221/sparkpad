@@ -74,7 +74,7 @@ export const CategoryBox = styled.div<{ isPermanent: boolean }>`
   &:hover {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    border: 1px solid ${({ theme }) => theme.colors.accent};
+    //border: 1px solid ${({ theme }) => theme.colors.accent};
   }
 `;
 

@@ -146,9 +146,9 @@ export class NoteService {
     }
   }
 
-  static async updateNote(noteId: string, category: string): Promise<string> {
+  static async updateNote(noteId: string, content: string, category: string, recentlyMoved?: boolean | false): Promise<string> {
     try {
-      await supabase.from('notes').update({ category }).eq('id', noteId);
+      await supabase.from('notes').update({ content, category, recentlyMoved }).eq('id', noteId);
       return 'Successfully updated note!';
     } catch {
       return 'Failed to update note';
@@ -160,7 +160,7 @@ export class NoteService {
       if (!limit) {
         const { data } = await supabase
           .from('notes')
-          .select('id, content, category, created_at, user_id, cluster')
+          .select('id, content, category, created_at, user_id, cluster, recentlyMoved')
           .eq('user_id', userId)
           .order('created_at', { ascending: true });
 
@@ -168,7 +168,7 @@ export class NoteService {
       } else {
         const { data } = await supabase
           .from('notes')
-          .select('id, content, category, created_at, user_id, cluster')
+          .select('id, content, category, created_at, user_id, cluster, recentlyMoved')
           .eq('user_id', userId)
           .order('created_at', { ascending: true })
           .limit(limit);
@@ -261,7 +261,7 @@ export class NoteService {
 
         const { data, error } = await supabase
           .from('notes')
-          .select('id, content, category, created_at, user_id, cluster')
+          .select('id, content, category, created_at, user_id, cluster, recentlyMoved')
           .eq('user_id', userId)
           .eq('category', category)
           .gte('created_at', startOfDay)
@@ -277,7 +277,7 @@ export class NoteService {
       } else {
         const { data, error } = await supabase
           .from('notes')
-          .select('id, content, category, created_at, user_id, cluster')
+          .select('id, content, category, created_at, user_id, cluster, recentlyMoved')
           .eq('user_id', userId)
           .eq('category', category)
           .order('created_at', { ascending: false })

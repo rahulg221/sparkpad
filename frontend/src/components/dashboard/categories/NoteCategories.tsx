@@ -18,7 +18,7 @@ import { FaHouse } from 'react-icons/fa6';
 export const NoteCategories = () => {
   const { user, lockedCategories, setLockedCategories } = useAuth();
   const { categories, setCategories, setIsSidebarVisible, isToolBarCollapsed, isSidebarVisible, isInputBarVisible, setIsInputBarVisible, setNotificationMessage, setShowNotification } = useActions();
-  const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory, refreshNotes, setRefreshNotes, setShowRecentNotes, showRecentNotes } = useNotes();
+  const { draftNote, setDraftNote, setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory, refreshNotes, setRefreshNotes, setShowRecentNotes, showRecentNotes } = useNotes();
   const [isNewNotepadVisible, setIsNewNotepadVisible] = useState(false);
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
@@ -74,9 +74,13 @@ export const NoteCategories = () => {
     }
   } 
 
-  const handlePenClick = () => {
-    setIsInputBarVisible(true);
-    setWriteInCurrentCategory(true);
+  const handlePenClick = (category: string) => {
+    if (category === 'Unsorted') {
+      setIsInputBarVisible(true);
+    } else {
+      setWriteInCurrentCategory(true);
+      setDraftNote('');
+    }
   }
 
   const handleCategoryClick = (category: string) => {
@@ -140,7 +144,7 @@ export const NoteCategories = () => {
                     )}
                     {lockedCategories.includes(category) || category === "Unsorted" ? (
                       <PenIconContainer isPermanent={true}>
-                        <PenIcon title={`Write in ${category}`} onClick={handlePenClick}>
+                        <PenIcon title={`Write in ${category}`} onClick={() => handlePenClick(category)}>
                           <IoPencilOutline size={25} />
                         </PenIcon>
                       </PenIconContainer>

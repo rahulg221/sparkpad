@@ -16,8 +16,8 @@ export const NoteContainer = styled(Container)<{ $isUnsorted: boolean }>`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow-y: auto;
   //border: 1px solid ${({ theme }) => theme.colors.border};
-  border-left: 15px solid black;
-  box-shadow: ${({ theme, $isUnsorted }) => $isUnsorted ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.2)'};
+  border-left: ${({ $isUnsorted }) => $isUnsorted ? 'none' : '15px solid black'};
+  box-shadow: ${({ $isUnsorted }) => $isUnsorted ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.2)'};
   background-color: ${({ theme, $isUnsorted }) => $isUnsorted ? 'transparent' : theme.colors.cardBackground};
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
@@ -59,7 +59,7 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: 
   //border: 1px solid ${({ theme }) => theme.colors.border};
   //border-bottom: 1px solid ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.border};
   //border-radius: ${({ theme }) => theme.borderRadius.md};
-  min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '15vh' : '30vh'};
+  min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '10vh' : '30vh'};
   transition: max-height 0.4s ease, border 0.3s ease;
 
   &:hover {

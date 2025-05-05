@@ -24,7 +24,7 @@ export const UpdateNoteModal: React.FC<UpdateNoteModalProps> = ({
   categories
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Edit Spark">
+    <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Move Spark">
       <ModalContent>
         <SmallHeader>Content</SmallHeader>
         <h2>{noteContent}</h2>
