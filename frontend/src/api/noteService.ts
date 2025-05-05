@@ -253,21 +253,42 @@ export class NoteService {
     }
   }
 
-  static async getNotesByCategory(userId: string, category: string, limit: number, offset: number): Promise<Note[]> {
+  static async getNotesByCategory(userId: string, category: string, limit: number, offset: number, date: string | null): Promise<Note[]> {
     try {
-      const { data, error } = await supabase
-        .from('notes')
-        .select('id, content, category, created_at, user_id, cluster')
-        .eq('user_id', userId)
-        .eq('category', category)
-        .order('created_at', { ascending: false })
-        .range(offset, offset + limit - 1);
+      if (date) {
+        const startOfDay = `${date}T00:00:00`;
+        const endOfDay = `${date}T23:59:59.999`;
 
-      if (error) {
-        throw error;
-      }
+        const { data, error } = await supabase
+          .from('notes')
+          .select('id, content, category, created_at, user_id, cluster')
+          .eq('user_id', userId)
+          .eq('category', category)
+          .gte('created_at', startOfDay)
+          .lte('created_at', endOfDay)
+          .order('created_at', { ascending: false })
+        .range(offset, offset + limit - 1)
+      
+        if (error) {
+          throw error;
+        }
 
-      return data || [];
+        return data || [];
+      } else {
+        const { data, error } = await supabase
+          .from('notes')
+          .select('id, content, category, created_at, user_id, cluster')
+          .eq('user_id', userId)
+          .eq('category', category)
+          .order('created_at', { ascending: false })
+          .range(offset, offset + limit - 1);
+
+        if (error) {
+          throw error;
+        }
+
+        return data || [];
+      } 
     } catch (error) {
       console.error('Failed to get notes by category:', error);
       return [];

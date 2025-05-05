@@ -153,7 +153,10 @@ class ClusteringService:
                         borderline_notes.append(note)
                         notes_to_remove.append(note)
 
-                borderline_notes_categories = OpenAIService().llm_classify_notes(borderline_notes, locked_categories)
+                borderline_notes_categories = []
+                
+                if len(borderline_notes) > 0:
+                    borderline_notes_categories = OpenAIService().llm_classify_notes(borderline_notes, locked_categories)
 
                 for note in borderline_notes_categories:
                     print(f"note {note['id']} {note['category']} {note['content']}")

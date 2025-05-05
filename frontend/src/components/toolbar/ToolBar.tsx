@@ -1,5 +1,5 @@
 import { Column, Container, Row, Spacer } from '../../styles/shared/BaseLayout';
-import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaCalendar, FaThumbtack} from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaLightbulb, FaSearch, FaCalendar, FaThumbtack, FaStickyNote} from 'react-icons/fa';
 import { SecondaryButton, IconButton, TextButton } from '../../styles/shared/Button.styles';
 import { IconWrapper, ToolBarContainer, SmallHeader } from './ToolBar.Styles';
 import { FaClock, FaGear, FaPen, FaPlus, FaWandMagicSparkles } from 'react-icons/fa6';
@@ -12,7 +12,7 @@ import { IoSparkles } from 'react-icons/io5';
 export const ToolBar = () => {
     const { setIsSettingsVisible, setIsSidebarVisible, setIsToolBarCollapsed, isToolBarCollapsed, setIsEventsVisible, isEventsVisible, setIsTasksVisible, isTasksVisible, isSidebarVisible, setIsInputBarVisible, isInputBarVisible  } = useActions();
     const { createSummary, isSummaryVisible, setIsSummaryVisible } = useSummary();
-    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes } = useNotes();
+    const { showTree, autoOrganizeNotes, semanticSearch, setShowTree, setShowRecentNotes, showRecentNotes, setWriteInCurrentCategory, writeInCurrentCategory } = useNotes();
 
     const handleSummaryClick = () => {
         if (isSummaryVisible) {
@@ -87,6 +87,7 @@ export const ToolBar = () => {
             setIsInputBarVisible(false);
         } else {
             setIsInputBarVisible(true);
+            setWriteInCurrentCategory(false);
         }
     };
 
@@ -140,8 +141,8 @@ export const ToolBar = () => {
                         {isToolBarCollapsed ? null : 'Upcoming'}
                     </TextButton>
                     <TextButton onClick={handleRecentNotesClick} title="View your recent sparks">
-                        <FaThumbtack size={14} />
-                        {isToolBarCollapsed ? null : 'Sparkboard'}
+                        <FaStickyNote size={14} />
+                        {isToolBarCollapsed ? null : 'Sticky Notes'}
                     </TextButton>
                 </Container>
                 <Container width="100%">

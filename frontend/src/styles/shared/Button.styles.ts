@@ -30,7 +30,7 @@ export const PrimaryButton = styled.button`
 export const SecondaryButton = styled.button<{ width?: string }>`
   padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.bgElevated};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   height: 6.5vh;
@@ -111,6 +111,18 @@ export const FloatingButton = styled.button`
 
   @media (min-width: 769px) {
     display: none;
+  }
+`;
+
+export const SmallIconButton = styled.div`
+  width: 20px;
+  height: 20px;
+  color: ${({ theme }) => theme.colors.bgElevated};
+  cursor: pointer;
+  transition: color 0.2s ease;
+
+  &:hover {
+    color: ${({ theme }) => theme.colors.textLight};
   }
 `;
 

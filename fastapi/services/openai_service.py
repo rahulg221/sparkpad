@@ -25,8 +25,11 @@ class OpenAIService:
 
         note_texts = [note.content for note in notes]
         note_ids = [note.id for note in notes]
+        print(note_texts)
+        print(note_ids)
 
         notes_block = "\n".join(note_texts)
+        print(notes_block)
 
         prompt = f"""
         You are a note classification assistant.
@@ -49,7 +52,9 @@ class OpenAIService:
 
         result_lines = response.choices[0].message.content.strip().splitlines()
 
-        if len(result_lines) != len(note_ids):
+        if len(result_lines) != len(note_ids) and len(result_lines) > 0:
+            print(result_lines)
+            print(note_ids)
             raise ValueError("Mismatch between classified lines and note count.")
 
         return [{"id": nid, "category": line.strip(), "content": text} for nid, text, line in zip(note_ids, note_texts, result_lines)]

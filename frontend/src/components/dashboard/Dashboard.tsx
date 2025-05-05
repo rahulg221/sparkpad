@@ -22,7 +22,8 @@ import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
 import { FaPen, FaTrash } from 'react-icons/fa';
-import { NoteCard, NoteContent, NoteInfo, SmallIconButton } from './noteslist/NotesList.Styles';
+import { SmallIconButton } from '../../styles/shared/Button.styles';
+import { NoteCard, NoteInfo, NotePreview } from './noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
 import { UpdateNoteModal } from '../modal/UpdateNoteModal';
 import { NewNotepadModal } from '../modal/NewNotepadModal';
@@ -97,6 +98,7 @@ export const Dashboard = () => {
         // Trigger on 'Q' (for "Quick note")
         if (e.key === 'q' || e.key === 'Q') {
           e.preventDefault(); 
+
           setIsInputBarVisible(true);
         }
       };
@@ -182,8 +184,8 @@ export const Dashboard = () => {
               </Row>  
                 <Grid $columns={1} $layoutMode="list">  
                   {searchResults.map((note) => (
-                    <NoteCard key={note.id} $layoutMode="list">
-                      <NoteContent>
+                    <NoteCard key={note.id} $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
+                      <NotePreview $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
                         <ReactMarkdown
                           components={{
                             ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
@@ -192,8 +194,8 @@ export const Dashboard = () => {
                         >
                           {note.content}
                         </ReactMarkdown>
-                      </NoteContent>
-                      <NoteInfo>
+                      </NotePreview>
+                      <NoteInfo $isUnsorted={note.category === "Unsorted"}>
                         {note.category === "Unsorted"
                           ? "Miscellaneous"
                           : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
@@ -238,8 +240,8 @@ export const Dashboard = () => {
               <Spacer height="lg" />
               <Grid $columns={1} $layoutMode="list">  
                   {searchResults.map((note) => (
-                    <NoteCard key={note.id} $layoutMode="list">
-                      <NoteContent>
+                    <NoteCard key={note.id} $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
+                      <NotePreview $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
                         <ReactMarkdown
                           components={{
                             ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
@@ -248,8 +250,8 @@ export const Dashboard = () => {
                         >
                           {note.content}
                         </ReactMarkdown>
-                      </NoteContent>
-                      <NoteInfo>
+                      </NotePreview>
+                      <NoteInfo $isUnsorted={note.category === "Unsorted"}>
                         {note.category === "Unsorted"
                           ? "Miscellaneous"
                           : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}

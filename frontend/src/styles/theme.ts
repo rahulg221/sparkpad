@@ -1,10 +1,10 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
-    bgPure: 'rgb(12, 12, 12)', // Pure black app background
-    bgDark: 'rgb(18, 18, 18)',           // Most surfaces
-    bgElevated: 'rgba(255, 255, 255, 0.08)', // Flexible surfaces
-    bgLight: 'rgb(36, 36, 36)',          // Dark gray for inputs, blocks
+    bgPure: 'rgb(8, 8, 8)', // Pure black app background
+    bgDark: 'rgb(12, 12, 12)',           // Most surfaces
+    bgElevated: 'rgba(255, 255, 255, 0.06)', // Flexible surfaces
+    bgLight: 'rgb(30, 30, 30)',          // Dark gray for inputs, blocks
     
     // Text colors (inverted from light mode)
     textPrimary: '#ffffff',      // Bright white for high contrast
@@ -25,6 +25,7 @@ export const darkTheme = {
 
     // Inverted dot color (was black on white)
     dotColor: 'rgba(255, 255, 255, 0.1)',
+    penColor: 'rgb(86, 139, 237)',
     looseSpark: 'rgb(230, 66, 66)',
     topNotePad: 'rgb(255, 255, 255)',     
     treeNode: 'rgb(30, 30, 30)',
@@ -36,23 +37,26 @@ export const darkTheme = {
     colorThree: 'rgba(255, 255, 255, 0.2)',  // Dots and lines on notepad
     colorFour: 'rgb(0, 0, 0)',        // Neutral dark base
 
-    taskBackground: 'rgb(28, 28, 28)',
+    taskBackground: 'rgb(18, 18, 18)',
     taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-    eventBackground: 'rgb(28, 28, 28)',
+    eventBackground: 'rgb(18, 18, 18)',
     eventColor: 'rgb(156, 115, 214)',  // dusty lavendar
 
-    notifBackground: 'rgb(28, 28, 28)',
+    notifBackground: 'rgb(18, 18, 18)',
     notifColor: 'rgb(255, 214, 10)',
 
-    recentBackground: 'rgb(28, 28, 28)',
+    recentBackground: 'rgb(18, 18, 18)',
     recentColor: 'rgb(250, 98, 75)',
 
-    cardBackground: 'rgb(24, 24, 24)',
+    stickyNoteBackground: 'rgba(255, 255, 255, 0.05)',
+    stickyNoteColor: 'rgb(254, 249, 195)',
+
+    cardBackground: 'rgb(18, 18, 18)',
     cardColor: '#444444',
 
     // Utility / Semantic
-    border: 'rgba(255, 255, 255, 0.09)',           // Dark gray borders
+    border: 'rgba(176, 176, 176, 0.22)',           // Dark gray borders
     error: 'rgb(255, 50, 50)',            // Soft pinkish-red error
     success: 'rgb(137, 251, 95)',          // Green for success (kept same)
     warning: '#fbc02d',          // Vibrant yellow for warnings (kept same)
@@ -93,7 +97,7 @@ export const lightTheme = {
   // Backgrounds
   bgPure: 'rgb(255, 255, 255)',
   bgDark: 'rgb(255, 255, 255)',                     // White app background
-  bgElevated: 'rgba(0, 0, 0, 0.025)',     // Subtle card background
+  bgElevated: 'rgba(0, 0, 0, 0.08)',    
   bgLight: 'rgb(238, 238, 238)',                    // Light gray for inputs, code blocks
 
   // Text colors
@@ -115,6 +119,7 @@ export const lightTheme = {
 
   // Dot color (reversed for light bg)
   dotColor: 'rgba(0, 0, 0, 0.3)', 
+  penColor: 'rgb(86, 139, 237)',
   looseSpark: 'rgb(0, 0, 0)',
   topNotePad: 'rgba(0, 0, 0, 0.9)',
   treeNode: 'rgb(235, 235, 235)',
@@ -126,20 +131,24 @@ export const lightTheme = {
   colorThree: 'rgba(0, 0, 0, 0.2)',         // Dots and lines on notepad
   colorFour: 'rgb(187, 187, 187)',
 
-  taskBackground: 'rgb(246, 248, 255)',
+  taskBackground: 'rgb(245, 245, 245)',
   taskColor: 'rgb(106, 146, 246)',   // slate blue
 
-  eventBackground: 'rgb(251, 242, 255)',
+  eventBackground: 'rgb(245, 245, 245)',
   eventColor: 'rgb(183, 115, 214)',  // dusty lavendar
 
-  notifBackground: 'rgba(255, 214, 10, 0.3)',
+  notifBackground: 'rgb(245, 245, 245)',
   notifColor: 'rgb(255, 214, 10)',
 
-  recentBackground: 'rgba(250, 98, 75, 0.3)',
+  recentBackground: 'rgb(245, 245, 245)',
   recentColor: 'rgb(250, 98, 75)',
 
   primarySurface: 'rgba(255, 214, 10, 0.3)',
-  cardBackground: 'rgb(255, 255, 242)',
+  cardBackground: 'rgb(255, 255, 255)',
+
+  stickyNoteBackground: 'rgb(254, 249, 195)',
+  stickyNoteColor: 'rgb(0, 0, 0)',
+
   cardColor: 'rgb(255, 238, 152)',
 
   // Utility / Semantic

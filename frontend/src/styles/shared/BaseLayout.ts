@@ -82,7 +82,7 @@ export const Grid = styled.div<{
   ${({ $layoutMode, $columns }) =>
     $layoutMode === 'grid' &&
     `grid-template-columns: repeat(${$columns || 2}, 1fr);`}
-  gap: ${({ theme, gap }) => gap ? theme.spacing[gap] : theme.spacing.md};
+  gap: ${({ theme, gap }) => gap ? theme.spacing[gap] : 0};
 
   @media (max-width: 768px) {
     display: flex;

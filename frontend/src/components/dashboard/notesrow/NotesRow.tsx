@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/AuthProvider';
 import { Note } from '../../../models/noteModel';
 import { NoteService } from '../../../api/noteService';
-import { NoteInfo, NotePreview, NewNoteCard, Icon } from './NotesRow.Styles';
+import { NoteInfo, NotePreview, NewNoteCard } from './NotesRow.Styles';
 import { Row, ScrollView, Spacer } from '../../../styles/shared/BaseLayout';
 import { Container } from '../../../styles/shared/BaseLayout';
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
-import { IconButton } from '../../../styles/shared/Button.styles';
-import { FaTimes, FaTrash, FaChevronUp, FaMagic, FaThumbtack } from 'react-icons/fa';
+import { IconButton, SmallIconButton } from '../../../styles/shared/Button.styles';
+import { FaTimes, FaTrash, FaChevronUp, FaMagic, FaStickyNote } from 'react-icons/fa';
 import { useNotes } from '../../../context/NotesProvider';
 import { IoSparkles } from 'react-icons/io5';
 import { NotesRowContainer } from './NotesRow.Styles';
@@ -40,7 +40,7 @@ export const NotesRow = () => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
-      await NoteService.deleteNote(user?.id!, noteId, lockedCategories);
+      await NoteService.deleteNote(noteId, user?.id || '', lockedCategories);
       setRecentNotes(recentNotes.filter(note => note.id !== noteId));
     } catch (err) {
       console.error('Error deleting note:', err);
@@ -50,13 +50,6 @@ export const NotesRow = () => {
   return (
     <>
     <NotesRowContainer $isRecentNotesVisible={showRecentNotes}>            
-        <Row main="spaceBetween" cross="start">
-            <h1>Wild Sparks</h1>
-            <IconButton onClick={() => setShowRecentNotes(false)}>
-                <FaThumbtack size={14} />
-            </IconButton>
-        </Row>
-        <Spacer height="md" />
           <ScrollView direction='horizontal'>
               <Container width="100%">
                 {isLoading ? (
@@ -64,10 +57,11 @@ export const NotesRow = () => {
                 ) : (
                   <Row main="start" cross="start" gap="md">
                   {recentNotes.map(note => (
-                      <NewNoteCard key={note.id}>
-                          <NotePreview>
+                      <NewNoteCard key={note.id} $isUnsorted={note.category === "Unsorted"}>
+                          <NotePreview $isUnsorted={note.category === "Unsorted"}>
                             <ReactMarkdown
                               components={{
+                                p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
                                 ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
                                 li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
                               }}
@@ -82,9 +76,7 @@ export const NotesRow = () => {
                               hour: '2-digit',
                               minute: '2-digit',
                               })}
-                              <Icon>
-                                <FaFire size={14} />
-                              </Icon>
+                              <SmallIconButton onClick={() => {handleDeleteNote(note.id!)}}> <FaTrash size={14}/> </SmallIconButton>
                           </NoteInfo>
                       </NewNoteCard>
                   ))}

@@ -15,7 +15,7 @@ export const Snapshot = () => {
     return (
         <>
             <Row main="spaceBetween" cross="start">
-                <h2>Snapshot</h2>
+                <h2>Summary</h2>
                 <IconButton onClick={() => setIsSidebarVisible(false)}>
                 <FaTimes size={14}/>
                 </IconButton>

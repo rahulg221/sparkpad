@@ -4,13 +4,13 @@ import { Note } from '../../../models/noteModel';
 import { NoteService } from '../../../api/noteService';
 import { SmallHeader } from '../../toolbar/ToolBar.Styles';
 import { Column, Grid, Row, Spacer } from '../../../styles/shared/BaseLayout';
-import { NoteCard, NoteInfo, NotePreview, SmallIconButton, NoteContainer, NoteListContainer } from './NotesList.Styles';
+import { NoteCard, NoteInfo, NotePreview, NoteContainer, NoteListContainer } from './NotesList.Styles';
 import { SecondaryButton, TextButton } from '../../../styles/shared/Button.styles';
 import { MdArrowBack, MdArrowForward, MdLogout, MdEventAvailable } from 'react-icons/md';
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { FaBars, FaBorderAll, FaTrash } from 'react-icons/fa';
-import { FaPen, FaTable, FaTableList } from 'react-icons/fa6';
+import { FaArrowLeft, FaArrowRight, FaPen, FaTable, FaTableList } from 'react-icons/fa6';
 import { Modal } from '../../modal/Modal';
 import { ModalContent } from '../../modal/Modal.Styles'; 
 import { ThemeToggle } from '../../modal/themetoggle/ThemeToggle';
@@ -19,10 +19,10 @@ import { useActions } from '../../../context/ActionsContext';
 import { UpdateNoteModal } from '../../modal/UpdateNoteModal';
 import { useNotes } from '../../../context/NotesProvider';
 import remarkGfm from 'remark-gfm';
-import { IconButton } from '../../../styles/shared/Button.styles';
-import styled from 'styled-components';
+import { IconButton, SmallIconButton } from '../../../styles/shared/Button.styles';
 import { InputBar } from '../../inputbar/InputBar';
 import { motion } from 'framer-motion';
+import { DateFilter } from './DateFilter';
 
 interface NotesListProps {
   category: string;
@@ -33,10 +33,11 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const [notes, setNotes] = useState<Note[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [date, setDate] = useState<string | null>(null);
   const { user } = useAuth();
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(15);
+  const [limit, setLimit] = useState(10);
   const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
@@ -48,10 +49,10 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   useEffect(() => {
     fetchNotes();
 
-    if (isSidebarVisible && !isToolBarCollapsed) {
-      //setLayoutMode('list');
+    if(category === 'Unsorted') {
+      setLayoutMode('grid');
     } else {
-      //setLayoutMode('grid');
+      setLayoutMode('list');
     }
 
   }, [user?.id, page, refreshNotes, limit, category]);
@@ -59,15 +60,19 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const fetchNotes = async () => {
     console.log('fetching notes');
     if (!user?.id) return;
-  
-    const count = await NoteService.getNotesCountByCategory(user.id, category);
-    setTotalNotes(count);
-  
-    const computedOffset = (page - 1) * limit;
-  
+
     try {
-      //setIsLoading(true);
-      const visibleNotes = await NoteService.getNotesByCategory(user.id, category, limit, computedOffset);
+      const count = await NoteService.getNotesCountByCategory(user.id, category);
+      setTotalNotes(count);
+  
+      const computedOffset = (page - 1) * limit;
+      const visibleNotes = await NoteService.getNotesByCategory(
+        user.id,
+        category,
+        limit,
+        computedOffset,
+        date
+      );
   
       setNotes(visibleNotes);
       setIsLoading(false);
@@ -107,25 +112,43 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
       <Column main="start" cross="start" width="100%">
         <Row main="start" cross="start" gap="sm">    
           <h1>
-          {category === 'Unsorted' ? 'Scratchpad' : category}
+          {category === 'Unsorted' ? 'Sticky Notes' : category}
         </h1>
         <Spacer expand={true} />
-        {window.innerWidth > 768 && (
-          <IconButton title="Toggle layout" onClick={handleLayoutMode}>
-            {$layoutMode === 'grid' ? <FaTableList size={14} /> : <FaTable size={14} />}
-          </IconButton>
-        )}
+        <IconButton
+          onClick={() => {
+              if (page > 1) {
+                setPage(page - 1);
+                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+          <FaArrowLeft size={16} />
+        </IconButton>
+        <IconButton
+          onClick={() => {
+            const maxPage = Math.ceil(totalNotes / limit);
+              if (page < maxPage) {
+                setPage(page + 1);
+                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
+              }
+            }}
+          >
+          <FaArrowRight size={16} />
+        </IconButton>
       </Row>
-      <NoteContainer ref={notesContainerRef}>
-      {notes.length === 0 && <h2>No notes found</h2>}
+      <Spacer height='lg' />
+      <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
+      {notes.length === 0 && <h2>No notes found for {date}.</h2>}
         { isLoading || isSearchLoading ? <LoadingSpinner /> :
         <Grid $columns={3} $layoutMode={$layoutMode}>
           {notes.map((note) => (
-            <NoteCard key={note.id} $layoutMode={$layoutMode}>
-              <NotePreview $layoutMode={$layoutMode}>
+            <NoteCard key={note.id} $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
+              <NotePreview $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
                 <ReactMarkdown
                   remarkPlugins={[remarkGfm]}
                   components={{
+                    p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
                     ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
                     li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
                   }}
@@ -133,7 +156,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
                   {note.content}
                 </ReactMarkdown>
               </NotePreview>
-              <NoteInfo>
+              <NoteInfo $isUnsorted={note.category === "Unsorted"}>
                 {new Date(note.created_at!).toLocaleDateString('en-US', {
                   month: 'short',
                   day: 'numeric',
@@ -157,36 +180,9 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
         </Grid>
         }
         <Row main='end' cross='center'>
-        <TextButton
-          onClick={() => {
-              if (page > 1) {
-                setPage(page - 1);
-                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-          >
-          <Row main="center" cross="center" gap="sm">
-            <MdArrowBack size={16} />
-            Previous
-          </Row>
-        </TextButton>
-        <TextButton
-          onClick={() => {
-            const maxPage = Math.ceil(totalNotes / limit);
-              if (page < maxPage) {
-                setPage(page + 1);
-                notesContainerRef.current?.scrollTo({ top: 0, behavior: 'smooth' });
-              }
-            }}
-          >
-          <Row main="center" cross="center" gap="sm">
-            Next
-            <MdArrowForward size={16} />
-          </Row>
-        </TextButton>
       </Row>
       </NoteContainer>
-      <Spacer height='sm' />
+      <p style={{ marginTop: '8px' }}>Page {page} of {Math.ceil(totalNotes / limit)}</p>
       <InputBar />
       {isUpdateNoteOpen && (
           <UpdateNoteModal

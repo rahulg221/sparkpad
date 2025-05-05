@@ -22,8 +22,8 @@ export const DashboardWrapper = styled.div`
   flex-direction: column;
   height: 100%;
   padding-bottom: ${({ theme }) => theme.spacing.xl};
-  padding-right: ${({ theme }) => theme.spacing.lg};
-  padding-left: ${({ theme }) => theme.spacing.lg};
+  padding-right: ${({ theme }) => theme.spacing.sm};
+  padding-left: ${({ theme }) => theme.spacing.sm};
   background-color: transparent;
   overflow-x: hidden;
   width: 100%;

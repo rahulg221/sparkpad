@@ -5,7 +5,6 @@ export const SidebarContainer = styled.div<{ isSidebarVisible: boolean }>`
   height: 100dvh;
   background-color: ${({ theme }) => theme.colors.bgDark};
   border-radius: 0;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   border-left: 1px solid ${({ theme }) => theme.colors.border};
   padding-left: ${({ theme, isSidebarVisible }) => isSidebarVisible ? theme.spacing.md : '0px'};
   padding-right: ${({ theme, isSidebarVisible }) => isSidebarVisible ? theme.spacing.md : '0px'};

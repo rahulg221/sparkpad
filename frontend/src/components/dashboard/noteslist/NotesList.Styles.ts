@@ -7,28 +7,18 @@ export const NoteListContainer = styled.div`
   height: 95vh;
 `;
 
-export const SmallIconButton = styled.div`
-  width: 20px;
-  height: 20px;
-  color: ${({ theme }) => theme.colors.textFaint};
-  cursor: pointer;
-  transition: color 0.2s ease;
-
-  &:hover {
-    color: ${({ theme }) => theme.colors.textLight};
-  }
-`;
-
-export const NoteContainer = styled(Container)`
+export const NoteContainer = styled(Container)<{ $isUnsorted: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   height: auto;
-  background-color: transparent;
   width: 100%;
-  padding-top: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   overflow-y: auto;
-  
+  //border: 1px solid ${({ theme }) => theme.colors.border};
+  border-left: 15px solid black;
+  box-shadow: ${({ theme, $isUnsorted }) => $isUnsorted ? 'none' : '0 1px 3px rgba(0, 0, 0, 0.2)'};
+  background-color: ${({ theme, $isUnsorted }) => $isUnsorted ? 'transparent' : theme.colors.cardBackground};
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 
@@ -58,21 +48,23 @@ export const NoteContainer = styled(Container)`
   }
 `;  
 
-export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list'}>`
+export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: boolean}>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   width: 100%;
   padding: ${({ theme }) => theme.spacing.lg};
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  background-color: ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.cardBackground};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
+  //border-bottom: 1px solid ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.border};
+  //border-radius: ${({ theme }) => theme.borderRadius.md};
   min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '15vh' : '30vh'};
   transition: max-height 0.4s ease, border 0.3s ease;
 
   &:hover {
     max-height: 80vh;
-    border: 1px solid ${({ theme }) => theme.colors.accent};
+    background-color: ${({ theme }) => theme.colors.bgElevated};
   }
 
   @media (max-width: 768px) {
@@ -80,8 +72,8 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list'}>`
   }
 `;
 
-export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
-  color: ${({ theme }) => theme.colors.textLight};
+export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: boolean }>`
+  color: ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteColor : theme.colors.cardColor};
   font-size: ${({ theme }) => theme.fontSize.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   word-break: break-word;
@@ -103,6 +95,10 @@ export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
     text-overflow: unset;
   }
 
+  .markdown-p {
+    color: ${({ theme }) => theme.colors.textPrimary};
+  }
+
   .markdown-ul {
     padding-left: 1.2rem;
     list-style-type: disc;
@@ -114,33 +110,10 @@ export const NotePreview = styled.div<{ $layoutMode: 'grid' | 'list' }>`
   }
 `;
 
-export const NoteInfo = styled.div`
-  color: ${({ theme }) => theme.colors.textLight};
+export const NoteInfo = styled.div<{ $isUnsorted: boolean }>`
+  color: ${({ theme }) => theme.colors.textFaint};
   font-size: ${({ theme }) => theme.fontSize.xs};
   display: flex;
   flex-direction: row;
   justify-content: start;
-`;
-
-export const NoteContent = styled.div`
-  color: ${({ theme }) => theme.colors.textLight};
-  font-size: ${({ theme }) => theme.fontSize.sm};
-  margin-bottom: ${({ theme }) => theme.spacing.md};
-  word-break: break-word;
-  overflow-wrap: anywhere;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-
-  &:hover {
-    overflow: visible;
-    text-overflow: clip;
-    -webkit-line-clamp: none;
-  }
-
-  @media (max-width: 768px) {
-    line-clamp: 1;
-  }
 `;

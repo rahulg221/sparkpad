@@ -31,7 +31,6 @@ const MainContent = styled.div`
   );
   background-size: 20px 20px;
   display: flex;
-
   scrollbar-width: thin;
   scrollbar-color: ${({ theme }) => theme.colors.border} ${({ theme }) => theme.colors.bgPure};
 
@@ -69,7 +68,7 @@ export const DashboardPage = () => {
         <ToolBar />
         <MainContent>
           <NotesRow />
-          <Row main="start" cross="start">
+          <Row main="start" cross="start" gap='md'>
             <NoteCategories />
             <Dashboard />
           </Row>

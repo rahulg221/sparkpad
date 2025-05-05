@@ -30,7 +30,7 @@ export const CategoriesContainer = styled.div<{ isToolBarCollapsed: boolean, isS
 export const CategoryBox = styled.div<{ isPermanent: boolean }>`
   position: relative;
   background-color: ${({ theme }) => theme.colors.bgLight};
-  border-left: 1px solid ${({ theme }) => theme.colors.border};
+  //border-left: 1px solid ${({ theme }) => theme.colors.border};
   border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding: ${({ theme }) => theme.spacing.sm};
   height: 7vh;
@@ -78,7 +78,70 @@ export const CategoryBox = styled.div<{ isPermanent: boolean }>`
   }
 `;
 
-export const PenIconContainer = styled.div<{ isPermanent: boolean }>`
+export const ScratchpadBox = styled.div`
+  position: relative;
+  background-color: ${({ theme }) => theme.colors.stickyNoteBackground};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  padding: ${({ theme }) => theme.spacing.sm};
+  height: 5.5vh;
+  max-height: 100px;
+  width: 5.5vh;
+  max-width: 80px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  overflow: visible;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.15);
+  transform: rotate(-1deg);
+
+
+  /* Peeling bottom corner effect */
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    right: -5px;
+    width: 30px;
+    height: 30px;
+    background-color: ${({ theme }) => theme.colors.stickyNoteBackground}; 
+    border-radius: 0 0 5px 0;
+    box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.1);
+    transform: rotate(5deg);
+    z-index: -1;
+    transition: all 0.3s ease;
+  }
+
+  /* Shadow beneath peeling corner */
+  &::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    right: -2px;
+    width: 25px;
+    height: 25px;
+    background: transparent;
+    box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.3);
+    z-index: -2;
+  }
+
+  &:hover {
+    transform: translateY(-3px) rotate(0deg) scale(1.05);
+    box-shadow: 3px 5px 10px rgba(0, 0, 0, 0.2);
+    
+    /* Enhance peeling effect on hover */
+    &::after {
+      transform: rotate(10deg);
+      bottom: -8px;
+      right: -8px;
+      box-shadow: -4px -4px 5px rgba(0, 0, 0, 0.15);
+    }
+  }
+`;
+
+export const PenIconContainer = styled.div<{ isPermanent: boolean} >`
   position: absolute;
   top: 10px;
   left: 15px;

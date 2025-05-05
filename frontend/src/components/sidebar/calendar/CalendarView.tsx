@@ -67,7 +67,7 @@ export const TasksRow = () => {
               <FaTimes size={14}/>
             </IconButton>
           </Row>
-          <Spacer height="sm" />
+          <Spacer height="md" />
           <ItemContainer>
             {
               isGoogleConnected ? (
@@ -95,7 +95,7 @@ export const TasksRow = () => {
         </Container>
         <Container width="100%">
         <h2>Events</h2>
-        <Spacer height="sm" />
+        <Spacer height="md" />
         <ItemContainer>
           {isGoogleConnected ? (
             <Column main="start" cross="start" gap="md">

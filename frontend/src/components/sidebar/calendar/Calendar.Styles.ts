@@ -29,7 +29,7 @@ export const TaskCard = styled.div`
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.lg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
   width: 100%;           
   box-sizing: border-box;
 
@@ -48,7 +48,7 @@ export const EventCard = styled.div`
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: ${({ theme }) => theme.spacing.lg};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
   width: 100%;           
   box-sizing: border-box;
   height: 100px;

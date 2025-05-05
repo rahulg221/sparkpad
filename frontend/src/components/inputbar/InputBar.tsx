@@ -161,8 +161,8 @@ export const InputBar = () => {
           }}
           placeholder={
             writeInCurrentCategory
-              ? 'Capture a spark to ' + (currentCategory === 'Unsorted' ? 'your scratchpad' : currentCategory) + '...'
-              : 'Capture a spark to your scratchpad...'
+              ? 'Capture a spark to ' + (currentCategory === 'Unsorted' ? 'your sticky notes' : currentCategory) + '...'
+              : 'Capture a spark to your sticky notes...'
           }
           disabled={isLoading}
           rows={1}

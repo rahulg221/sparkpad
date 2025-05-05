@@ -1,26 +1,24 @@
 import { useEffect, useState } from 'react';
 import { NoteService } from '../../../api/noteService';
 import { useAuth } from '../../../context/AuthProvider';
-import { CategoriesContainer, CategoryBox, CategoryTitle, NoteCategoriesContainer, PenIcon, PenIconContainer, RejectIconContainer, ThumbsIconContainer } from './NoteCategories.Styles';
+import { CategoriesContainer, CategoryBox, CategoryTitle, NoteCategoriesContainer, PenIcon, PenIconContainer, ScratchpadBox, ThumbsIconContainer } from './NoteCategories.Styles';
 import { useActions } from '../../../context/ActionsContext';
 import { Stack, Row, Column, Spacer } from '../../../styles/shared/BaseLayout';
 import { IoPencilOutline, IoSparkles } from 'react-icons/io5';
 import { useNotes } from '../../../context/NotesProvider';
 import { UserService } from '../../../api/userService';
-import { FaArrowDown, FaArrowUp, FaCheck, FaCircle, FaCircleArrowDown, FaCircleDot, FaCircleDown, FaCircleUp, FaEnvelopeOpen, FaEnvelopeOpenText, FaEnvelopesBulk, FaFire, FaHouse, FaHouseMedical, FaInbox, FaLightbulb, FaLock, FaLockOpen, FaRegCircle, FaRegEnvelope, FaRegStar, FaSpaceAwesome, FaStar, FaThumbsDown, FaThumbsUp, FaThumbtack, FaTrash, FaTurnDown} from 'react-icons/fa6';
-import { FaCheckCircle, FaHome, FaUndo, FaMailBulk, FaEnvelope, FaEnvelopeSquare, FaStickyNote, FaTimes, FaArrowCircleDown } from 'react-icons/fa';
+import { FaThumbsDown, FaThumbsUp, FaInfoCircle, FaCheckCircle, FaTimesCircle, FaHome } from 'react-icons/fa';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { Note } from '../../../models/noteModel';
-import { FaPlus } from 'react-icons/fa';
-import { IconButton, SecondaryButton, TextButton } from '../../../styles/shared/Button.styles';
-import { InputBar } from '../../inputbar/InputBar';
+import { FaArrowCircleDown, FaPlus } from 'react-icons/fa';
+import { IconButton } from '../../../styles/shared/Button.styles';
 import { NewNotepadModal } from '../../modal/NewNotepadModal';
-import { GiBlackHoleBolas } from 'react-icons/gi';
+import { FaHouse } from 'react-icons/fa6';
 
 export const NoteCategories = () => {
   const { user, lockedCategories, setLockedCategories } = useAuth();
   const { categories, setCategories, setIsSidebarVisible, isToolBarCollapsed, isSidebarVisible, isInputBarVisible, setIsInputBarVisible, setNotificationMessage, setShowNotification } = useActions();
-  const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
+  const { setWriteInCurrentCategory, isCategoriesLoading, isSearchLoading, setCurrentCategory, refreshNotes, setRefreshNotes, setShowRecentNotes, showRecentNotes } = useNotes();
   const [isNewNotepadVisible, setIsNewNotepadVisible] = useState(false);
   const iconSize = window.innerWidth < 768 ? 22 : 16;
 
@@ -40,19 +38,23 @@ export const NoteCategories = () => {
     fetchCategories();
   }, [user?.id, isCategoriesLoading, lockedCategories]);
 
+  useEffect(() => {
+    // Make sure Scratchpad is always present
+    showEmptySparkpad('Unsorted');
+  }, [categories]);
+
+  const showEmptySparkpad = (category: string) => {
+    if (!categories.includes(category)) {
+      setCategories([...categories, category]);
+    }
+  }
+  
   const handleNewNotepad = async (newCategory: string) => {
     let notificationMessage = '';
     let categories = [];
 
-    const anchorNote: Note = {
-      content: 'Custom Sparkpad created!\n- This sparkpad is locked by default, click the lock icon to unlock it.\n- Click the pen icon to write in this sparkpad.',
-      user_id: user?.id || '',
-      category: newCategory,
-      cluster: -1,
-    };
-
     try {
-        await NoteService.addNote(anchorNote);
+        showEmptySparkpad(newCategory);
         await UserService.updateLockedCategory(user?.id || '', newCategory, lockedCategories);
 
         notificationMessage = 'Custom sparkpad created!';
@@ -104,7 +106,7 @@ export const NoteCategories = () => {
     <NoteCategoriesContainer>
       <Column main="start" cross="start">
         <Row main="spaceBetween" cross="start" gap="sm">
-          <h1>Sparkpads</h1>
+          <h1>Workspace</h1>
           <IconButton title="Create a new Sparkpad" onClick={() => setIsNewNotepadVisible(true)}>
             <FaPlus size={14} />
           </IconButton>
@@ -120,14 +122,22 @@ export const NoteCategories = () => {
             ) : (
               <>
               {categories.sort((a, b) => {
+                if (a === 'Unsorted') return -1;
+                if (b === 'Unsorted') return 1;
+              
                 const aLocked = lockedCategories.includes(a);
                 const bLocked = lockedCategories.includes(b);
+              
                 if (aLocked === bLocked) return 0;
-                return aLocked ? -1 : 1;  // locked categories first
+                return aLocked ? -1 : 1;
               }).map((category) => (
                 <Row main="start" cross="center" key={category} gap="md">
                   <Stack onClick={() => handleCategoryClick(category)}>
-                    <CategoryBox onClick={() => handleNotepadClick()} isPermanent={lockedCategories.includes(category) || category === "Unsorted"} />
+                    {category === "Unsorted" ? (
+                      <ScratchpadBox onClick={() => handleNotepadClick()} />
+                    ) : (
+                      <CategoryBox onClick={() => handleNotepadClick()} isPermanent={lockedCategories.includes(category)} />
+                    )}
                     {lockedCategories.includes(category) || category === "Unsorted" ? (
                       <PenIconContainer isPermanent={true}>
                         <PenIcon title={`Write in ${category}`} onClick={handlePenClick}>
@@ -144,25 +154,23 @@ export const NoteCategories = () => {
                   </Stack>
                   {category === "Unsorted" ? (
                     <CategoryTitle isPermanent={true}>
-                      <h1 onClick={() => handleCategoryClick("Unsorted")}>Scratchpad</h1>
+                      <h1 onClick={() => handleCategoryClick("Unsorted")}>Sticky Notes</h1>
                     </CategoryTitle>
                   ) : (
                     <> 
                       {lockedCategories.includes(category) ?   (
                           <CategoryTitle isPermanent={true}>
                             <h1 onClick={() => handleCategoryClick(category)}>{category}</h1>
-                            {/*
-                            <ThumbsIconContainer isPermanent={true} title="Downgrade a sparkpad into a suggested sparkpad">
-                              <FaArrowCircleDown size={12} className="reject" onClick={() => handleUpdateLockedCategory(category)}/>
+                            <ThumbsIconContainer isPermanent={false} title="Downgrade a sparkpad into a suggested sparkpad">
+                              <FaTimesCircle size={12} className="reject" onClick={() => handleUpdateLockedCategory(category)}/>
                             </ThumbsIconContainer>
-                            */}
                           </CategoryTitle>
                         ) : (
                           <CategoryTitle isPermanent={false}>
                             <h1 onClick={() => handleCategoryClick(category)}>{category}</h1>
                             <ThumbsIconContainer isPermanent={false} title="Upgrade a suggested sparkpad into a sparkpad or reject it">
-                              <FaThumbsUp size={12} className="accept" onClick={() => handleUpdateLockedCategory(category)}/>
-                              <FaThumbsDown size={12} className="reject" onClick={() => handleRemoveSuggestedCategory(category)} />
+                              <FaCheckCircle size={12} className="accept" onClick={() => handleUpdateLockedCategory(category)}/>
+                              <FaTimesCircle size={12} className="reject" onClick={() => handleRemoveSuggestedCategory(category)} />
                             </ThumbsIconContainer>
                           </CategoryTitle>
                         )}

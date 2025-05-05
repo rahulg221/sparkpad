@@ -21,19 +21,24 @@ export const NotesRowContainer = styled.div<{ $isRecentNotesVisible: boolean }>`
 export const NoteInfo = styled.div`
   margin-top: ${({ theme }) => theme.spacing.sm};
   font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textLight};
+  color: ${({ theme }) => theme.colors.textFaint};
   display: flex;
   justify-content: space-between;
   align-items: center;
 `;
 
-export const NewNoteCard = styled.div`
-  background-color: ${({ theme }) => theme.colors.cardBackground};
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+export const NewNoteCard = styled.div<{ $isUnsorted: boolean }>`
+  background-color: ${({ theme }) => theme.colors.stickyNoteBackground};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
+  //border-radius: ${({ theme }) => theme.borderRadius.md};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};
+  margin-left: 3px;
+  margin-top: 3px;
+  margin-bottom: 3px;
   width: 240px;
+  height: 180px;
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
@@ -45,13 +50,12 @@ export const NewNoteCard = styled.div`
   transition: max-height 0.5s ease, border 0.3s ease;
 
   &:hover {
-    height: auto;
-    border: 1px solid ${({ theme }) => theme.colors.looseSpark};
+    max-height: auto;
   }
 `;
 
-export const NotePreview = styled.div`
-  color: ${({ theme }) => theme.colors.textLight};
+export const NotePreview = styled.div<{ $isUnsorted: boolean }>`
+  color: ${({ theme }) => theme.colors.stickyNoteColor};
   font-size: ${({ theme }) => theme.fontSize.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   word-break: break-word;
@@ -73,6 +77,10 @@ export const NotePreview = styled.div`
     overflow: visible;
     text-overflow: unset;
     opacity: 1;
+  }
+
+  .markdown-p {
+    color: ${({ theme }) => theme.colors.textPrimary};
   }
 
   .markdown-ul {
