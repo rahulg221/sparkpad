@@ -75,7 +75,7 @@ export const InputBar = () => {
           cluster: -1,
         };
 
-        notificationMessage = await NoteService.addNote(note, dateTimeString, content);
+        notificationMessage = await NoteService.addNote(note, dateTimeString, content, user?.isGoogleConnected);
         setNotificationType('event');
         setNotificationMessage(notificationMessage);
         setShowNotification(true);
@@ -145,6 +145,7 @@ export const InputBar = () => {
           onChange={(e) => handleTextChange(e)}
           placeholder="Write your note here..."
           onKeyDown={handleKeyDown}  
+          maxLength={1000}
           style={{
             width: '100%',
             height: '200px',

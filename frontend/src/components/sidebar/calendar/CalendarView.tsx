@@ -89,7 +89,7 @@ export const TasksRow = () => {
                 )}
               </Column>
             ) : (
-              <h2>Connect your Google Calendar in Settings to see your tasks</h2>
+              <p>Connect your Google Calendar in Settings to see your tasks</p>
             )}
           </ItemContainer>
         </Container>
@@ -109,7 +109,7 @@ export const TasksRow = () => {
               )}
             </Column>
           ) : (
-            <h2>Connect your Google Calendar in Settings to see your events</h2>
+            <p>Connect your Google Calendar in Settings to see your events</p>
           )}  
         </ItemContainer>
       </Container>

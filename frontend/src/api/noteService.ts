@@ -44,16 +44,21 @@ export class NoteService {
     }
   }
 
-  static async addNote(note: Note, dateTimeString?: string, content?: string): Promise<string> {
+  static async addNote(note: Note, dateTimeString?: string, content?: string, isGoogleConnected?: boolean): Promise<string> {
     const token = await getToken();
     // Initialize notification message and OpenAI client
     let notificationMessage = 'Include a date or time in your note to create a calendar event or task';
 
-    if (dateTimeString && note.content.startsWith('/e')) {
+    if (!isGoogleConnected && (note.content.startsWith('/e') || note.content.startsWith('/t'))) {
+      notificationMessage = 'Connect your Google account in Settings to create calendar events or tasks';
+      return notificationMessage;
+    }
+
+    if (dateTimeString && note.content.startsWith('/e') && isGoogleConnected) {
       notificationMessage = await CalendarMethods.createCalendarEvent(content!, dateTimeString); // content is from dateParse.ts
       console.log(notificationMessage);
       return notificationMessage;
-    } else if (note.content.startsWith('/t')) {
+    } else if (note.content.startsWith('/t') && isGoogleConnected) {
       notificationMessage = await CalendarMethods.createCalendarTask(note.content);
 
       return notificationMessage;

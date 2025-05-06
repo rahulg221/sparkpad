@@ -88,23 +88,6 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
     }
   };  
 
-  const handleTextChange = async (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    const input = e.target.value;
-    setDraftNote(input);
-
-    if (input.trim() === '') {
-      setParsedDateHint('');
-      return;
-    }
-
-    if (input.startsWith('/e')) {
-      const { hint } = await extractDateAndText(input);
-      setParsedDateHint(hint);
-    } else {
-      setParsedDateHint('');
-    }
-  };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (draftNote.trim() === '') return;
@@ -226,6 +209,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
             <textarea
               value={draftNote}
               ref={textInputRef}
+              maxLength={1000}
               onChange={(e) => setDraftNote(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && !e.shiftKey) {

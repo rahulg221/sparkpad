@@ -34,7 +34,7 @@ export const Snapshot = () => {
                     <div style={{ fontSize: "0.7rem", lineHeight: "1.4" }}>
                 <ReactMarkdown components={{
                     p: ({node, ...props}) => (
-                        <p style={{ fontSize: "0.75rem", margin: "0.25rem 0" }} {...props} />
+                        <p style={{ fontSize: "0.75rem", marginTop: "0.25rem" }} {...props} />
                     )
                 }}> 
                   {summary}

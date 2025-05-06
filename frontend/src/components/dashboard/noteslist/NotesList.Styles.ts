@@ -63,23 +63,11 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: 
   //border-bottom: 1px solid ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.border};
   //border-radius: ${({ theme }) => theme.borderRadius.md};
   min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '12vh' : '30vh'};
-  transition: max-height 0.4s ease, min-height 0.4s ease;
+  transition: height 0.4s ease;
 
   &:hover {
     //max-height: 80vh;
     background-color: ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.bgElevated};
-  }
-
-  /* Expand the note card when focused on the textarea */
-  &:has(textarea:focus) {
-    min-height: 25vh;
-    transition: min-height 0.4s ease;
-  }
-
-  /* Ensure the textarea expands with the card */
-  & textarea:focus {
-    min-height: 25vh;
-    transition: min-height 0.4s ease;
   }
     
   @media (max-width: 768px) {

@@ -9,7 +9,7 @@ export const SidebarContainer = styled.div<{ isSidebarVisible: boolean }>`
   padding-left: ${({ theme, isSidebarVisible }) => isSidebarVisible ? theme.spacing.md : '0px'};
   padding-right: ${({ theme, isSidebarVisible }) => isSidebarVisible ? theme.spacing.md : '0px'};
   transition: all 0.4s ease;
-  width: ${({ isSidebarVisible }) => isSidebarVisible ? '240px' : '0px'};
+  width: ${({ isSidebarVisible }) => isSidebarVisible ? '275px' : '0px'};
   align-items: ${({ isSidebarVisible }) => isSidebarVisible ? 'start' : 'center'};
   overflow-y: auto;
 
