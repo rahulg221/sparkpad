@@ -37,7 +37,7 @@ type ActionsContextType = {
 export const ActionsContext = createContext<ActionsContextType | null>(null);
 
 export const ActionsProvider = ({ children }: { children: ReactNode }) => {
-    const { user, isGoogleConnected } = useAuth();
+    const { user } = useAuth();
     const [notificationMessage, setNotificationMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const [notificationType, setNotificationType] = useState('');
@@ -54,7 +54,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     const [isInputBarVisible, setIsInputBarVisible] = useState(false);
     
     const updateTasks = async (newTask: boolean = false) => {
-        if (!isGoogleConnected) return;
+        if (!user?.isGoogleConnected) return;
 
         if (newTask) {
             const tasks = await CalendarService.getTasks(); 
@@ -80,7 +80,7 @@ export const ActionsProvider = ({ children }: { children: ReactNode }) => {
     };
         
     const updateEvents = async (newEvent: boolean) => {
-        if (!isGoogleConnected) return;
+        if (!user?.isGoogleConnected) return;
         
         if (newEvent) {
             const events = await CalendarService.getCalendarEvents(); 

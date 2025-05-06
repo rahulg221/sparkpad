@@ -16,7 +16,7 @@ export const ModalOverlay = styled.div`
 
 export const ModalText = styled.p`
   font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textPrimary};
+  color: ${({ theme }) => theme.colors.textLight};
 `;
 
 export const ModalContainer = styled.div`
@@ -24,6 +24,7 @@ export const ModalContainer = styled.div`
   flex-direction: column;
   padding: ${({ theme }) => theme.spacing.lg};
   width: auto;   
+  max-width: 40vw;
   max-height: 80vh;       
   background: ${({ theme }) => theme.colors.bgDark};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -35,8 +36,31 @@ export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-weight: 600;
+  font-weight: 500;
   font-size: ${({ theme }) => theme.fontSize.lg};
+`;
+
+export const CategoryHeader = styled.h2`
+  margin: 0;
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  font-weight: 500;
+  color: ${({ theme }) => theme.colors.textPrimary};
+  background-color: ${({ theme }) => theme.colors.bgLight};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  margin-bottom: ${({ theme }) => theme.spacing.lg};
+  margin-top: ${({ theme }) => theme.spacing.lg};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: ${({ theme }) => theme.spacing.sm};
+
+  .helper-text {
+    font-size: ${({ theme }) => theme.fontSize.xs};
+    font-weight: 400;
+    color: ${({ theme }) => theme.colors.accent};
+  }
 `;
 
 export const ModalTitle = styled.h2`

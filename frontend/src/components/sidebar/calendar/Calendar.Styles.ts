@@ -20,7 +20,7 @@ export const SummaryContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.taskBackground};
   transition: all 0.3s ease-in-out;
   padding: ${({ theme }) => theme.spacing.md};
-  border: 1px solid ${({ theme }) => theme.colors.border};
+  //border: 1px solid ${({ theme }) => theme.colors.border};
   overflow-y: none;
 `;
 

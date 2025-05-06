@@ -88,38 +88,24 @@ export class UserService {
     }
   }
   
-  static async updateLockedCategory(userId: string, category: string, lockedCategories: string[]): Promise<void> {
-    if (category === 'Unsorted') {
-      return;
-    }
-
-    if (lockedCategories.includes(category)) {
-      // Remove the category from the locked categories
-      const { error: removeError } = await supabase
-        .from('users')
-        .update({ 
-          locked_categories: lockedCategories.filter((c: string) => c !== category) 
-        })
-        .eq('id', userId);  
-
-      if (removeError) {
-        throw removeError;
-      }
-
-      return;
-    }
-    
-    // Then update with the new category added
+  static async updateLockedCategory(userId: string, category: string, lockedCategories: string[]): Promise<string[]> {
+    if (category === 'Unsorted') return lockedCategories;
+  
+    const isLocked = lockedCategories.includes(category);
+    const updatedLockedCategories = isLocked
+      ? lockedCategories.filter((c) => c !== category)
+      : [...lockedCategories, category];
+  
     const { error } = await supabase
       .from('users')
-      .update({ 
-        locked_categories: [...lockedCategories, category] 
-      })
+      .update({ locked_categories: updatedLockedCategories })
       .eq('id', userId);
-
+  
     if (error) {
       throw error;
     }
-  } 
+  
+    return updatedLockedCategories;
+  }  
 }
 

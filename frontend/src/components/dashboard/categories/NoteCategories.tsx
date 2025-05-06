@@ -57,7 +57,17 @@ export const NoteCategories = () => {
         showEmptySparkpad(newCategory);
         await UserService.updateLockedCategory(user?.id || '', newCategory, lockedCategories);
 
-        notificationMessage = 'Custom sparkpad created!';
+        // Create a new note in the new category
+        const note: Note = {
+          content: 'Write a note then delete this message',
+          user_id: user?.id || '',
+          category: newCategory,
+          cluster: -1,
+        };
+
+        await NoteService.addNote(note);
+
+        notificationMessage = 'New notebook created!';
     
         categories = await NoteService.getDistinctCategories(user?.id || '');
         setCategories(categories);
@@ -102,15 +112,15 @@ export const NoteCategories = () => {
 
   const handleUpdateLockedCategory = async (category: string) => {
     if (!user?.id) return;
-    await UserService.updateLockedCategory(user.id, category, lockedCategories);
-    setLockedCategories(lockedCategories.includes(category) ? lockedCategories.filter((c: string) => c !== category) : [...lockedCategories, category]);
+    const updated = await UserService.updateLockedCategory(user.id, category, lockedCategories);
+    setLockedCategories(updated);
   }   
 
   return (
     <NoteCategoriesContainer>
       <Column main="start" cross="start">
         <Row main="spaceBetween" cross="start" gap="sm">
-          <h1>Workspace</h1>
+          <h1>My Notebooks</h1>
           <IconButton title="Create a new Sparkpad" onClick={() => setIsNewNotepadVisible(true)}>
             <FaPlus size={14} />
           </IconButton>

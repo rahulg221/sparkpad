@@ -11,7 +11,7 @@ export const DropdownHeader = styled.button`
   background: ${({ theme }) => theme.colors.bgElevated};
   color: ${({ theme }) => theme.colors.textLight};
   border: 1px solid ${({ theme }) => theme.colors.border};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
   padding: 6px 10px;
   display: flex;
   align-items: center;

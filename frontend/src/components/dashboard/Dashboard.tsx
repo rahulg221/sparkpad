@@ -32,9 +32,11 @@ import { InputBar } from '../inputbar/InputBar';
 import { SortingUpdatesModal } from '../modal/SortingUpdates';
 import { IconButton } from '../../styles/shared/Button.styles';
 import { SettingsModal } from '../modal/SettingsModal';
+import { motion } from 'framer-motion';
+import { AnimatePresence } from 'framer-motion';
 
 export const Dashboard = () => {
-    const { signOut, isGoogleConnected, setIsGoogleConnected, lockedCategories, setLockedCategories, user } = useAuth();
+    const { signOut, lockedCategories, setLockedCategories, user, setUser } = useAuth();
     const { setIsSettingsVisible, setCategories, setNotificationMessage, isSettingsVisible, setShowNotification, notificationMessage, categories, showNotification, notificationType, isInputBarVisible, setIsInputBarVisible, } = useActions();
     const { setIsSummaryVisible } = useSummary();
     const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
@@ -61,7 +63,7 @@ export const Dashboard = () => {
 
     useEffect(() => {
         const runOAuthCallback = async () => {
-          if (isGoogleConnected) return;
+          if (user?.isGoogleConnected) return;
 
           const params = new URLSearchParams(window.location.search);
           const code = params.get("code");
@@ -72,7 +74,9 @@ export const Dashboard = () => {
           try {
             await CalendarService.sendAuthCodeToBackend(code);
 
-            setIsGoogleConnected(true);
+            if (user) {
+              setUser({...user, isGoogleConnected: true});
+            }
     
             window.history.replaceState({}, document.title, "/dashboard");
           } catch (err) {
@@ -167,66 +171,6 @@ export const Dashboard = () => {
         }
     }
 
-    const renderDashboardContent = () => {
-        // Tree View overrides everything
-        if (showTree) {
-          return <TreeView showTree={showTree} />;
-        }
-        
-        // Put into a separate component
-        if (searchResults.length > 0) {
-          return (
-            <>
-              <Spacer height="xl" />
-              <Row main="start" cross="start" gap="sm">
-                <MdArrowBack size={18} onClick={handleBackClick} />
-                <h1>Search Results</h1>
-              </Row>  
-                <Grid $columns={1} $layoutMode="list">  
-                  {searchResults.map((note) => (
-                    <NoteCard key={note.id} $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
-                      <NotePreview $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
-                        <ReactMarkdown
-                          components={{
-                            ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                            li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                          }}
-                        >
-                          {note.content}
-                        </ReactMarkdown>
-                      </NotePreview>
-                      <NoteInfo $isUnsorted={note.category === "Unsorted"}>
-                        {note.category === "Unsorted"
-                          ? "Miscellaneous"
-                          : note.category.replace(/\*\*/g, "").split(" ").slice(0, 2).join(" ")}
-                        <br />
-                        {new Date(note.created_at!).toLocaleDateString("en-US", {
-                          month: "short",
-                          day: "numeric",
-                          hour: "2-digit",
-                          minute: "2-digit",
-                        })}
-                        <Spacer expand={true} />
-                        <SmallIconButton onClick={() => {
-                            setNoteToUpdate(note);
-                            setIsUpdateNoteOpen(true);
-                        }}>
-                        <FaPen size={14} />
-                        </SmallIconButton>
-                        <Spacer width='sm' />
-                        <SmallIconButton onClick={() => handleDeleteNote(note.id!)}>
-                        <FaTrash size={14} />
-                        </SmallIconButton>
-                      </NoteInfo>
-                    </NoteCard>
-                  ))}
-                </Grid>
-            </>
-          );
-        }
-      };
-      
-
     return (
         <DashboardWrapper>
           {searchResults.length > 0 && (
@@ -279,7 +223,20 @@ export const Dashboard = () => {
                 </Grid>
             </>
           )}
-            <NotesList category={currentCategory} lockedCategories={lockedCategories} />
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={currentCategory} // this triggers re-animation on category change
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+          >
+            <NotesList 
+              category={currentCategory}
+              lockedCategories={lockedCategories}
+            />
+          </motion.div>
+        </AnimatePresence>
             {isSortingUpdatesVisible && (
                 <SortingUpdatesModal
                     isOpen={isSortingUpdatesVisible}

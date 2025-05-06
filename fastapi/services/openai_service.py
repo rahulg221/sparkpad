@@ -1,3 +1,4 @@
+import ast
 from typing import List
 from dotenv import load_dotenv
 import openai
@@ -17,6 +18,17 @@ class OpenAIService:
 
     def __init__(self):
         self.client = openai.OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+
+    def parse_category(self, line: str) -> str:
+        try:
+            parsed = ast.literal_eval(line.strip())
+            if isinstance(parsed, list) and parsed and isinstance(parsed[0], str):
+                return parsed[0].strip()
+            elif isinstance(parsed, str):
+                return parsed.strip()
+        except:
+            pass
+        return ""
 
     def llm_classify_notes(self, notes: List[Note], categories: List[str]):
         """
@@ -57,7 +69,10 @@ class OpenAIService:
             print(note_ids)
             raise ValueError("Mismatch between classified lines and note count.")
 
-        return [{"id": nid, "category": line.strip(), "content": text} for nid, text, line in zip(note_ids, note_texts, result_lines)]
+        return [
+            {"id": nid, "category": self.parse_category(line), "content": text}
+            for nid, text, line in zip(note_ids, note_texts, result_lines)
+        ]
 
     def generate_category(self, notes: List[str]):
         """

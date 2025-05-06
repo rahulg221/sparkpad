@@ -133,7 +133,7 @@ export class NoteService {
         .eq('user_id', userId)
         .eq('category', noteCategory);
       
-      // If this was the last note in the category, we might want to handle that
+      // If this was the last note in the category, we want to handle that
       const isLastNoteInCategory = count === 0;
 
       if (isLastNoteInCategory) {

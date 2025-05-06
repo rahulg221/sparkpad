@@ -2,12 +2,14 @@ import styled from 'styled-components';
 
 export const PrimaryButton = styled.button`
   width: 100%;
-  height: 6.5vh;
-  max-height: 40px;
-  padding: ${({ theme }) => theme.spacing.md};
+  height: 5.5vh;
+  //padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
   color: black;
-  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid ${({ theme }) => theme.colors.primary};
   border-radius: ${({ theme }) => theme.borderRadius.md};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -28,12 +30,14 @@ export const PrimaryButton = styled.button`
 `;
 
 export const SecondaryButton = styled.button<{ width?: string }>`
-  padding: ${({ theme }) => theme.spacing.md};
-  background-color: ${({ theme }) => theme.colors.bgElevated};
-  //border: 1px solid ${({ theme }) => theme.colors.border};
+  //padding: ${({ theme }) => theme.spacing.md};
+  background-color: transparent;
+  border: 1px solid ${({ theme }) => theme.colors.border};
   color: ${({ theme }) => theme.colors.textLight};
   border-radius: ${({ theme }) => theme.borderRadius.md};
-  height: 6.5vh;
+  height: 5.5vh;
+  align-items: center;
+  justify-content: center;
   width: ${({ width }) => width || '100%'};
   cursor: pointer;
   transition: all 0.2s ease;
@@ -41,7 +45,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   color: ${({ theme }) => theme.colors.textLight};
 
   &:hover:not(:disabled) {
-    background-color: ${({ theme }) => theme.colors.bgLight};
+    background-color: ${({ theme }) => theme.colors.bgElevated};
   }
 
   &:focus {
@@ -117,12 +121,12 @@ export const FloatingButton = styled.button`
 export const SmallIconButton = styled.div`
   width: 20px;
   height: 20px;
-  color: ${({ theme }) => theme.colors.bgElevated};
+  color: ${({ theme }) => theme.colors.textLight};
   cursor: pointer;
   transition: color 0.2s ease;
 
   &:hover {
-    color: ${({ theme }) => theme.colors.textLight};
+    color: ${({ theme }) => theme.colors.textFaint};
   }
 `;
 

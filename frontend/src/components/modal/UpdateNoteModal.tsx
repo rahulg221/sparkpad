@@ -1,6 +1,6 @@
 import React from 'react';
 import { Modal } from './Modal';
-import { ModalContent } from './Modal.Styles';
+import { ModalContent, CategoryHeader, ModalText } from './Modal.Styles';
 import { SmallHeader } from '../toolbar/ToolBar.Styles';
 import { CustomDropdown } from '../dropdown/Dropdown';
 
@@ -26,9 +26,9 @@ export const UpdateNoteModal: React.FC<UpdateNoteModalProps> = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Move Spark">
       <ModalContent>
-        <SmallHeader>Content</SmallHeader>
-        <h2>{noteContent}</h2>
-        <SmallHeader>Move to</SmallHeader>
+        <CategoryHeader>Content</CategoryHeader>
+        <ModalText>{noteContent}</ModalText>
+        <CategoryHeader>Move to</CategoryHeader>
         <CustomDropdown
           value={newCategory}
           onChange={(val: string | number) => setNewCategory(val as string)}

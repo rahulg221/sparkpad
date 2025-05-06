@@ -18,7 +18,7 @@ import { FaTimes } from 'react-icons/fa';
 export const TasksRow = () => {
   const [isLoading, setIsLoading] = useState(true);
   const { setIsTasksVisible, updateTasks, tasks, updateEvents, calendarEvents, isSidebarVisible, setIsSidebarVisible } = useActions();
-  const { isGoogleConnected } = useAuth();
+  const { user } = useAuth();
   const theme = useTheme();
   const [showAllTasks, setShowAllTasks] = useState(false);
   const [showAllEvents, setShowAllEvents] = useState(false);
@@ -70,7 +70,7 @@ export const TasksRow = () => {
           <Spacer height="md" />
           <ItemContainer>
             {
-              isGoogleConnected ? (
+              user?.isGoogleConnected ? (
                 <Column main="start" cross="start" gap="md">
                   {tasks.slice(0, showAllTasks ? tasks.length :  4).map(task => (
                     <TaskCard>
@@ -97,7 +97,7 @@ export const TasksRow = () => {
         <h2>Events</h2>
         <Spacer height="md" />
         <ItemContainer>
-          {isGoogleConnected ? (
+          {user?.isGoogleConnected ? (
             <Column main="start" cross="start" gap="md">
               {calendarEvents.slice(0, showAllEvents ? calendarEvents.length : 4).map(event => (
                   <CountdownTimer eventString={event} />

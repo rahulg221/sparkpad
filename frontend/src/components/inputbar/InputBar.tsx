@@ -1,6 +1,4 @@
 import { useNotes } from "../../context/NotesProvider";
-import { TextInput, TextBarForm, DateHint, SubmitButton, InputBarContainer } from "./InputBar.Styles";
-import { FaClock, FaArrowUp } from "react-icons/fa"; 
 import { useState, useRef, useEffect } from "react";
 import { extractDateAndText } from "../../utils/dateParse";
 import { NoteService } from "../../api/noteService";
@@ -8,16 +6,11 @@ import { UserService } from "../../api/userService";
 import { Note } from "../../models/noteModel";
 import { useAuth } from "../../context/AuthProvider";
 import { useActions } from "../../context/ActionsContext";
-import { LoadingSpinner } from "../../styles/shared/LoadingSpinner";
-import { IoSparkles } from "react-icons/io5";
-import { Row, Stack } from "../../styles/shared/BaseLayout";
-import { FaSpinner, FaSquare } from "react-icons/fa6";
 import { useTheme } from "styled-components";
 import { NewStickyNoteModal } from "./NewStickyNoteModal";
 
 export const InputBar = () => {
   const {
-    isLoading,
     setCategories,
     setNotificationMessage,
     setShowNotification,
@@ -68,32 +61,11 @@ export const InputBar = () => {
     if (text.trim() === '') return;
 
     let notificationMessage = '';
-    let categories: string[] = [];
-
+    
     try {
       setNoteLoading(true);
 
-      if (text.startsWith('/c')) {
-        const category = text.substring(2).trim(); 
-
-        const anchorNote: Note = {
-          content: 'Custom Sparkpad created!\n- This sparkpad is locked by default, click the lock icon to unlock it.\n- Click the pen icon to write in this sparkpad.',
-          user_id: user?.id || '',
-          category,
-          cluster: -1,
-        };
-
-        await NoteService.addNote(anchorNote);
-        await UserService.updateLockedCategory(user?.id || '', category, lockedCategories);
-
-        notificationMessage = 'Custom sparkpad created!';
-        categories = await NoteService.getDistinctCategories(user?.id || '');
-
-        setNotificationMessage(notificationMessage);
-        setShowNotification(true);
-        setCategories(categories);
-      } 
-      else if (text.startsWith('/e')) {
+      if (text.startsWith('/e')) {
         const { dateTimeString, content } = await extractDateAndText(text);
 
         const note: Note = {
@@ -105,6 +77,8 @@ export const InputBar = () => {
 
         notificationMessage = await NoteService.addNote(note, dateTimeString, content);
         setNotificationType('event');
+        setNotificationMessage(notificationMessage);
+        setShowNotification(true);
         setParsedDateHint('');
       } 
       else {
@@ -117,11 +91,13 @@ export const InputBar = () => {
         const note: Note = {
           content: text.trim(),
           user_id: user?.id || '',
-          category: writeInCurrentCategory ? currentCategory : 'Unsorted',
+          category: 'Unsorted',
           cluster: -1,
         };
 
         notificationMessage = await NoteService.addNote(note);
+        setNotificationMessage(notificationMessage);
+        setShowNotification(true);
         setParsedDateHint('');
       }
 
@@ -161,11 +137,12 @@ export const InputBar = () => {
         onClose={() => setIsInputBarVisible(false)}
         onSave={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
         title="New Note"
+        dateHint={parsedDateHint || ''}
       >
         <textarea
           ref={textInputRef}
           value={text}
-          onChange={(e) => setText(e.target.value)}
+          onChange={(e) => handleTextChange(e)}
           placeholder="Write your note here..."
           onKeyDown={handleKeyDown}  
           style={{

@@ -50,7 +50,7 @@ export const darkTheme = {
     recentColor: 'rgb(250, 98, 75)',
 
     stickyNoteBackground: 'rgba(36, 36, 36, 0.4)',
-    stickyNoteTextArea: 'rgba(36, 36, 36, 1)',
+    stickyNoteTextArea: 'rgb(18, 18, 18)',
     stickyNoteColor: 'rgb(254, 249, 195)',
 
     cardBackground: 'rgb(18, 18, 18)',

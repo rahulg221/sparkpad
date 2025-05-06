@@ -17,20 +17,12 @@ export const NotesRowContainer = styled.div<{ $isRecentNotesVisible: boolean }>`
   justify-content: center;
 `;
 
-export const NoteInfo = styled.div`
-  margin-top: ${({ theme }) => theme.spacing.sm};
-  font-size: ${({ theme }) => theme.fontSize.xs};
-  color: ${({ theme }) => theme.colors.textFaint};
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
 export const NewNoteCard = styled.div<{ $isUnsorted: boolean }>`
   background-color: ${({ theme }) => theme.colors.stickyNoteBackground};
   //border: 1px solid ${({ theme }) => theme.colors.border};
   //border: 1px solid ${({ theme }) => theme.colors.border};
   //border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-bottom: 1px solid ${({ theme }) => theme.colors.bgElevated};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};
   margin-left: 3px;
@@ -90,5 +82,20 @@ export const NotePreview = styled.div<{ $isUnsorted: boolean }>`
 
   .markdown-li {
     margin-bottom: 0.25rem;
+  }
+`;
+
+export const NoteInfo = styled.div`
+  color: ${({ theme }) => theme.colors.textPrimary};
+  font-size: ${({ theme }) => theme.fontSize.xs};
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  transition: opacity 0.3s ease;
+  opacity: 0.3;
+
+  ${NewNoteCard}:hover & {
+    opacity: 0.8;
   }
 `;

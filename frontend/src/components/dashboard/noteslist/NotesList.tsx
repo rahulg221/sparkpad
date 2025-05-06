@@ -32,7 +32,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
   const { user } = useAuth();
   const [$layoutMode, setLayoutMode] = useState<'grid' | 'list'>('list');
   const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const [limit, setLimit] = useState(12);
   const [isUpdateNoteOpen, setIsUpdateNoteOpen] = useState(false);
   const [newCategory, setNewCategory] = useState('');
   const [noteToUpdate, setNoteToUpdate] = useState<Note | null>(null);
@@ -110,7 +110,6 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
     if (draftNote.trim() === '') return;
 
     let notificationMessage = '';
-    let categories: string[] = [];
 
     try {
       if (draftNote.startsWith('/e')) {
@@ -171,9 +170,9 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
     }
   };
 
-  const handleUpdateNote = async (noteId: string) => {
+  const handleUpdateNote = async (noteId: string, content: string) => {
     try {
-      await NoteService.updateNote(noteId, draftNote, newCategory);
+      await NoteService.updateNote(noteId, content, newCategory);
       setNotes(notes.filter(note => note.id !== noteId));
       setIsUpdateNoteOpen(false);
     } catch (err) {
@@ -215,7 +214,11 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           <FaArrowRight size={16} />
         </IconButton>
       </Row>
-      <Spacer height='lg' />
+      {notes.length === 0 && (
+        <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
+          <p>Press Q or click Capture to create a sticky note.</p>
+        </NoteContainer>  
+      )}
       <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
       {draftNote !== null && category !== 'Unsorted' && (
         <NoteCard $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"}>
@@ -230,20 +233,8 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
                   e.currentTarget.blur(); // triggers save via onBlur
                 }
               }}              
-              onBlur={async () => {
-                const note: Note = {
-                  id: '',
-                  content: draftNote,
-                  category: category,
-                  cluster: -1,
-                  user_id: user?.id || ''
-                };
-                
-                if (draftNote.trim()) {
-                  await NoteService.addNote(note);
-                  setRefreshNotes(!refreshNotes);
-                }
-                setDraftNote('');
+              onBlur={async (e) => {
+                handleSubmit(e);
               }}
               autoFocus
               placeholder="Write here..."
@@ -262,9 +253,8 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           </NotePreview>
         </NoteCard>
       )}
-      {notes.length === 0 && <h2>No notes found for {date}.</h2>}
         { isLoading || isSearchLoading ? <LoadingSpinner /> :
-        <Grid $columns={3} $layoutMode={$layoutMode} gap="md">
+        <Grid $columns={3} $layoutMode={$layoutMode} gap={$layoutMode === "grid" ? "md" : "none"}>
           {notes.map((note) => (
             <NoteCard key={note.id} $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
               <NotePreview $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
@@ -357,7 +347,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           <UpdateNoteModal
               isOpen={isUpdateNoteOpen}
               onClose={() => setIsUpdateNoteOpen(false)}
-              onSave={() => handleUpdateNote(noteToUpdate!.id!)}
+              onSave={() => handleUpdateNote(noteToUpdate!.id!, noteToUpdate!.content!)}
               noteContent={noteToUpdate?.content || ''}   
               newCategory={newCategory}
               setNewCategory={setNewCategory}

@@ -5,11 +5,10 @@ import CalendarService from '../api/calendarService';
 
 interface AuthContextType {
     user: User | null;
+    setUser: (user: User | null) => void;
     isLoading: boolean;
-    isGoogleConnected: boolean;
     lockedCategories: string[];
     setLockedCategories: (lockedCategories: string[]) => void;
-    setIsGoogleConnected: (isGoogleConnected: boolean) => void;
     signIn: (email: string, password: string) => Promise<any>;
     signUp: (email: string, password: string) => Promise<any>;
     signOut: () => Promise<void>;
@@ -20,7 +19,6 @@ const AuthContext = createContext<AuthContextType | null>(null);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
-    const [isGoogleConnected, setIsGoogleConnected] = useState(false);
     const [lockedCategories, setLockedCategories] = useState<string[]>([]);
 
     useEffect(() => {
@@ -32,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
                 if (user) {
                     const isGoogleConnected = await CalendarService.checkCalendarAccess(user.id!);
-                    setIsGoogleConnected(isGoogleConnected);
+                    setUser({...user, isGoogleConnected});
                 }
             } catch (err) {
                 console.error('Error fetching user:', err);
@@ -64,10 +62,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return (
         <AuthContext.Provider value={{
             user,
+            setUser,
             isLoading,
-            isGoogleConnected,
             lockedCategories,
-            setIsGoogleConnected,
             setLockedCategories,
             signIn,
             signUp,

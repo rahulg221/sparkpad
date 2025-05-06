@@ -74,7 +74,7 @@ export const Stack = styled.div<{
 
 export const Grid = styled.div<{
   $columns?: number;
-  gap?: 'sm' | 'md' | 'lg' | 'xl';
+  gap?: 'sm' | 'md' | 'lg' | 'xl' | 'none';
   $layoutMode?: 'grid' | 'list';
 }>`
   display: ${({ $layoutMode }) => ($layoutMode === 'list' ? 'flex' : 'grid')};
@@ -82,7 +82,7 @@ export const Grid = styled.div<{
   ${({ $layoutMode, $columns }) =>
     $layoutMode === 'grid' &&
     `grid-template-columns: repeat(${$columns || 2}, 1fr);`}
-  gap: ${({ theme, gap }) => gap ? theme.spacing[gap] : 0};
+  gap: ${({ theme, gap }) => gap !== 'none' ? theme.spacing[gap || 'md'] : '0px'};
 
   @media (max-width: 768px) {
     display: flex;

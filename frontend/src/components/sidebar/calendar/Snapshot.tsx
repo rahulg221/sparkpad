@@ -7,15 +7,23 @@ import { Column, Row, Spacer } from "../../../styles/shared/BaseLayout"
 import { IconButton, SecondaryButton } from "../../../styles/shared/Button.styles"
 import { FaTimes } from "react-icons/fa"
 import { useActions } from "../../../context/ActionsContext"
+import { useNotes } from "../../../context/NotesProvider"
+import { useEffect, useState } from "react"
 
 export const Snapshot = () => {
     const { summary, isSummaryLoading, setIsSummaryVisible } = useSummary();  
-    const { setIsSidebarVisible } = useActions();     
+    const { setIsSidebarVisible } = useActions(); 
+    const { currentCategory } = useNotes();
+    const [category, setCategory] = useState(currentCategory);
+
+    useEffect(() => {
+        setCategory(currentCategory);
+    }, []);
 
     return (
         <>
             <Row main="spaceBetween" cross="start">
-                <h2>Summary</h2>
+                <h2>{category} - TLDR</h2>
                 <IconButton onClick={() => setIsSidebarVisible(false)}>
                 <FaTimes size={14}/>
                 </IconButton>

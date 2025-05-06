@@ -32,6 +32,18 @@ export const ModalContainer = styled.div`
   opacity: 1;
 `;
 
+export const ModalDateHint = styled.p`
+  background-color: ${({ theme }) => theme.colors.bgElevated};
+  padding: ${({ theme }) => theme.spacing.md};
+  border-radius: ${({ theme }) => theme.borderRadius.md};
+  font-size: ${({ theme }) => theme.fontSize.sm};
+  color: ${({ theme }) => theme.colors.textLight};
+  width: 50%;
+  display: flex;
+  align-items: center;
+  gap: ${({ theme }) => theme.spacing.sm};
+`;
+
 export const ModalHeader = styled.div`
   display: flex;
   justify-content: space-between;

@@ -112,8 +112,8 @@ class ClusteringService:
                     raise Exception("Notes not found in database.")
 
                 unlocked_notes_data = unlocked_notes_response.data
-
-                notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding")]
+                
+                notes_to_cluster = [Note(**parse_embedding(n)) for n in unlocked_notes_data if n.get("embedding") ]
 
                 notes_to_remove = []
 
@@ -129,11 +129,12 @@ class ClusteringService:
                             best_score = score
                             best_category = category
 
-                    if best_score > 0.6:
+                    if best_score > 0.5:
                         print(f"Best score: {best_score}")
                         note.category = best_category
 
-                        print(f"Updating note {note.id} to category {best_category}")
+                        note.category = best_category
+                        print(f"Updating note {note.id} ({note.content}) to category {best_category}")
                         response = supabase_client.table("notes").update({
                             "category": best_category,
                             "recentlyMoved": True
@@ -225,7 +226,7 @@ class ClusteringService:
         new_categories_count = df["Category"].nunique()
 
         if new_categories_count > 1:
-            clustered_updates.append(f"{new_categories_count} suggested sparkpads\n")
+            clustered_updates.append(f"{new_categories_count} new notebooks\n")
 
             for note in json_result:
                 note_preview = ' '.join(note["Note"].split()[:10])

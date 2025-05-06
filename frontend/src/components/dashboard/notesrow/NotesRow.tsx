@@ -25,9 +25,13 @@ export const NotesRow = () => {
       //setIsLoading(true);
 
       try {
-        //const recentNotes = await NoteService.getMostRecentNotes(user?.id!, 15);
-        const unlockedNotes = await NoteService.getUnlockedNotes(user?.id!, lockedCategories);
-        setRecentNotes(unlockedNotes);
+        if (user?.id) {
+          const unlockedNotes = await NoteService.getUnlockedNotes(user.id, lockedCategories);
+          setRecentNotes(unlockedNotes);
+        } else {
+          console.error('User not found');
+          setRecentNotes([]);
+        }
       } catch (err) {
         console.error('Error fetching recent notes:', err);
       } finally {
