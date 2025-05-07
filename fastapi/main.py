@@ -64,7 +64,7 @@ async def preflight_handler(full_path: str):
     return Response(status_code=200)
 
 @app.post("/event")
-@limiter.limit("120/day")
+@limiter.limit("100/day")
 async def create_new_event(request: Request, request_body: Event, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     date_time = request_body.date_time
@@ -81,7 +81,7 @@ async def create_new_event(request: Request, request_body: Event, user=Depends(A
         raise HTTPException(status_code=500, detail="Unexpected error while creating event")
     
 @app.post("/task")
-@limiter.limit("120/day")
+@limiter.limit("100/day")
 async def create_new_task(request: Request, request_body: Task, user=Depends(AuthService.get_current_user)):
     note_content = request_body.note_content
     auth_id = user["sub"]
@@ -97,7 +97,7 @@ async def create_new_task(request: Request, request_body: Task, user=Depends(Aut
         raise HTTPException(status_code=500, detail="Unexpected error while creating task")
 
 @app.post("/label")
-@limiter.limit("75/day") # Lower this later
+@limiter.limit("25/day") # Lower this later
 async def cluster_notes(request: Request, user=Depends(AuthService.get_current_user)):
     try:
         # Cluster the notes

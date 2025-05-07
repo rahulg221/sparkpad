@@ -1,6 +1,17 @@
 import { MdDeleteOutline } from "react-icons/md";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { Container } from "../../../styles/shared/BaseLayout";
+
+const fadeInUp = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
 
 export const NoteListContainer = styled.div`
   width: 100%;
@@ -50,7 +61,7 @@ export const NoteContainer = styled(Container)<{ $isUnsorted: boolean }>`
   }
 `;  
 
-export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: boolean}>`
+export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: boolean, isDeleting: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -61,9 +72,14 @@ export const NoteCard = styled.div<{ $layoutMode: 'grid' | 'list', $isUnsorted: 
   background-color: ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.cardBackground};
   //border: 1px solid ${({ theme }) => theme.colors.border};
   //border-bottom: 1px solid ${({ theme, $isUnsorted }) => $isUnsorted ? theme.colors.stickyNoteBackground : theme.colors.border};
-  //border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   min-height: ${({ $layoutMode }) => $layoutMode === 'list' ? '12vh' : '30vh'};
-  transition: height 0.4s ease;
+  transition: height 0.4s ease, opacity 0.3s ease, transform 0.3s ease;
+  opacity: ${({ isDeleting }) => (isDeleting ? 0 : 1)};
+  transform: ${({ isDeleting }) =>
+    isDeleting ? 'translateY(10px) scale(0.95)' : 'translateY(0) scale(1)'};
+  pointer-events: ${({ isDeleting }) => (isDeleting ? 'none' : 'auto')};
+  animation: ${fadeInUp} 0.3s ease-in-out;
 
   &:hover {
     //max-height: 80vh;

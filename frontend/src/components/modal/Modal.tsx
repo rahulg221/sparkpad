@@ -11,8 +11,8 @@ import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.style
 
 interface ModalProps {
   isOpen: boolean;
-  onClose: () => void;
   onSave: () => void;
+  onClose: () => void;
   title: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
@@ -20,8 +20,8 @@ interface ModalProps {
 
 export const Modal: React.FC<ModalProps> = ({ 
   isOpen, 
-  onClose, 
   onSave,
+  onClose,  
   title, 
   children}) => {
   const modalRef = useRef<HTMLDivElement>(null);

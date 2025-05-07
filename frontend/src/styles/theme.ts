@@ -1,14 +1,14 @@
 export const darkTheme = {
   colors: {
     // Backgrounds (inverted)
-    bgPure: 'rgb(8, 8, 8)', // Pure black app background
+    bgPure: 'rgb(12, 12, 12)', // Pure black app background
     bgDark: 'rgb(12, 12, 12)',           // Most surfaces
     bgElevated: 'rgba(255, 255, 255, 0.06)', // Flexible surfaces
     bgLight: 'rgb(30, 30, 30)',          // Dark gray for inputs, blocks
     
     // Text colors (inverted from light mode)
-    textPrimary: '#ffffff',      // Bright white for high contrast
-    textLight: 'rgba(255, 255, 255, 0.75)',
+    textPrimary: 'rgba(255, 255, 255, 0.75)',      // Bright white for high contrast
+    textLight: 'rgba(255, 255, 255, 0.55)',
     textFaint: 'rgba(255, 255, 255, 0.35)',
     textSecondary: 'rgb(0, 0, 0)',
 
@@ -49,7 +49,7 @@ export const darkTheme = {
     recentBackground: 'rgb(18, 18, 18)',
     recentColor: 'rgb(250, 98, 75)',
 
-    stickyNoteBackground: 'rgba(36, 36, 36, 0.4)',
+    stickyNoteBackground: 'rgba(64, 64, 51, 0.4)',
     stickyNoteTextArea: 'rgb(18, 18, 18)',
     stickyNoteColor: 'rgb(254, 249, 195)',
 

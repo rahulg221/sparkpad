@@ -2,40 +2,37 @@ import styled from 'styled-components';
 
 export const PrimaryButton = styled.button`
   width: 100%;
-  height: 5.5vh;
+  height: 5vh;
   //padding: ${({ theme }) => theme.spacing.md};
   background-color: ${({ theme }) => theme.colors.primary};
   color: black;
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid ${({ theme }) => theme.colors.primary};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
+  //border: 1px solid ${({ theme }) => theme.colors.primary};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   cursor: pointer;
   transition: all 0.2s ease;
   font-size: ${({ theme }) => theme.fontSize.xs};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.primaryHover};
+    //border: 1px solid ${({ theme }) => theme.colors.primaryHover};
   }
 
   &:disabled {
     opacity: 0.6;
     cursor: not-allowed;
   }
-
-  @media (max-width: 768px) {
-    height: 7.5vh;
-  }
 `;
 
 export const SecondaryButton = styled.button<{ width?: string }>`
   //padding: ${({ theme }) => theme.spacing.md};
-  background-color: transparent;
-  border: 1px solid ${({ theme }) => theme.colors.border};
-  color: ${({ theme }) => theme.colors.textLight};
-  border-radius: ${({ theme }) => theme.borderRadius.md};
-  height: 5.5vh;
+  background-color: ${({ theme }) => theme.colors.bgElevated};
+  //border: 1px solid ${({ theme }) => theme.colors.bgElevated};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  height: 5vh;
   align-items: center;
   justify-content: center;
   width: ${({ width }) => width || '100%'};
@@ -43,6 +40,7 @@ export const SecondaryButton = styled.button<{ width?: string }>`
   transition: all 0.2s ease;
   font-size: ${({ theme }) => theme.fontSize.xs};
   color: ${({ theme }) => theme.colors.textLight};
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 
   &:hover:not(:disabled) {
     background-color: ${({ theme }) => theme.colors.bgElevated};

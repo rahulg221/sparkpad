@@ -16,11 +16,7 @@ export const Landing = () => {
   return (
     <LandingContainer>
       <ContentContainer>
-        <h1>Organize</h1>
-        <br />
-        <h1>Summarize</h1>
-        <br />
-        <h1>Schedule</h1>
+        <h1>Sparkpad</h1>
         <br />
         <p>Low friction productivity tool built for ADHD minds, creatives, and fast-paced thinkers.</p>
         <ButtonContainer>

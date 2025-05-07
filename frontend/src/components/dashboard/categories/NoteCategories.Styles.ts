@@ -81,7 +81,7 @@ export const CategoryBox = styled.div<{ isPermanent: boolean }>`
 export const ScratchpadBox = styled.div`
   position: relative;
   background-color: ${({ theme }) => theme.colors.stickyNoteBackground};
-  border-radius: ${({ theme }) => theme.borderRadius.sm};
+  //border-radius: ${({ theme }) => theme.borderRadius.sm};
   padding: ${({ theme }) => theme.spacing.sm};
   height: 5.5vh;
   max-height: 100px;
@@ -104,8 +104,8 @@ export const ScratchpadBox = styled.div`
     position: absolute;
     bottom: -5px;
     right: -5px;
-    width: 30px;
-    height: 30px;
+    width: 5vh;
+    height: 5vh;
     background-color: ${({ theme }) => theme.colors.stickyNoteBackground}; 
     border-radius: 0 0 5px 0;
     box-shadow: -3px -3px 5px rgba(0, 0, 0, 0.1);

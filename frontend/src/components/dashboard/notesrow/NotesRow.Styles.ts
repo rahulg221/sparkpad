@@ -21,7 +21,7 @@ export const NewNoteCard = styled.div<{ $isUnsorted: boolean }>`
   background-color: ${({ theme }) => theme.colors.stickyNoteBackground};
   //border: 1px solid ${({ theme }) => theme.colors.border};
   //border: 1px solid ${({ theme }) => theme.colors.border};
-  //border-radius: ${({ theme }) => theme.borderRadius.md};
+  border-radius: ${({ theme }) => theme.borderRadius.sm};
   border-bottom: 1px solid ${({ theme }) => theme.colors.bgElevated};
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   padding: ${({ theme }) => theme.spacing.lg};
@@ -46,14 +46,14 @@ export const NewNoteCard = styled.div<{ $isUnsorted: boolean }>`
 `;
 
 export const NotePreview = styled.div<{ $isUnsorted: boolean }>`
-  color: ${({ theme }) => theme.colors.stickyNoteColor};
+  //color: ${({ theme }) => theme.colors.stickyNoteColor};
   font-size: ${({ theme }) => theme.fontSize.xs};
   margin-bottom: ${({ theme }) => theme.spacing.md};
   word-break: break-word;
   overflow-wrap: anywhere;
 
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 5;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

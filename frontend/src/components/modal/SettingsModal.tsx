@@ -9,27 +9,26 @@ import { ThemeToggle } from './themetoggle/ThemeToggle';
 
 interface SettingsModalProps {
   isOpen: boolean;
-  onClose: () => void;
   onSave: () => void;
+  onClose: () => void;      
   setIsSettingsVisible: (isSettingsVisible: boolean) => void;
   handleCalendarClick: () => void;
   handleLogout: () => void; 
 }
-
 export const SettingsModal: React.FC<SettingsModalProps> = ({
   isOpen,
-  onClose,
   onSave,
+  onClose,
   setIsSettingsVisible,
   handleCalendarClick,
-  handleLogout
+  handleLogout,
 }) => {
   return (
     <Modal
-        isOpen={true}
-        onSave={() => setIsSettingsVisible(false)}
-        onClose={() => setIsSettingsVisible(false)}
+        isOpen={isOpen}
+        onClose={onClose}
         title="Settings"
+        onSave={onSave}
     >
     <ThemeToggle />
     <TextButton onClick={handleCalendarClick}>

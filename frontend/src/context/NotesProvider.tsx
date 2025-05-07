@@ -63,6 +63,11 @@ export const NotesProvider = ({ children }: { children: ReactNode }) => {
             const unlockedNotes = await NoteService.getUnlockedNotes(user?.id ?? '', lockedCategories);
             setUnlockedNotes(unlockedNotes);
 
+            if (unlockedNotes.length === 0) {
+                setIsCategoriesLoading(false); // Add notif message later
+                return;
+            } 
+
             const response = await NoteService.groupAndLabelNotes();
             setIsCategoriesLoading(false);
 

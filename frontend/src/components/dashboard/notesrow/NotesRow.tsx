@@ -53,7 +53,8 @@ export const NotesRow = () => {
 
   return (
     <>
-    <NotesRowContainer $isRecentNotesVisible={showRecentNotes}>            
+    {recentNotes.length === 0 && showRecentNotes ? <p style={{paddingLeft: '12px', paddingBottom: '12px'}}>No sticky notes yet.</p> : (
+      <NotesRowContainer $isRecentNotesVisible={showRecentNotes}>            
           <ScrollView direction='horizontal'>
               <Container width="100%">
                 {isLoading ? (
@@ -89,7 +90,8 @@ export const NotesRow = () => {
           </Container>
         </ScrollView>
         <Spacer height="lg" />  
-    </NotesRowContainer>
+      </NotesRowContainer>
+      )}
     </>
   );
 };

@@ -6,6 +6,7 @@ from models import Note
 from services.utils import preprocess_text, get_category_examples
 import os
 import json
+import re
 
 load_dotenv()
 
@@ -40,19 +41,27 @@ class OpenAIService:
         print(note_texts)
         print(note_ids)
 
-        notes_block = "\n".join(note_texts)
+        # Add numbered prefixes for the LLM prompt but keep original texts separate
+        numbered_texts = [f"Note {i+1}: {text}" for i, text in enumerate(note_texts)]
+        notes_block = "\n".join(numbered_texts)
         print(notes_block)
 
         prompt = f"""
         You are a note classification assistant.
 
-        Your task is to classify a note into one of the following categories:
+        Your task is to classify each note into one of the following categories:
         {categories}
 
         Here are the notes:
         {notes_block}
 
-        Return only the category for each note, one per line, matching the order given above.
+        IMPORTANT: Return your classification in the following format:
+        1. [category]
+        2. [category]
+        ...
+        {len(notes)}. [category]
+        
+        You must provide exactly {len(notes)} classifications, one for each note, maintaining the same order.
         """
 
         response = self.client.chat.completions.create(
@@ -62,16 +71,27 @@ class OpenAIService:
             max_tokens=1000,
         )
 
-        result_lines = response.choices[0].message.content.strip().splitlines()
+        # Split raw LLM response
+        result_text = response.choices[0].message.content.strip()
+        result_lines = result_text.splitlines()
+        
+        # Filter out any lines that don't follow the pattern "number. category"
+        clean_lines = []
+        for line in result_lines:
+            line = line.strip()
+            if line and line[0].isdigit() and '.' in line:
+                clean_lines.append(line)
 
-        if len(result_lines) != len(note_ids) and len(result_lines) > 0:
-            print(result_lines)
+        if len(clean_lines) != len(note_ids):
+            print(clean_lines)
             print(note_ids)
+            print(len(clean_lines))
+            print(len(note_ids))
             raise ValueError("Mismatch between classified lines and note count.")
 
         return [
             {"id": nid, "category": self.parse_category(line), "content": text}
-            for nid, text, line in zip(note_ids, note_texts, result_lines)
+            for nid, text, line in zip(note_ids, note_texts, clean_lines)
         ]
 
     def generate_category(self, notes: List[str]):

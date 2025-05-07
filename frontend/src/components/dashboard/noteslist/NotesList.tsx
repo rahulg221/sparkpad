@@ -7,7 +7,7 @@ import { NoteCard, NoteInfo, NotePreview, NoteContainer, NoteListContainer } fro
 import ReactMarkdown from 'react-markdown';
 import { LoadingSpinner } from '../../../styles/shared/LoadingSpinner';
 import { FaInfoCircle, FaTimesCircle, FaTrash } from 'react-icons/fa';
-import { FaArrowLeft, FaArrowRight, FaArrowUpRightFromSquare, FaCircle } from 'react-icons/fa6';
+import { FaArrowLeft, FaArrowRight, FaArrowUpRightFromSquare, FaChevronLeft, FaChevronRight, FaCircle } from 'react-icons/fa6';
 import { useActions } from '../../../context/ActionsContext';
 import { UpdateNoteModal } from '../../modal/UpdateNoteModal';
 import { useNotes } from '../../../context/NotesProvider';
@@ -17,6 +17,7 @@ import { InputBar } from '../../inputbar/InputBar';
 import { useTheme } from 'styled-components';
 import { extractDateAndText } from '../../../utils/dateParse';
 import { IoSparkles } from 'react-icons/io5';
+import { motion } from 'framer-motion';
 
 interface NotesListProps {
   category: string;
@@ -145,8 +146,14 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
 
   const handleDeleteNote = async (noteId: string) => {
     try {
+      setNotes(prev =>
+        prev.map(note =>
+          note.id === noteId ? { ...note, isDeleting: true } : note
+        )
+      );
+    
       await NoteService.deleteNote(noteId, user?.id || '', lockedCategories);
-      setNotes(notes.filter(note => note.id !== noteId));
+      setNotes(prev => prev.filter(note => note.id !== noteId));
     } catch (err) {
       console.error('Error deleting note:', err);
       setError('Error deleting note');
@@ -183,7 +190,7 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
               }
             }}
           >
-          <FaArrowLeft size={16} />
+          <FaChevronLeft size={14} />
         </IconButton>
         <IconButton
           onClick={() => {
@@ -194,17 +201,18 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
               }
             }}
           >
-          <FaArrowRight size={16} />
+          <FaChevronRight size={14} />
         </IconButton>
       </Row>
-      {notes.length === 0 && (
-        <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
-          <p>Press Q or click Capture to create a sticky note.</p>
-        </NoteContainer>  
+      {notes.length === 0 && categories.length === 1 && (
+        <>
+          <Spacer height="md" />
+          <p>Press Q or click the pencil icon to create a sticky note.</p>
+        </>
       )}
       <NoteContainer ref={notesContainerRef} $isUnsorted={category === 'Unsorted'}>
       {draftNote !== null && category !== 'Unsorted' && (
-        <NoteCard $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"}>
+        <NoteCard $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"} isDeleting={false}>
           <NotePreview $layoutMode={$layoutMode} $isUnsorted={category === "Unsorted"}>
             <textarea
               value={draftNote}
@@ -237,10 +245,10 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
           </NotePreview>
         </NoteCard>
       )}
-        { isLoading || isSearchLoading ? <LoadingSpinner /> :
+        { isSearchLoading ? <LoadingSpinner /> :
         <Grid $columns={3} $layoutMode={$layoutMode} gap={$layoutMode === "grid" ? "md" : "none"}>
           {notes.map((note) => (
-            <NoteCard key={note.id} $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
+            <NoteCard key={note.id} $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"} isDeleting={note.isDeleting || false}>
               <NotePreview $layoutMode={$layoutMode} $isUnsorted={note.category === "Unsorted"}>
                 {editingNoteId === note.id ? (
                   <textarea
@@ -281,16 +289,16 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
                     }}
                     style={{ cursor: 'text' }}
                   >
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
-                        ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
-                        li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
-                      }}
-                    >
-                      {note.content}
-                    </ReactMarkdown>
+                      <ReactMarkdown
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          p: ({ node, ...props }) => <p className="markdown-p" {...props} />,
+                          ul: ({ node, ...props }) => <ul className="markdown-ul" {...props} />,
+                          li: ({ node, ...props }) => <li className="markdown-li" {...props} />,
+                        }}
+                      >
+                          {note.content}
+                      </ReactMarkdown>
                   </div>
                 )}
               </NotePreview>

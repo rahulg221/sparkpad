@@ -160,6 +160,13 @@ export const Dashboard = () => {
     const handleRevertChanges = async () => {
         try {
             setIsCategoriesLoading(true);
+            
+            // Update each note to set recentlyMoved to false
+            for (const note of unlockedNotes) {
+              if (note.recentlyMoved) {
+                note.recentlyMoved = false;
+              }
+            }
             await NoteService.revertChanges(unlockedNotes);
             console.log('Reverted changes');
             setIsSortingUpdatesVisible(false);
@@ -184,7 +191,7 @@ export const Dashboard = () => {
               <Spacer height="lg" />
               <Grid $columns={1} $layoutMode="list">  
                   {searchResults.map((note) => (
-                    <NoteCard key={note.id} $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
+                    <NoteCard key={note.id} $layoutMode="list" $isUnsorted={note.category === "Unsorted"} isDeleting={note.isDeleting || false}>
                       <NotePreview $layoutMode="list" $isUnsorted={note.category === "Unsorted"}>
                         <ReactMarkdown
                           components={{
