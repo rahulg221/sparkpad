@@ -23,7 +23,7 @@ export const NewNotepadModal: React.FC<NewNotepadModalProps> = ({
             setIsLoading(true);
             await onSave(name);
             setIsLoading(false);
-        }} title="New Sparkpad">
+        }} title="New Notebook">
             { isLoading ? (
                 <LoadingSpinner />
             ) : (

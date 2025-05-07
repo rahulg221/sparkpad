@@ -95,6 +95,10 @@ export const NotesList = ({ category, lockedCategories }: NotesListProps) => {
 
     let notificationMessage = '';
 
+    setNotificationMessage('Writing in notebook...');
+    setShowNotification(true);
+    setNotificationType('note');
+
     try {
       if (draftNote.startsWith('/e')) {
         const { dateTimeString, content } = await extractDateAndText(draftNote);

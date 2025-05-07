@@ -24,9 +24,12 @@ export const SortingUpdatesModal: React.FC<SortingUpdatesModalProps> = ({
   
   return (
     <Modal isOpen={isOpen} onClose={onClose} onSave={onSave} title="Results">
+        {sortingUpdates.length === 0 && clusteredUpdates.length === 0 && (
+            <p>No changes made</p>
+        )}
         {Object.entries(groupedSortingUpdates).map(([category, notes]) => (
             <div key={category}>
-                <CategoryHeader>{category}</CategoryHeader>
+                <CategoryHeader>Moved to {category}</CategoryHeader>
                 {notes.map((note, index) => (
                     <ModalText key={index}>- {note}</ModalText>
                 ))}

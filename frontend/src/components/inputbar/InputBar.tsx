@@ -64,6 +64,9 @@ export const InputBar = () => {
     
     try {
       setNoteLoading(true);
+      setNotificationMessage('Capturing spark...');
+      setShowNotification(true);
+      setNotificationType('note');
 
       if (text.startsWith('/e')) {
         const { dateTimeString, content } = await extractDateAndText(text);
@@ -96,8 +99,6 @@ export const InputBar = () => {
         };
 
         notificationMessage = await NoteService.addNote(note);
-        setNotificationMessage(notificationMessage);
-        setShowNotification(true);
         setParsedDateHint('');
       }
 
