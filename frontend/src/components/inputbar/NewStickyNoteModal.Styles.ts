@@ -23,7 +23,8 @@ export const ModalContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding: ${({ theme }) => theme.spacing.lg};
-  width: auto;   
+  min-width: 35vw;   
+  width: auto;
   max-height: 80vh;       
   background: ${({ theme }) => theme.colors.stickyNoteTextArea};
   border: 1px solid ${({ theme }) => theme.colors.border};
@@ -38,7 +39,7 @@ export const ModalDateHint = styled.p`
   border-radius: ${({ theme }) => theme.borderRadius.md};
   font-size: ${({ theme }) => theme.fontSize.sm};
   color: ${({ theme }) => theme.colors.textLight};
-  width: 50%;
+  width: 95%;
   display: flex;
   align-items: center;
   gap: ${({ theme }) => theme.spacing.sm};

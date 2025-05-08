@@ -21,7 +21,7 @@ import { TreeView } from '../tree/Tree';
 import ReactMarkdown from 'react-markdown';
 import { useSummary } from '../../context/SummaryProvider';
 import { useNotes } from '../../context/NotesProvider';
-import { FaPen, FaTrash } from 'react-icons/fa';
+import { FaPen, FaTrash, FaTimes } from 'react-icons/fa';
 import { SmallIconButton } from '../../styles/shared/Button.styles';
 import { NoteCard, NoteInfo, NotePreview } from './noteslist/NotesList.Styles';
 import { Note } from '../../models/noteModel';
@@ -160,7 +160,7 @@ export const Dashboard = () => {
     const handleRevertChanges = async () => {
         try {
             setIsCategoriesLoading(true);
-            
+
             // Update each note to set recentlyMoved to false
             for (const note of unlockedNotes) {
               if (note.recentlyMoved) {
@@ -182,11 +182,13 @@ export const Dashboard = () => {
         <DashboardWrapper>
           {searchResults.length > 0 && (
             <>
-              <Row main="start" cross="start" gap="sm">
-                <MdArrowBack size={18} onClick={handleBackClick} />
+              <Row main="spaceBetween" cross="start" gap="sm">
                 <h1>
-                  {currentCategory === 'Unsorted' ? 'Miscellaneous' : currentCategory}
+                  Search Results
                 </h1>
+                <IconButton onClick={() => setSearchResults([])}>
+                  <FaTimes size={14} />
+                </IconButton>
               </Row>
               <Spacer height="lg" />
               <Grid $columns={1} $layoutMode="list">  

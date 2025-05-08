@@ -48,7 +48,7 @@ export class NoteService {
     const token = await getToken();
     // Initialize notification message and OpenAI client
     let notificationMessage = 'Include a date or time in your note to create a calendar event or task';
-
+    console.log("isGoogleConnected", isGoogleConnected);
     if (!isGoogleConnected && (note.content.startsWith('/e') || note.content.startsWith('/t'))) {
       notificationMessage = 'Connect your Google account in Settings to create calendar events or tasks';
       return notificationMessage;

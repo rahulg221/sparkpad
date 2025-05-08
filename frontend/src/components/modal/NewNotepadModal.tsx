@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal } from './Modal';
 import { ModalContent, ModalInput } from './Modal.Styles';
 import { LoadingSpinner } from '../../styles/shared/LoadingSpinner';
-import { SmallHeader } from '../../components/toolbar/ToolBar.Styles';
+import { ModalText, CategoryHeader } from './Modal.Styles';
 
 interface NewNotepadModalProps {
   isOpen: boolean;
@@ -28,10 +28,9 @@ export const NewNotepadModal: React.FC<NewNotepadModalProps> = ({
                 <LoadingSpinner />
             ) : (
                 <ModalContent>
-                    <SmallHeader>Pick a name</SmallHeader>
                     <ModalInput 
                         type="text" 
-                        placeholder="Favorite quotes... Project ideas... etc." 
+                        placeholder="Name your notebook..." 
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         onKeyDown={async (e) => { 

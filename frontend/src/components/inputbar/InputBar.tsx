@@ -27,6 +27,7 @@ export const InputBar = () => {
   const { currentCategory, writeInCurrentCategory, refreshNotes, setRefreshNotes } = useNotes();
   const [noteLoading, setNoteLoading] = useState(false); 
   const [parsedDateHint, setParsedDateHint] = useState<string | null>(null);
+  const [parsedContent, setParsedContent] = useState<string | null>(null);
   const [isFocused, setIsFocused] = useState(false);
   const { user, lockedCategories } = useAuth();
   const isMobile = window.matchMedia('(max-width: 768px)').matches;
@@ -49,10 +50,12 @@ export const InputBar = () => {
     }
 
     if (input.startsWith('/e')) {
-      const { hint } = await extractDateAndText(input);
+      const { hint, content } = await extractDateAndText(input);
       setParsedDateHint(hint);
+      setParsedContent(content.replace('/e ', ''));
     } else {
       setParsedDateHint('');
+      setParsedContent('');
     }
   };
 
@@ -98,7 +101,9 @@ export const InputBar = () => {
           cluster: -1,
         };
 
-        notificationMessage = await NoteService.addNote(note);
+        notificationMessage = await NoteService.addNote(note, '', '', user?.isGoogleConnected);
+        setNotificationMessage(notificationMessage);
+        setShowNotification(true);
         setParsedDateHint('');
       }
 
@@ -139,6 +144,7 @@ export const InputBar = () => {
         onSave={() => handleSubmit(new Event('submit') as unknown as React.FormEvent)}
         title="New Note"
         dateHint={parsedDateHint || ''}
+        content={parsedContent || ''}
       >
         <textarea
           ref={textInputRef}

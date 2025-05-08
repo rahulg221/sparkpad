@@ -9,7 +9,8 @@ import {
   ModalDateHint
 } from './NewStickyNoteModal.Styles';
 import { PrimaryButton, SecondaryButton } from '../../styles/shared/Button.styles';
-import { FaClock } from 'react-icons/fa6';
+import { FaCalendar } from 'react-icons/fa6';
+import { FaTimes } from 'react-icons/fa';
 
 interface NewStickyNoteModalProps {
   isOpen: boolean;
@@ -17,6 +18,7 @@ interface NewStickyNoteModalProps {
   onSave: (e: React.FormEvent) => void;
   title: string;
   dateHint: string;
+  content: string;
   children: React.ReactNode;
   footer?: React.ReactNode;
 }
@@ -27,6 +29,7 @@ export const NewStickyNoteModal: React.FC<NewStickyNoteModalProps> = ({
   onSave,
   title, 
   dateHint,
+  content,
   children}) => {
   const modalRef = useRef<HTMLDivElement>(null);
 
@@ -68,9 +71,11 @@ export const NewStickyNoteModal: React.FC<NewStickyNoteModalProps> = ({
         <ModalContent>
           {children}
           {dateHint && <ModalDateHint>
-            <FaClock size={14} />
-            {dateHint}
-            </ModalDateHint>}
+          <span>
+            <strong>Adding</strong> "{content}" <strong>on</strong> <em>{dateHint}</em>
+          </span>
+          <FaCalendar size={14} />
+          </ModalDateHint>}
         </ModalContent>
         <ModalFooter>
           <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
