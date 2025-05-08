@@ -152,7 +152,7 @@ class ClusteringService:
                     elif best_score > 0.4:
                         print(f"Borderline note {note.id} {note.content} with score {best_score}")
                         note_preview = ' '.join(note.content.split()[:10])
-                        sorting_updates.append(f"{best_category} - {note_preview}\n")
+                        sorting_updates.append(f"{best_category} - {note_preview}...\n")
                         borderline_notes.append(note)
                         notes_to_remove.append(note)
 
@@ -162,7 +162,7 @@ class ClusteringService:
                     borderline_notes_categories = OpenAIService().llm_classify_notes(borderline_notes, locked_categories)
 
                 for note in borderline_notes_categories:
-                    print(f"note {note['id']} {note['category']} {note['content']}")
+                    print(f"note {note['id']} {note['category']} {note['content']}...")
 
                     response = supabase_client.table("notes").update({
                         "category": note["category"],
@@ -231,7 +231,7 @@ class ClusteringService:
             for note in json_result:
                 note_preview = ' '.join(note["Note"].split()[:10])
                 if note["Category"] != "Unsorted":
-                    clustered_updates.append(f"{note['Category']} - {note_preview}\n")
+                    clustered_updates.append(f"{note['Category']} - {note_preview}...\n")
 
         self.update_database(json_result, notes_to_cluster)
 
@@ -262,7 +262,8 @@ class ClusteringService:
             min_cluster_size=min_cluster_size,
             min_samples=min_samples,
             metric='euclidean',  # use euclidean since UMAP was already cosine
-            prediction_data=True
+            prediction_data=True,
+            cluster_selection_epsilon=0.2
         )
         labels = clusterer.fit_predict(reduced_embeddings)
 
@@ -270,7 +271,7 @@ class ClusteringService:
             silhouette = silhouette_score(reduced_embeddings, labels)
             print(f"HDBSCAN Silhouette Score (excluding noise): {silhouette:.4f}")
 
-            if silhouette < 0.2:
+            if silhouette < 0.1 and len(set(labels)) > 1:
                 labels[:] = -1
                 print("Silhouette too low — treating all notes as unclustered.")
         else:

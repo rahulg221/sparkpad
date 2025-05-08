@@ -29,7 +29,7 @@ export const SortingUpdatesModal: React.FC<SortingUpdatesModalProps> = ({
         )}
         {Object.entries(groupedSortingUpdates).map(([category, notes]) => (
             <div key={category}>
-                <CategoryHeader>Moved to {category}</CategoryHeader>
+                <CategoryHeader>{category}</CategoryHeader>
                 {notes.map((note, index) => (
                     <ModalText key={index}>- {note}</ModalText>
                 ))}
